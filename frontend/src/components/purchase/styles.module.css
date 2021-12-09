@@ -1,0 +1,88 @@
+.purchase {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    max-width: 600px;
+    align-content: flex-start;
+    width: 100%;
+    position: relative;
+    justify-content: space-between;
+    padding-bottom: 18px;
+    text-align: left;
+    list-style-type: none;
+    border-bottom: 1px solid #EEEEEE;
+}
+
+.purchaseDelete {
+    font-family: 'Montserrat', sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    color: #858383;
+    text-decoration: none;
+}
+
+.recipeLink {
+  color: #000;
+  text-decoration: none;
+}
+
+.purchase:last-child {
+    margin-bottom: 0;
+}
+
+.purchaseContent {
+    display: grid;
+    position: relative;
+    grid-template-areas: 'image title'
+    'image text';
+    justify-content: space-between;
+    column-gap: 50px;
+}
+
+.purchaseImage {
+    width: 72px;
+    height: 72px;
+    grid-area: image;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: 50% 50%;
+    align-self: center;
+}
+
+.purchaseText {
+    font-family: 'Montserrat', sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 17px;
+    max-width: 300px;
+    color: #000;
+    grid-area: text;
+    align-self: start;
+    margin: 0 0 28px;
+    display: flex;
+    align-items: center;
+}
+
+.purchaseText:last-child {
+    margin-bottom: 0;
+}
+
+.purchaseText svg {
+    margin-right: 10px;
+}
+
+.purchaseTitle {
+    font-family: 'Montserrat', sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    max-width: 300px;
+    font-size: 16px;
+    line-height: 20px;
+    color: #000;
+    margin: 10px 0 13px;
+    grid-area: title;
+}
+

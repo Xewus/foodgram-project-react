@@ -1,0 +1,111 @@
+.single-card {
+  display: flex;
+  justify-content: space-between;
+  text-align: left;
+}
+
+.single-card__buttons {
+  display: flex;
+  margin-bottom: 40px;
+}
+
+.single-card__link {
+  color: #000;
+}
+
+.single-card__button {
+  display: flex;
+  align-items: center;
+  margin-right: 16px;
+}
+
+.single-card__button svg {
+  margin-right: 5px;
+}
+
+.single-card__button:last-child {
+  margin-right: 0px;
+}
+
+.single-card__edit {
+  margin-left: 40px;
+  color: #000;
+  text-decoration: underline;
+}
+
+.single-card__text, .single-card__text_with_link {
+  display: flex;
+  align-items: center;
+}
+
+.single-card__text svg {
+  margin-right: 12px;
+}
+
+.single-card__image {
+  object-fit: cover;
+  align-self: flex-start;
+  height: 480px;
+  width: 480px;
+  border-radius: 15px;
+  max-width: 100%;
+}
+
+.single-card__info {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-left: 60px;
+}
+
+
+.single-card__header-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin: 0 0 18px;
+}
+
+.single-card__title {
+  font-family: 'Montserrat', sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 40px;
+
+  line-height: 49px;
+  color: #000;
+  margin: 0;
+}
+
+@media screen and (max-width: 820px) {
+  .single-card__text_with_link {
+    display: block;
+  }
+
+  .single-card__edit {
+    margin-left: 0px;
+    margin-top: 20px;
+    display: inline-block;
+  }
+
+  .single-card {
+    display: block;
+  }
+
+  .single-card__info {
+    padding-left: 0px;
+  }
+
+  .single-card__image {
+    margin-bottom: 40px;
+  }
+
+  .single-card__buttons {
+    display: block;
+  }
+
+  .single-card__button {
+    margin-bottom: 16px;
+  }
+}
+
