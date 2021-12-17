@@ -1,13 +1,14 @@
 from rest_framework.serializers import ModelSerializer
 
-from ..recipes.models import Favorite, Ingredient, Subscription, Tag
+from ..recipes.models import Favorite, Ingredient, Recipe, Subscription, Tag
 from ..users import MyUser as User
 
 
-class TagSerializer(ModelSerializer):
+class FavoriteSerializer(ModelSerializer):
 
     class Meta:
-        model = Tag
+        model = Favorite
+
         fields = '__all__'
 
 
@@ -18,6 +19,15 @@ class IngredientSerializer(ModelSerializer):
         fields = '__all__'
 
 
+class RecipeSerializer(ModelSerializer):
+
+    class Meta:
+        model = Recipe
+        fields = (
+            'ingredients', 'tags', 'image', 'name', 'text', 'cooking_time',
+        )
+
+
 class SubscriptionSerializer(ModelSerializer):
 
     class Meta:
@@ -25,11 +35,10 @@ class SubscriptionSerializer(ModelSerializer):
         fields = '__all__'
 
 
-class FavoriteSerializer(ModelSerializer):
+class TagSerializer(ModelSerializer):
 
     class Meta:
-        model = Favorite
-
+        model = Tag
         fields = '__all__'
 
 
