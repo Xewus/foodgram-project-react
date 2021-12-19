@@ -1,12 +1,12 @@
+import os
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-s8n6!f(8mf#*^e3pmdfo&h)6j0@w(4r)m!r#m1!)ia4$*)rm3*'
 
-DEBUG = True
-
-ALLOWED_HOSTS = []
+#SECRET_KEY = os.environ.get('SECRET_KEY', default='string_from_.env')
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', default='*').split(', ')
 
 ROOT_URLCONF = 'foodgram.urls'
 
@@ -23,7 +23,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
-    
+    'django_filters',
+
     'api.apps.ApiConfig',
     'recipes.apps.RecipesConfig',
     'users.apps.UsersConfig',
@@ -42,7 +43,7 @@ MIDDLEWARE = [
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

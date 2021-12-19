@@ -3,10 +3,12 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db.models import (CASCADE, CharField, CheckConstraint,
                               DateTimeField, F, ForeignKey, ImageField,
                               ManyToManyField, Model,
-                              PositiveSmallIntegerField, Q, TextField,
-                              UniqueConstraint)
+                              PositiveSmallIntegerField, RESTRICT,
+                              Q, TextField, UniqueConstraint)
+from django.db.models.fields.related import OneToOneField
 from django.db.models.functions import Length
 from django.forms import ValidationError
+
 
 CharField.register_lookup(Length)
 
@@ -22,7 +24,9 @@ def null_validator(value):
 
 
 class Tag(Model):
-    '''Тэги для рецептов.'''
+    '''
+    Тэги для рецептов.
+    '''
     name = CharField(
         verbose_name='Тэг',
         max_length=200,
@@ -62,36 +66,9 @@ class Tag(Model):
 
 
 class Ingredient(Model):
-    '''Ингридиенты для рецептов'''
-    MEASURES = [
-        ('to taste', 'по вкусу'),
-        ('gramm', 'г'),
-        ('kilogramm', 'кг'),
-        ('milliliter', 'мл'),
-        ('liter', 'л'),
-        ('teaspoon', 'ч. л'),
-        ('tablespoon', 'ст. л'),
-        ('glass', 'стакан'),
-        ('drop', 'капля'),
-        ('pinch', 'щепотка'),
-        ('handful', 'горсть'),
-        ('piece', 'кусок'),
-        ('thing', 'шт.'),
-        ('bunch', 'пучок'),
-        ('segment', 'долька'),
-        ('jar', 'банка'),
-        ('pack', 'упаковка'),
-        ('clove', 'зубчик'),
-        ('carcass', 'тушка'),
-        ('pod', 'стручок'),
-        ('bottle', 'бутылка'),
-        ('sprig', 'веточка'),
-        ('loaf', 'батон'),
-        ('bag', 'пакетик'),
-        ('package', 'пакетик'),
-        ('leaf', 'лист'),
-        ('stalk', 'стебель'),
-    ]
+    '''
+    Ингридиенты для рецептов.
+    '''
     name = CharField(
         verbose_name='Ингридиент',
         max_length=200,
@@ -100,7 +77,6 @@ class Ingredient(Model):
     measurement_unit = CharField(
         verbose_name='Единицы измерения',
         max_length=200,
-        #  choices=MEASURES,
     )
 
     class Meta:
@@ -123,26 +99,29 @@ class Ingredient(Model):
 
 
 class Recipe(Model):
-    '''Модель для рецептов'''
+    '''
+    Модель для рецептов.
+    '''
     author = ForeignKey(
         verbose_name='Автор рецепта',
+        related_name='recipes',
         to=User,
-        on_delete=CASCADE
+        on_delete=CASCADE,
     )
     pub_date = DateTimeField(
         verbose_name='Дата публикации',
-        auto_now_add=True
+        auto_now_add=True,
     )
     ingredients = ManyToManyField(
         verbose_name='Ингредиенты блюда',
+        related_name='recipes',
         to=Ingredient,
         through='recipes.QuantityIngredient',
-        related_name='recipes',
     )
     tags = ManyToManyField(
         verbose_name='Тег',
-        to='Tag',
         related_name='recipes',
+        to='Tag',
     )
     image = ImageField(
         verbose_name='Изображение блюда',
@@ -154,6 +133,7 @@ class Recipe(Model):
     )
     text = TextField(
         verbose_name='Описание блюда',
+        max_length=5000,
     )
     cooking_time = PositiveSmallIntegerField(
         verbose_name='Время приготовления',
@@ -199,18 +179,23 @@ class Recipe(Model):
 
 
 class QuantityIngredient(Model):
-    '''Количество ингридиентов в блюде.'''
+    '''
+    Количество ингридиентов в блюде.
+    '''
     recipe = ForeignKey(
-        to=Recipe,
+        verbose_name='В каких рецептах',
         related_name='quantity',
+        to=Recipe,
         on_delete=CASCADE,
     )
     ingredient = ForeignKey(
-        to=Ingredient,
+        verbose_name='Связанные ингредиенты',
         related_name='quantity',
+        to=Ingredient,
         on_delete=CASCADE,
     )
     quantity = PositiveSmallIntegerField(
+        verbose_name='Количество',
         default=0,
         validators=(
             MinValueValidator(
@@ -238,18 +223,20 @@ class QuantityIngredient(Model):
 
 
 class Subscription(Model):
-    '''Подписки на авторов.'''
+    '''
+    Подписки на авторов рецептов.
+    '''
     subscriber = ForeignKey(
         verbose_name='Подписчик',
         related_name='subscriber',
         to=User,
-        on_delete=CASCADE
+        on_delete=CASCADE,
     )
     author = ForeignKey(
         verbose_name='Автор',
         related_name='following',
         to=User,
-        on_delete=CASCADE
+        on_delete=CASCADE,
     )
 
     class Meta:
@@ -272,11 +259,13 @@ class Subscription(Model):
 
 
 class Favorite(Model):
-    '''Избранные рецепты.
+    '''
+    Избранные рецепты.
     Внимание!!!
     Django не решает проблему ограничений на уровне базы по связанным PK.
     Если вам нужно запретить "owner == recipe.author",
-    Позаботьтесь об этом в контроллерах. '''
+    Позаботьтесь об этом в контроллерах.
+    '''
     owner = ForeignKey(
         verbose_name='Владелец подписки',
         related_name='owner',
@@ -303,3 +292,32 @@ class Favorite(Model):
 
     def __str__(self) -> str:
         return f'{self.owner}: {self.recipe}'
+
+
+class ShoppingCart(Model):
+    '''
+    Список рецептов для расчёта суммы ингредиентов.
+    '''
+    owner = OneToOneField(
+        verbose_name='Корзина',
+        related_name='shopping_cart',
+        to=User,
+        on_delete=CASCADE,
+    )
+    recipes = ForeignKey(
+        verbose_name='Рецепты в корзине',
+        related_name='shopping_cart',
+        to=Recipe,
+        on_delete=RESTRICT,
+    )
+
+    class Meta:
+        verbose_name = 'Список рецептов в корзине'
+        verbose_name_plural = 'ПСписок рецептов в корзине'
+        ordering = ('owner', 'recipes', )
+        constraints = (
+            UniqueConstraint(
+                fields=('owner', 'recipes'),
+                name='\n%(app_label)s_%(class)s recipe alredy added\n',
+            ),
+        )
