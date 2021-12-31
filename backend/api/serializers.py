@@ -76,7 +76,7 @@ class UserSerializer(ModelSerializer):
             raise ValidationError(
                 'В username допустимы только буквы.'
             )
-        return username
+        return username.capitalize()
 
 
 class UserSubscribeSerializer(UserSerializer):
@@ -131,7 +131,6 @@ class TagSerializer(ModelSerializer):
     '''
     Сериализатор для вывода тэгов.
     '''
-
     class Meta:
         model = Tag
         fields = ('id', 'name', 'color', 'slug', )
@@ -142,7 +141,6 @@ class IngredientSerializer(ModelSerializer):
     '''
     Сериализатор для вывода ингридиентов.
     '''
-
     class Meta:
         model = Ingredient
         fields = (
@@ -210,10 +208,6 @@ class RecipeSerializer(ModelSerializer):
 
     def validate(self, data):
         name = str(self.initial_data.get('name')).strip()
-        if not name.isalpha():
-            raise ValidationError(
-                'В именах и названиях принимаются только буквы'
-            )
 
         tags = self.initial_data.get('tags')
         if not isinstance(tags, list):
