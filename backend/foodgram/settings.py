@@ -1,13 +1,13 @@
 from pathlib import Path
 from decouple import config
 
-DEBUG = True
+DEBUG = config('DEBUG', default=True)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY', default='string_from_.env')
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='no host').split()
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*').split()
 
 CSRF_TRUSTED_ORIGINS = config(
     'CSRF_TRUSTED_ORIGINS', default='http://localhost http://127.0.0.1'
@@ -132,3 +132,12 @@ MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / MEDIA_URL
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+if DEBUG:
+    import os
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
