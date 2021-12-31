@@ -6,7 +6,6 @@ from django.utils.translation import gettext_lazy as _
 CharField.register_lookup(Length)
 
 MIN_USERNAME_LENGTH = 3
-IMAGE_EXTENSION = ('jpg', 'png',)
 MAX_LEN_CHARFIELD = 150
 
 
