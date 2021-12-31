@@ -1,8 +1,8 @@
 from django.contrib.admin import ModelAdmin, TabularInline, register, site
 from django.utils.safestring import mark_safe
 
-from .models import (Favorite, Ingredient, AmountIngredient, Recipe,
-                     Subscription, ShoppingCart, Tag)
+from .models import (AmountIngredient, Favorite, Ingredient, Recipe,
+                     ShoppingCart, Subscription, Tag)
 
 site.site_header = 'Администрирование Foodgram'
 EMPTY_VALUE_DISPLAY = 'Значение не указано'

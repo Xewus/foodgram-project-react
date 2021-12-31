@@ -1,20 +1,17 @@
-from os import environ
 from pathlib import Path
+from decouple import config
 
 DEBUG = True
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = environ.get('SECRET_KEY', default='string_from_.env')
-ALLOWED_HOSTS = environ.get('ALLOWED_HOSTS', default='').split()
+SECRET_KEY = config('SECRET_KEY', default='string_from_.env')
 
-SECRET_KEY = (
-    'django-insecure-0(25)3tslle82#9o7$p+^!&fx9zqu)@bqgialv+z^=7hsyi@5k'
-)
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='no host').split()
 
-ALLOWED_HOSTS = ('127.0.0.1', 'backend', 'localhost')
-
-CSRF_TRUSTED_ORIGINS = ('http://localhost', 'http://127.0.0.1',)
+CSRF_TRUSTED_ORIGINS = config(
+    'CSRF_TRUSTED_ORIGINS', default='http://localhost http://127.0.0.1'
+).split()
 
 ROOT_URLCONF = 'foodgram.urls'
 
@@ -67,8 +64,18 @@ TEMPLATES = [
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': config(
+            'DB_ENGINE', default='django.db.backends.postgresql'),
+        'NAME': config(
+            'DB_NAME', default='postgres'),
+        'USER': config(
+            'POSTGRES_USER', default='postgres'),
+        'PASSWORD': config(
+            'POSTGRES_PASSWORD', default='password'),
+        'HOST': config(
+            'DB_HOST', default='db'),
+        'PORT': config(
+            'DB_PORT', default=5432)
     }
 }
 
@@ -85,7 +92,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES':
-    ['rest_framework.permissions.AllowAny', ],
+    ['rest_framework.permissions.IsAuthenticatedOrReadOnly', ],
 
     'DEFAULT_AUTHENTICATION_CLASSES':
     ['rest_framework.authentication.TokenAuthentication', ],

@@ -1,10 +1,10 @@
-from django.db.models import F
 from django.contrib.auth import get_user_model
-from rest_framework.settings import api_settings
+from django.db.models import F
 from drf_extra_fields.fields import Base64ImageField
 from recipes.models import Ingredient, Recipe, Tag
 from rest_framework.serializers import (ModelSerializer, SerializerMethodField,
                                         ValidationError)
+from rest_framework.settings import api_settings
 
 from .services import set_amount_ingredients
 
@@ -14,21 +14,13 @@ MIN_USERNAME_LENGTH = 3
 MAX_LEN_CHARFIELD = 150
 
 
-# def set_amount_ingredients(recipe, ingredients):
-#     '''
-#     Записывает ингредиенты вложенные в рецепт.
-#     '''
-#     for ingredient in ingredients:
-#         AmountIngredient.objects.get_or_create(
-#             recipe=recipe,
-#             ingredients=ingredient['ing'],
-#             amount=ingredient['amount']
-#         )
-
-
 class UserSerializer(ModelSerializer):
     '''
     Сериализатор для использования с моделью User,
+    Создание пользователей разрешено с юзернеймами только из букв
+    определённой в настройках длины.
+    Метод "get_is_subscribed" определяет - подписан ли
+    текущий пользователь на просматриваемого пользователя.
     '''
     is_subscribed = SerializerMethodField()
 
@@ -47,12 +39,19 @@ class UserSerializer(ModelSerializer):
         read_only_fields = ('is_subscribed', )
 
     def get_is_subscribed(self, obj):
+        '''
+        Метод определяет - подписан ли текущий пользователь
+        на просматриваемого пользователя.
+        '''
         user = self.context.get('request').user
         if user.is_anonymous:
             return False
         return user.subscriber.filter(author=obj).exists()
 
     def create(self, validated_data):
+        '''
+        Создаёт нового пользователя с запрошенными полями.
+        '''
         user = User(
             email=validated_data['email'],
             username=validated_data['username'],
@@ -64,6 +63,10 @@ class UserSerializer(ModelSerializer):
         return user
 
     def validate_username(self, username):
+        '''
+        Проверяет введённый юзернейм на соответствие
+        установленным правилам.
+        '''
         if len(username) < MIN_USERNAME_LENGTH:
             raise ValidationError(
                 'Длина username допустима от '
@@ -78,7 +81,9 @@ class UserSerializer(ModelSerializer):
 
 class UserSubscribeSerializer(UserSerializer):
     '''
-    Сериализатор для вывода авторов на которых подписан запрашивающий юзер.
+    Сериализатор для вывода авторов на которых подписан текущий пользователь.
+    Метод "get_is_subscribed" переопределён, для уменьшения нагрузки,
+    так как при вычислениях всё равно будет возвращать True.
     '''
     recipes = SerializerMethodField()
     recipes_count = SerializerMethodField()
@@ -152,10 +157,10 @@ class RecipeSerializer(ModelSerializer):
     '''
     tags = TagSerializer(many=True, read_only=True)
     author = UserSerializer(read_only=True)
+    ingredients = SerializerMethodField()
     is_favorited = SerializerMethodField()
     is_in_shopping_cart = SerializerMethodField()
     image = Base64ImageField()
-    ingredients = SerializerMethodField()
 
     class Meta:
         model = Recipe
@@ -177,18 +182,27 @@ class RecipeSerializer(ModelSerializer):
         )
 
     def get_ingredients(self, obj):
+        '''
+        Получает ингридиенты для каждого рецепта.
+        '''
         ingredients = obj.ingredients.values(
             'id', 'name', 'measurement_unit', amount=F('recipe__amount')
         )
         return ingredients
 
     def get_is_favorited(self, obj):
+        '''
+        Проверка - находится ли рецепт в избранном.
+        '''
         user = self.context.get('request').user
         if user.is_anonymous:
             return False
         return user.favorites.filter(recipes=obj).exists()
 
     def get_is_in_shopping_cart(self, obj):
+        '''
+        Проверка - находится ли рецепт в списке покупок.
+        '''
         user = self.context.get('request').user
         if user.is_anonymous:
             return False
@@ -256,9 +270,10 @@ class RecipeSerializer(ModelSerializer):
         return data
 
     def create(self, validated_data):
+        image = validated_data.pop('image')
         tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')
-        recipe = Recipe.objects.create(**validated_data)
+        recipe = Recipe.objects.create(image=image, **validated_data)
         recipe.tags.set(tags)
         set_amount_ingredients(recipe, ingredients)
         return recipe

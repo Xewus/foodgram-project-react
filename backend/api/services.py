@@ -1,10 +1,46 @@
 from django.shortcuts import get_object_or_404
+from recipes.models import AmountIngredient, Recipe
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import (BasePermission,
+                                        IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 from rest_framework.status import (HTTP_201_CREATED, HTTP_204_NO_CONTENT,
                                    HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED)
 
-from recipes.models import AmountIngredient, Recipe
+
+class AuthorStaffOrReadOnly(IsAuthenticatedOrReadOnly):
+    '''
+    Разрешение на создание и изменение только для админов и автора.
+    Остальным только чтение объекта.
+    '''
+    def has_object_permission(self, request, view, obj):
+        return (
+            request.method in ('GET',)
+            or (request.user == obj.author)
+            or request.user.is_moderator
+            or request.user.is_admin
+        )
+
+
+class AdminOrReadOnly(BasePermission):
+    '''
+    Разрешение на создание и изменение только для админов.
+    Остальным только чтение объекта.
+    '''
+    def has_permission(self, request, view):
+        return (
+            request.method in ('GET',)
+            or request.user.is_authenticated
+            and request.user.is_admin
+        )
+
+
+class PageLimitPagination(PageNumberPagination):
+    '''
+    Стандартный пагинатор.
+    Переименовано имя параметра под требования фронтенда.
+    '''
+    page_size_query_param = 'limit'
 
 
 def set_amount_ingredients(recipe, ingredients):
@@ -46,8 +82,3 @@ def add_del_recipe(self, pk, klass, serializer):
         obj.delete()
         return Response(status=HTTP_204_NO_CONTENT)
     return Response(status=HTTP_400_BAD_REQUEST)
-
-
-class PageLimitPagination(PageNumberPagination):
-    page_size = 6
-    page_size_query_param = 'limit'
