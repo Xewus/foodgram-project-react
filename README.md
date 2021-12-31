@@ -9,5 +9,5 @@ password: q
 Пароль остальных пользователей: aqswdefr
 ```
 ```
-Для docker-compose необходим */backend/.env (можно пустой)
+Для docker-compose необходим */backend/.env (если пустой, то будет использована прилагаемая БД)
 ```
