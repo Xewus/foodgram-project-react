@@ -4,22 +4,22 @@ from rest_framework.response import Response
 from rest_framework.status import (HTTP_201_CREATED, HTTP_204_NO_CONTENT,
                                    HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED)
 
-from .serializers import AddDelSerializer, Recipe
+from recipes.models import AmountIngredient, Recipe
 
 
-# def set_amount_ingredients(recipe, ingredients):
-#     '''
-#     Записывает ингредиенты вложенные в рецепт.
-#     '''
-#     for ingredient in ingredients:
-#         AmountIngredient.objects.get_or_create(
-#             recipe=recipe,
-#             ingredients=ingredient['ing'],
-#             amount=ingredient['amount']
-#         )
+def set_amount_ingredients(recipe, ingredients):
+    '''
+    Записывает ингредиенты вложенные в рецепт.
+    '''
+    for ingredient in ingredients:
+        AmountIngredient.objects.get_or_create(
+            recipe=recipe,
+            ingredients=ingredient['ing'],
+            amount=ingredient['amount']
+        )
 
 
-def add_del_recipe(self, pk, klass):
+def add_del_recipe(self, pk, klass, serializer):
     '''
     This method adds objects "many-to-many"
     relationed "User" and "Recipe".
@@ -32,7 +32,7 @@ def add_del_recipe(self, pk, klass):
         return Response(status=HTTP_401_UNAUTHORIZED)
     recipe = get_object_or_404(Recipe, id=pk)
 
-    serializer = AddDelSerializer(recipe)
+    serializer = serializer(recipe)
 
     if self.request.method in ('GET', 'POST',):
         obj, created = klass.objects.get_or_create(owner=user, recipes=recipe)

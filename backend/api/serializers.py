@@ -2,9 +2,11 @@ from django.db.models import F
 from django.contrib.auth import get_user_model
 from rest_framework.settings import api_settings
 from drf_extra_fields.fields import Base64ImageField
-from recipes.models import AmountIngredient, Ingredient, Recipe, Tag
+from recipes.models import Ingredient, Recipe, Tag
 from rest_framework.serializers import (ModelSerializer, SerializerMethodField,
                                         ValidationError)
+
+from .services import set_amount_ingredients
 
 User = get_user_model()
 
@@ -12,21 +14,21 @@ MIN_USERNAME_LENGTH = 3
 MAX_LEN_CHARFIELD = 150
 
 
-def set_amount_ingredients(recipe, ingredients):
-    '''
-    Записывает ингредиенты вложенные в рецепт.
-    '''
-    for ingredient in ingredients:
-        AmountIngredient.objects.get_or_create(
-            recipe=recipe,
-            ingredients=ingredient['ing'],
-            amount=ingredient['amount']
-        )
+# def set_amount_ingredients(recipe, ingredients):
+#     '''
+#     Записывает ингредиенты вложенные в рецепт.
+#     '''
+#     for ingredient in ingredients:
+#         AmountIngredient.objects.get_or_create(
+#             recipe=recipe,
+#             ingredients=ingredient['ing'],
+#             amount=ingredient['amount']
+#         )
 
 
 class UserSerializer(ModelSerializer):
     '''
-    Сериализатор для использования с моделью User/
+    Сериализатор для использования с моделью User,
     '''
     is_subscribed = SerializerMethodField()
 

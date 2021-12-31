@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.db.models import F, Q
+from django.db.models import F
 from datetime import datetime as dt
 from django.conf import settings
 from django.http.response import HttpResponse
@@ -15,7 +15,7 @@ from rest_framework.status import (HTTP_201_CREATED,
                                    HTTP_401_UNAUTHORIZED)
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
-from .serializers import (IngredientSerializer,
+from .serializers import (AddDelSerializer, IngredientSerializer,
                           RecipeSerializer, TagSerializer,
                           UserSubscribeSerializer, UserSerializer)
 from .services import PageLimitPagination, add_del_recipe
@@ -125,11 +125,11 @@ class RecipeViewSet(ModelViewSet):
 
     @action(methods=('get', 'delete', 'post'), detail=True)
     def favorite(self, request, pk):
-        return add_del_recipe(self, pk, Favorite)
+        return add_del_recipe(self, pk, Favorite, AddDelSerializer)
 
     @action(methods=('get', 'delete', 'post'), detail=True)
     def shopping_cart(self, request, pk):
-        return add_del_recipe(self, pk, ShoppingCart)
+        return add_del_recipe(self, pk, ShoppingCart, AddDelSerializer)
 
     @action(methods=('get',), detail=False)
     def download_shopping_cart(self, request):
