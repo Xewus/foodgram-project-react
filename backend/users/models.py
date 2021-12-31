@@ -1,63 +1,47 @@
 from django.contrib.auth.models import AbstractUser
-from django.core.exceptions import ValidationError
-from django.core.validators import FileExtensionValidator
-from django.db.models import (CASCADE, CharField, CheckConstraint, EmailField,
-                              ForeignKey, ImageField, Model, Q, URLField)
+from django.db.models import CharField, CheckConstraint, EmailField, Q
 from django.db.models.functions import Length
+from django.utils.translation import gettext_lazy as _
 
 CharField.register_lookup(Length)
 
-MIN_USERNAME_LENGTH = 2
-IMAGE_EXTENSION = ('jpg', 'png', )
-LIMIT_AVATAR_SIZE = 2  # Mb
-
-
-def size_image_validator(obj):
-    limit = LIMIT_AVATAR_SIZE * 1024 * 1024
-    if obj.size > limit:
-        raise ValidationError(
-            f'Размер {obj} больше ограничения {LIMIT_AVATAR_SIZE}'
-        )
-
-
-def path_avatars_upload(obj, file):
-    return f'avatars/{obj.pk}/{file}'
+MIN_USERNAME_LENGTH = 3
+IMAGE_EXTENSION = ('jpg', 'png',)
+MAX_LEN_CHARFIELD = 150
 
 
 class MyUser(AbstractUser):
     '''
-    Настроенная моделб пользователя.
+    Настроенная модель пользователя.
     '''
     email = EmailField(
         verbose_name='Адрес электронной почты',
         max_length=254,
-        unique=True
+        unique=True,
+        help_text='Required. <=254 characters.'
     )
     username = CharField(
         verbose_name='Уникальный юзернейм',
-        max_length=150,
-        unique=True
+        max_length=MAX_LEN_CHARFIELD,
+        unique=True,
+        help_text=(
+            f'Required.{MIN_USERNAME_LENGTH}-{MAX_LEN_CHARFIELD} characters.'
+        )
     )
     first_name = CharField(
         verbose_name='Имя',
-        max_length=150
+        max_length=MAX_LEN_CHARFIELD,
+        help_text=f'Required.<={MAX_LEN_CHARFIELD} characters.'
     )
     last_name = CharField(
         verbose_name='Фамилия',
-        max_length=150
+        max_length=MAX_LEN_CHARFIELD,
+        help_text=f'Required.<={MAX_LEN_CHARFIELD} characters.'
     )
-    avatar = ImageField(
-        verbose_name='Аватар',
-        upload_to=path_avatars_upload,
-        blank=True,
-        null=True,
-        validators=(
-            FileExtensionValidator(
-                allowed_extensions=(IMAGE_EXTENSION),
-                message=(f'Allowed only {IMAGE_EXTENSION}')
-            ),
-            size_image_validator,
-        )
+    password = CharField(
+        verbose_name=_('password'),
+        max_length=MAX_LEN_CHARFIELD,
+        help_text=f'Required.<={MAX_LEN_CHARFIELD} characters.'
     )
 
     class Meta:
@@ -66,32 +50,10 @@ class MyUser(AbstractUser):
         ordering = ['username']
         constraints = (
             CheckConstraint(
-                check=Q(username__length__gt=MIN_USERNAME_LENGTH),
+                check=Q(username__length__gte=MIN_USERNAME_LENGTH),
                 name='\nusername too short\n',
             ),
         )
 
     def __str__(self):
         return f'{self.username}: {self.email}'
-
-
-class SocialLink(Model):
-    '''
-    Ссылки на профили в соцсетях.
-    '''
-    owner = ForeignKey(
-        verbose_name='Пользователь',
-        to=MyUser,
-        on_delete=CASCADE,
-        related_name='social'
-    )
-    link = URLField(
-        verbose_name='Профиль в соцсети',
-        max_length=150,
-        unique=True
-    )
-
-    class Meta:
-        verbose_name = 'Профиль в соцсети'
-        verbose_name_plural = 'ТПрофили в соцсетях'
-        ordering = ('owner', 'link', )

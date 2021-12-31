@@ -1,12 +1,20 @@
-import os
+from os import environ
 from pathlib import Path
+
+DEBUG = True
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-s8n6!f(8mf#*^e3pmdfo&h)6j0@w(4r)m!r#m1!)ia4$*)rm3*'
+SECRET_KEY = environ.get('SECRET_KEY', default='string_from_.env')
+ALLOWED_HOSTS = environ.get('ALLOWED_HOSTS', default='').split()
 
-#SECRET_KEY = os.environ.get('SECRET_KEY', default='string_from_.env')
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', default='*').split(', ')
+SECRET_KEY = (
+    'django-insecure-0(25)3tslle82#9o7$p+^!&fx9zqu)@bqgialv+z^=7hsyi@5k'
+)
+
+ALLOWED_HOSTS = ('127.0.0.1', 'backend', 'localhost')
+
+CSRF_TRUSTED_ORIGINS = ('http://localhost', 'http://127.0.0.1',)
 
 ROOT_URLCONF = 'foodgram.urls'
 
@@ -20,14 +28,15 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-   'django.contrib.staticfiles',
-
+    'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
+    'djoser',
     'django_filters',
-
     'api.apps.ApiConfig',
     'recipes.apps.RecipesConfig',
     'users.apps.UsersConfig',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -56,9 +65,6 @@ TEMPLATES = [
     },
 ]
 
-# Database
-# https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -66,36 +72,56 @@ DATABASES = {
     }
 }
 
-
-# Password validation
-# https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME':
+     'django.contrib.auth.password_validation.UserAttributeSimilarityValidator', },
+    {'NAME':
+     'django.contrib.auth.password_validation.MinimumLengthValidator', },
+    {'NAME':
+     'django.contrib.auth.password_validation.CommonPasswordValidator', },
+    {'NAME':
+     'django.contrib.auth.password_validation.NumericPasswordValidator', },
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES':
+    ['rest_framework.permissions.AllowAny', ],
+
+    'DEFAULT_AUTHENTICATION_CLASSES':
+    ['rest_framework.authentication.TokenAuthentication', ],
+
+    'DEFAULT_PAGINATION_CLASS':
+    'rest_framework.pagination.PageNumberPagination',
+
+    'PAGE_SIZE': 6
+}
+
+DJOSER = {
+    'LOGIN_FIELD': 'email',
+    'HIDE_USERS': False,
+    'PERMISSIONS': {
+        'resipe': ('rest_framework.permissions.AllowAny',),
+        'recipe_list': ('rest_framework.permissions.AllowAny',),
+        'user': ('rest_framework.permissions.AllowAny',),
+        'user_list': ('rest_framework.permissions.AllowAny',),
+    },
+    'SERIALIZERS': {
+        'user': 'api.serializers.UserSerializer',
+        'user_list': 'api.serializers.UserSerializer',
+        'current_user': 'api.serializers.UserSerializer',
+        'user_create': 'api.serializers.UserSerializer',
+    },
+}
 
 LANGUAGE_CODE = 'ru'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = '/static/'
-#STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'), )
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / STATIC_URL
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / MEDIA_URL
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-EMPTY_VALUE_DISPLAY = '--empty--'

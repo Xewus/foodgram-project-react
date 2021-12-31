@@ -3,9 +3,8 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db.models import (CASCADE, CharField, CheckConstraint,
                               DateTimeField, F, ForeignKey, ImageField,
                               ManyToManyField, Model,
-                              PositiveSmallIntegerField, RESTRICT,
+                              PositiveSmallIntegerField,
                               Q, TextField, UniqueConstraint)
-from django.db.models.fields.related import OneToOneField
 from django.db.models.functions import Length
 from django.forms import ValidationError
 
@@ -35,11 +34,14 @@ class Tag(Model):
     color = CharField(
         verbose_name='Цветовой HEX-код',
         max_length=7,
+        blank=True,
+        null=True,
         default='FF',
     )
     slug = CharField(
         verbose_name='Слаг тэга',
         max_length=200,
+        unique=True,
     )
 
     class Meta:
@@ -108,6 +110,10 @@ class Recipe(Model):
         to=User,
         on_delete=CASCADE,
     )
+    name = CharField(
+        verbose_name='Название блюда',
+        max_length=200,
+    )
     pub_date = DateTimeField(
         verbose_name='Дата публикации',
         auto_now_add=True,
@@ -116,7 +122,7 @@ class Recipe(Model):
         verbose_name='Ингредиенты блюда',
         related_name='recipes',
         to=Ingredient,
-        through='recipes.QuantityIngredient',
+        through='recipes.AmountIngredient',
     )
     tags = ManyToManyField(
         verbose_name='Тег',
@@ -126,10 +132,6 @@ class Recipe(Model):
     image = ImageField(
         verbose_name='Изображение блюда',
         upload_to='recipe_images/'
-    )
-    name = CharField(
-        verbose_name='Название блюда',
-        max_length=200,
     )
     text = TextField(
         verbose_name='Описание блюда',
@@ -171,30 +173,24 @@ class Recipe(Model):
     def number_adds(self):
         return self.favorites.all().count()
 
-    def get_ingredients(self):
-        ingredients = [i.name for i in self.ingredients.all()]
-        if not ingredients:
-            return 'No ingredients'
-        return ingredients
 
-
-class QuantityIngredient(Model):
+class AmountIngredient(Model):
     '''
     Количество ингридиентов в блюде.
     '''
     recipe = ForeignKey(
         verbose_name='В каких рецептах',
-        related_name='quantity',
+        related_name='ingredient',
         to=Recipe,
         on_delete=CASCADE,
     )
-    ingredient = ForeignKey(
+    ingredients = ForeignKey(
         verbose_name='Связанные ингредиенты',
-        related_name='quantity',
+        related_name='recipe',
         to=Ingredient,
         on_delete=CASCADE,
     )
-    quantity = PositiveSmallIntegerField(
+    amount = PositiveSmallIntegerField(
         verbose_name='Количество',
         default=0,
         validators=(
@@ -213,20 +209,20 @@ class QuantityIngredient(Model):
         ordering = ('recipe', )
         constraints = (
             UniqueConstraint(
-                fields=('recipe', 'ingredient', ),
-                name='\n%(app_label)s_%(class)s ingredients alredy added\n',
+                fields=('recipe', 'ingredients', ),
+                name='\n%(app_label)s_%(class)s ingredient alredy added\n',
             ),
         )
 
     def __str__(self) -> str:
-        return f'{self.quantity} {self.ingredient} в {self.recipe}'
+        return str(self.amount)
 
 
 class Subscription(Model):
     '''
     Подписки на авторов рецептов.
     '''
-    subscriber = ForeignKey(
+    owner = ForeignKey(
         verbose_name='Подписчик',
         related_name='subscriber',
         to=User,
@@ -242,20 +238,20 @@ class Subscription(Model):
     class Meta:
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
-        ordering = ('subscriber', )
+        ordering = ('owner', )
         constraints = (
             UniqueConstraint(
-                fields=('subscriber', 'author'),
+                fields=('owner', 'author'),
                 name='\n%(app_label)s_%(class)s_already_exist\n',
             ),
             CheckConstraint(
-                check=~Q(subscriber=F('author')),
+                check=~Q(owner=F('author')),
                 name='\n%(app_label)s_%(class)s_no_self_subscribe\n',
             ),
         )
 
     def __str__(self) -> str:
-        return f'{self.subscriber} --> {self.author}'
+        return f'{self.owner} --> {self.author}'
 
 
 class Favorite(Model):
@@ -268,11 +264,11 @@ class Favorite(Model):
     '''
     owner = ForeignKey(
         verbose_name='Владелец подписки',
-        related_name='owner',
+        related_name='favorites',
         to=User,
         on_delete=CASCADE,
     )
-    recipe = ForeignKey(
+    recipes = ForeignKey(
         verbose_name='Понравившиеся рецепты',
         related_name='favorites',
         to='Recipe',
@@ -282,24 +278,24 @@ class Favorite(Model):
     class Meta:
         verbose_name = 'Понравившейся рецепт'
         verbose_name_plural = 'Понравившиеся рецепты'
-        ordering = ('recipe', 'owner', )
+        ordering = ('recipes', 'owner', )
         constraints = (
             UniqueConstraint(
-                fields=('owner', 'recipe'),
+                fields=('owner', 'recipes'),
                 name='\n%(app_label)s_%(class)s recipe alredy added\n',
             ),
         )
 
     def __str__(self) -> str:
-        return f'{self.owner}: {self.recipe}'
+        return f'{self.owner}: {self.recipes}'
 
 
 class ShoppingCart(Model):
     '''
     Список рецептов для расчёта суммы ингредиентов.
     '''
-    owner = OneToOneField(
-        verbose_name='Корзина',
+    owner = ForeignKey(
+        verbose_name='Владелец списка',
         related_name='shopping_cart',
         to=User,
         on_delete=CASCADE,
@@ -308,16 +304,10 @@ class ShoppingCart(Model):
         verbose_name='Рецепты в корзине',
         related_name='shopping_cart',
         to=Recipe,
-        on_delete=RESTRICT,
+        on_delete=CASCADE,
     )
 
     class Meta:
         verbose_name = 'Список рецептов в корзине'
-        verbose_name_plural = 'ПСписок рецептов в корзине'
-        ordering = ('owner', 'recipes', )
-        constraints = (
-            UniqueConstraint(
-                fields=('owner', 'recipes'),
-                name='\n%(app_label)s_%(class)s recipe alredy added\n',
-            ),
-        )
+        verbose_name_plural = 'Список рецептов в корзине'
+        ordering = ('owner',)

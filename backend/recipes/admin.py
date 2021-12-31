@@ -1,19 +1,19 @@
-from django.conf import settings
 from django.contrib.admin import ModelAdmin, TabularInline, register, site
 from django.utils.safestring import mark_safe
 
-from .models import (Favorite, Ingredient, QuantityIngredient, Recipe,
-                     Subscription, Tag)
+from .models import (Favorite, Ingredient, AmountIngredient, Recipe,
+                     Subscription, ShoppingCart, Tag)
 
 site.site_header = 'Администрирование Foodgram'
+EMPTY_VALUE_DISPLAY = 'Значение не указано'
 
 
-class QuantityIngredientInline(TabularInline):
-    model = QuantityIngredient
+class IngredientInline(TabularInline):
+    model = AmountIngredient
     extra = 2
 
 
-@register(Favorite, QuantityIngredient, Subscription)
+@register(Favorite, AmountIngredient, ShoppingCart, Subscription)
 class LinksAdmin(ModelAdmin):
     pass
 
@@ -31,41 +31,37 @@ class IngredientAdmin(ModelAdmin):
     )
 
     save_on_top = True
-    empty_value_display = settings.EMPTY_VALUE_DISPLAY
+    empty_value_display = EMPTY_VALUE_DISPLAY
 
 
 @register(Recipe)
 class RecipeAdmin(ModelAdmin):
     list_display = (
-        'name', 'author', 'get_ingredients', 'get_image'
+        'name', 'author', 'get_image',
         )
     fields = (
-        ('name', 'cooking_time', ),
-        ('author', 'tags', ),
-        ('text', ),
-        ('image', ),
+        ('name', 'cooking_time',),
+        ('author', 'tags',),
+        ('text',),
+        ('image',),
     )
-    raw_id_fields = ('author', 'tags', )
+    raw_id_fields = ('author', )
     search_fields = (
         'name', 'author',
     )
     list_filter = (
-        'name', 'author__username', 'tags',
+        'name', 'author__username',
     )
 
-    inlines = (QuantityIngredientInline,)
+    inlines = (IngredientInline,)
     save_on_top = True
-    empty_value_display = settings.EMPTY_VALUE_DISPLAY
-
-    def get_ings(self, obj):
-        return Ingredient.objects.filter(recipes=obj).count()
+    empty_value_display = EMPTY_VALUE_DISPLAY
 
     def get_image(self, obj):
         return mark_safe(f'<img src={obj.image.url} width="80" hieght="30"')
 
     get_image.short_description = 'Изображение'
     Recipe.number_adds.short_description = 'Количество добавлений'
-    Recipe.get_ingredients.short_description = 'Инргедиенты'
 
 
 @register(Tag)
@@ -78,4 +74,4 @@ class TagAdmin(ModelAdmin):
     )
 
     save_on_top = True
-    empty_value_display = settings.EMPTY_VALUE_DISPLAY
+    empty_value_display = EMPTY_VALUE_DISPLAY
