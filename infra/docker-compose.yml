@@ -8,6 +8,26 @@ services:
     volumes:
       - ../frontend/:/app/result_build/
 
+  db:
+    image: postgres:13.0-alpine
+    volumes:
+      - /var/lib/postgresql/data/
+    env_file:
+      - ../backend/.env
+
+  backend:
+    build: 
+      context: ../backend
+      dockerfile: Dockerfile
+    volumes:
+      - static_value:/app/static/
+      - media_value:/app/media/
+    depends_on:
+      - db
+    env_file:
+      - ../backend/.env
+
+
   nginx:
     image: nginx:1.19.3
     ports:
@@ -22,14 +42,7 @@ services:
     depends_on:
       - backend
 
-  backend:
-    build: 
-      context: ../backend
-      dockerfile: Dockerfile
-    volumes:
-      - static_value:/app/static/
-      - media_value:/app/media/
-
 volumes:
   static_value:
   media_value:
+  postgres_data:
