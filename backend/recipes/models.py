@@ -1,24 +1,17 @@
 from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db.models import (CASCADE, CharField, CheckConstraint,
-                              DateTimeField, F, ForeignKey, ImageField,
+                              DateTimeField, ForeignKey, ImageField,
                               ManyToManyField, Model,
                               PositiveSmallIntegerField, Q, TextField,
                               UniqueConstraint)
 from django.db.models.functions import Length
-from django.forms import ValidationError
+
+from tuns import MAX_LEN_RECIPES_CHARFIELD, MAX_LEN_RECIPES_TEXTFIELD
 
 CharField.register_lookup(Length)
 
 User = get_user_model()
-
-
-def null_validator(value):
-    if value < 1:
-        raise ValidationError(
-            ('%(value)s is not an even number'),
-            params={'value': value},
-        )
 
 
 class Tag(Model):
@@ -27,19 +20,19 @@ class Tag(Model):
     '''
     name = CharField(
         verbose_name='Тэг',
-        max_length=200,
+        max_length=MAX_LEN_RECIPES_CHARFIELD,
         unique=True,
     )
     color = CharField(
         verbose_name='Цветовой HEX-код',
-        max_length=7,
+        max_length=6,
         blank=True,
         null=True,
         default='FF',
     )
     slug = CharField(
         verbose_name='Слаг тэга',
-        max_length=200,
+        max_length=MAX_LEN_RECIPES_CHARFIELD,
         unique=True,
     )
 
@@ -72,12 +65,12 @@ class Ingredient(Model):
     '''
     name = CharField(
         verbose_name='Ингридиент',
-        max_length=200,
+        max_length=MAX_LEN_RECIPES_CHARFIELD,
         unique=True,
     )
     measurement_unit = CharField(
         verbose_name='Единицы измерения',
-        max_length=200,
+        max_length=MAX_LEN_RECIPES_CHARFIELD,
     )
 
     class Meta:
@@ -109,9 +102,19 @@ class Recipe(Model):
         to=User,
         on_delete=CASCADE,
     )
+    favorite = ManyToManyField(
+        verbose_name='Понравившеися рецепты',
+        related_name='favorites',
+        to=User,
+    )
+    cart = ManyToManyField(
+        verbose_name='Список покупок',
+        related_name='carts',
+        to=User,
+    )
     name = CharField(
         verbose_name='Название блюда',
-        max_length=200,
+        max_length=MAX_LEN_RECIPES_CHARFIELD,
     )
     pub_date = DateTimeField(
         verbose_name='Дата публикации',
@@ -134,7 +137,7 @@ class Recipe(Model):
     )
     text = TextField(
         verbose_name='Описание блюда',
-        max_length=5000,
+        max_length=MAX_LEN_RECIPES_TEXTFIELD,
     )
     cooking_time = PositiveSmallIntegerField(
         verbose_name='Время приготовления',
@@ -168,9 +171,6 @@ class Recipe(Model):
 
     def __str__(self) -> str:
         return f'{self.name}. Автор: {self.author.username}'
-
-    def number_adds(self):
-        return self.favorites.all().count()
 
 
 class AmountIngredient(Model):
@@ -215,98 +215,3 @@ class AmountIngredient(Model):
 
     def __str__(self) -> str:
         return str(self.amount)
-
-
-class Subscription(Model):
-    '''
-    Подписки на авторов рецептов.
-    '''
-    owner = ForeignKey(
-        verbose_name='Подписчик',
-        related_name='subscriber',
-        to=User,
-        on_delete=CASCADE,
-    )
-    author = ForeignKey(
-        verbose_name='Автор',
-        related_name='following',
-        to=User,
-        on_delete=CASCADE,
-    )
-
-    class Meta:
-        verbose_name = 'Подписка'
-        verbose_name_plural = 'Подписки'
-        ordering = ('owner', )
-        constraints = (
-            UniqueConstraint(
-                fields=('owner', 'author'),
-                name='\n%(app_label)s_%(class)s_already_exist\n',
-            ),
-            CheckConstraint(
-                check=~Q(owner=F('author')),
-                name='\n%(app_label)s_%(class)s_no_self_subscribe\n',
-            ),
-        )
-
-    def __str__(self) -> str:
-        return f'{self.owner} --> {self.author}'
-
-
-class Favorite(Model):
-    '''
-    Избранные рецепты.
-    Внимание!!!
-    Django не решает проблему ограничений на уровне базы по связанным PK.
-    Если вам нужно запретить "owner == recipe.author",
-    Позаботьтесь об этом в контроллерах.
-    '''
-    owner = ForeignKey(
-        verbose_name='Владелец подписки',
-        related_name='favorites',
-        to=User,
-        on_delete=CASCADE,
-    )
-    recipes = ForeignKey(
-        verbose_name='Понравившиеся рецепты',
-        related_name='favorites',
-        to='Recipe',
-        on_delete=CASCADE,
-    )
-
-    class Meta:
-        verbose_name = 'Понравившейся рецепт'
-        verbose_name_plural = 'Понравившиеся рецепты'
-        ordering = ('recipes', 'owner', )
-        constraints = (
-            UniqueConstraint(
-                fields=('owner', 'recipes'),
-                name='\n%(app_label)s_%(class)s recipe alredy added\n',
-            ),
-        )
-
-    def __str__(self) -> str:
-        return f'{self.owner}: {self.recipes}'
-
-
-class ShoppingCart(Model):
-    '''
-    Список рецептов для расчёта суммы ингредиентов.
-    '''
-    owner = ForeignKey(
-        verbose_name='Владелец списка',
-        related_name='shopping_cart',
-        to=User,
-        on_delete=CASCADE,
-    )
-    recipes = ForeignKey(
-        verbose_name='Рецепты в корзине',
-        related_name='shopping_cart',
-        to=Recipe,
-        on_delete=CASCADE,
-    )
-
-    class Meta:
-        verbose_name = 'Список рецептов в корзине'
-        verbose_name_plural = 'Список рецептов в корзине'
-        ordering = ('owner',)

@@ -1,17 +1,27 @@
 from django.contrib.auth import get_user_model
 from django.db.models import F
 from drf_extra_fields.fields import Base64ImageField
-from recipes.models import Ingredient, Recipe, Tag
 from rest_framework.serializers import (ModelSerializer, SerializerMethodField,
                                         ValidationError)
 from rest_framework.settings import api_settings
 
-from .services import set_amount_ingredients
+from recipes.models import AmountIngredient, Ingredient, Recipe, Tag
+
+from .tuns import MAX_LEN_CHARFIELD, MIN_USERNAME_LENGTH
 
 User = get_user_model()
 
-MIN_USERNAME_LENGTH = 3
-MAX_LEN_CHARFIELD = 150
+
+def set_amount_ingredients(recipe, ingredients):
+    '''
+    Записывает ингредиенты вложенные в рецепт.
+    '''
+    for ingredient in ingredients:
+        AmountIngredient.objects.get_or_create(
+            recipe=recipe,
+            ingredients=ingredient['ing'],
+            amount=ingredient['amount']
+        )
 
 
 class UserSerializer(ModelSerializer):
@@ -40,13 +50,13 @@ class UserSerializer(ModelSerializer):
 
     def get_is_subscribed(self, obj):
         '''
-        Метод определяет - подписан ли текущий пользователь
+        Определяет - подписан ли текущий пользователь
         на просматриваемого пользователя.
         '''
         user = self.context.get('request').user
-        if user.is_anonymous:
+        if user.is_anonymous or (user == obj):
             return False
-        return user.subscriber.filter(author=obj).exists()
+        return user.subscribe.filter(id=obj.id).exists()
 
     def create(self, validated_data):
         '''
@@ -102,11 +112,11 @@ class UserSubscribeSerializer(UserSerializer):
         )
         read_only_fields = '__all__',
 
-    def get_is_subscribed(*args):
-        '''
-        Довольно странное поле по запросу фронтенда.
-        '''
-        return True
+    # def get_is_subscribed(*args):
+    #     '''
+    #     Довольно странное поле по запросу фронтенда.
+    #     '''
+    #     return True
 
     def get_recipes(self, obj):
         '''
@@ -195,7 +205,7 @@ class RecipeSerializer(ModelSerializer):
         user = self.context.get('request').user
         if user.is_anonymous:
             return False
-        return user.favorites.filter(recipes=obj).exists()
+        return user.favorites.filter(id=obj.id).exists()
 
     def get_is_in_shopping_cart(self, obj):
         '''
@@ -204,7 +214,7 @@ class RecipeSerializer(ModelSerializer):
         user = self.context.get('request').user
         if user.is_anonymous:
             return False
-        return user.shopping_cart.filter(recipes=obj).exists()
+        return user.carts.filter(id=obj.id).exists()
 
     def validate(self, data):
         name = str(self.initial_data.get('name')).strip()

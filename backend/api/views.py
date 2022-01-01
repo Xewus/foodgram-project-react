@@ -4,22 +4,20 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db.models import F
 from django.http.response import HttpResponse
-from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet as DjoserUserViewSet
-from recipes.models import (AmountIngredient, Favorite, Ingredient, Recipe,
-                            ShoppingCart, Subscription, Tag)
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
-from rest_framework.status import (HTTP_201_CREATED, HTTP_204_NO_CONTENT,
-                                   HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED)
+from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
-from .serializers import (AddDelSerializer, IngredientSerializer,
-                          RecipeSerializer, TagSerializer, UserSerializer,
+from recipes.models import AmountIngredient, Ingredient, Recipe, Tag
+
+from .serializers import (AddDelSerializer, IngredientSerializer, RecipeSerializer,
+                          TagSerializer, UserSerializer,
                           UserSubscribeSerializer)
 from .services import (AdminOrReadOnly, AuthorStaffOrReadOnly,
-                       PageLimitPagination, add_del_recipe)
+                       PageLimitPagination, add_del_obj)
 
 User = get_user_model()
 SYMBOL_FOR_SEARCH = ('1', 'true',)
@@ -44,26 +42,12 @@ class UserViewSet(DjoserUserViewSet):
         Вызов метода через url: */user/<int:id>/subscribe/.
         '''
         user = self.request.user
+        serializer = UserSubscribeSerializer
         if user.is_anonymous:
             return Response(status=HTTP_401_UNAUTHORIZED)
-        author = get_object_or_404(User, id=id)
-        serializer = UserSubscribeSerializer(
-            author, context={'request': request}
+        return add_del_obj(
+            self, id, user.subscribe, User, serializer, request
         )
-
-        if self.request.method in ('GET', 'POST',):
-            obj, created = Subscription.objects.get_or_create(
-                owner=user, author=author
-            )
-            if created:
-                return Response(serializer.data, status=HTTP_201_CREATED)
-            else:
-                return Response(status=HTTP_400_BAD_REQUEST)
-        if self.request.method in ('DELETE',):
-            obj = get_object_or_404(Subscription, owner=user, author=author)
-            obj.delete()
-            return Response(status=HTTP_204_NO_CONTENT)
-        return Response(status=HTTP_400_BAD_REQUEST)
 
     @action(methods=('get',), detail=False)
     def subscriptions(self, request):
@@ -75,7 +59,7 @@ class UserViewSet(DjoserUserViewSet):
         user = self.request.user
         if user.is_anonymous:
             return Response(status=HTTP_401_UNAUTHORIZED)
-        authors = User.objects.filter(following__owner=user)
+        authors = user.subscribe.all()
         pages = self.paginate_queryset(authors)
         serializer = UserSubscribeSerializer(
             pages, many=True, context={'request': request}
@@ -114,7 +98,7 @@ class RecipeViewSet(ModelViewSet):
     Отправка текстового файла со списком покупок.
     Для авторизованных пользователей — возможность добавить
     рецепт в избранное и в список покупок.
-    Изменять рецепты может только автор или админы.
+    Изменять рецепт может только автор или админы.
     '''
     serializer_class = RecipeSerializer
     permission_classes = (AuthorStaffOrReadOnly,)
@@ -132,12 +116,12 @@ class RecipeViewSet(ModelViewSet):
         is_in_shopping = self.request.query_params.get('is_in_shopping_cart')
         if is_in_shopping in SYMBOL_FOR_SEARCH:
             if not user.is_anonymous:
-                queryset = queryset.filter(shopping_cart__owner=user)
+                queryset = queryset.filter(cart=user.id)
 
         is_favorited = self.request.query_params.get('is_favorited')
         if is_favorited in SYMBOL_FOR_SEARCH:
             if not user.is_anonymous:
-                queryset = queryset.filter(favorites__owner=user)
+                queryset = queryset.filter(favorite=user.id)
 
         author = self.request.query_params.get('author')
         if author:
@@ -151,7 +135,10 @@ class RecipeViewSet(ModelViewSet):
         Добавляет либо удалет рецепт в "избранное".
         Вызов метода через url:  */recipe/<int:id>/favorite/.
         '''
-        return add_del_recipe(self, pk, Favorite, AddDelSerializer)
+        user = self.request.user
+        if user.is_anonymous:
+            return Response(status=HTTP_401_UNAUTHORIZED)
+        return add_del_obj(self, pk, user.favorites, Recipe, AddDelSerializer)
 
     @action(methods=('get', 'delete', 'post'), detail=True)
     def shopping_cart(self, request, pk):
@@ -159,7 +146,10 @@ class RecipeViewSet(ModelViewSet):
         Добавляет либо удалет рецепт в "список покупок".
         Вызов метода через url:  */recipe/<int:id>/shopping_cart/.
         '''
-        return add_del_recipe(self, pk, ShoppingCart, AddDelSerializer)
+        user = self.request.user
+        if user.is_anonymous:
+            return Response(status=HTTP_401_UNAUTHORIZED)
+        return add_del_obj(self, pk, user.carts, Recipe, AddDelSerializer)
 
     @action(methods=('get',), detail=False)
     def download_shopping_cart(self, request):
@@ -169,11 +159,9 @@ class RecipeViewSet(ModelViewSet):
         Вызов метода через url:  */recipe/<int:id>/download_shopping_cart/.
         '''
         user = self.request.user
-        if not user.shopping_cart.exists():
+        if not user.carts.exists():
             return Response(status=HTTP_400_BAD_REQUEST)
-        recipes = Recipe.objects.filter(
-            shopping_cart__owner=user
-        ).values('id')
+        recipes = user.carts.values('id')
         ingredients = AmountIngredient.objects.filter(
             recipe__in=recipes
         ).values(
