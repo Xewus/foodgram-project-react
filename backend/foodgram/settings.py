@@ -1,4 +1,5 @@
 from pathlib import Path
+
 from decouple import config
 
 DEBUG = config('DEBUG', default=True)

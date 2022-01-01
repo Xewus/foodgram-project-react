@@ -13,8 +13,8 @@ from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from recipes.models import AmountIngredient, Ingredient, Recipe, Tag
 
-from .serializers import (AddDelSerializer, IngredientSerializer, RecipeSerializer,
-                          TagSerializer, UserSerializer,
+from .serializers import (AddDelSerializer, IngredientSerializer,
+                          RecipeSerializer, TagSerializer, UserSerializer,
                           UserSubscribeSerializer)
 from .services import (AdminOrReadOnly, AuthorStaffOrReadOnly,
                        PageLimitPagination, add_del_obj)
