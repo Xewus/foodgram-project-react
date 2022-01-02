@@ -1,18 +1,20 @@
 from pathlib import Path
 
-from decouple import config
+from decouple import config, Csv
 
-DEBUG = config('DEBUG', default=True)
+DEBUG = config('DEBUG', default=True, cast=bool)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY', default='string_from_.env')
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*').split()
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*', cast=Csv())
 
 CSRF_TRUSTED_ORIGINS = config(
-    'CSRF_TRUSTED_ORIGINS', default='http://localhost http://127.0.0.1'
-).split()
+    'CSRF_TRUSTED_ORIGINS',
+    default='http://localhost http://127.0.0.1',
+    cast=Csv()
+)
 
 ROOT_URLCONF = 'foodgram.urls'
 
@@ -76,7 +78,7 @@ DATABASES = {
         'HOST': config(
             'DB_HOST', default='db'),
         'PORT': config(
-            'DB_PORT', default=5432)
+            'DB_PORT', default=5432, cast=int)
     }
 }
 
@@ -134,11 +136,11 @@ MEDIA_ROOT = BASE_DIR / MEDIA_URL
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# for review
 if DEBUG:
-    import os
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+            'NAME': str(BASE_DIR / 'db.sqlite3'),
         }
     }
