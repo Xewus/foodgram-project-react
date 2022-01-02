@@ -2,7 +2,7 @@ from datetime import datetime as dt
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.db.models import F
+from django.db.models import F, Sum
 from django.http.response import HttpResponse
 from djoser.views import UserViewSet as DjoserUserViewSet
 from rest_framework.decorators import action
@@ -172,17 +172,9 @@ class RecipeViewSet(ModelViewSet):
         ingredients = AmountIngredient.objects.filter(
             recipe__in=recipes
         ).values(
-            'amount',
             ingredient=F('ingredients__name'),
             measure=F('ingredients__measurement_unit')
-        )
-
-        shopping_list = {}
-        for i in ingredients:
-            if i['ingredient'] not in shopping_list:
-                shopping_list[i['ingredient']] = [i['amount'], i['measure']]
-            else:
-                shopping_list[i['ingredient']][0] += i['amount']
+        ).annotate(amount=Sum('amount'))
 
         filename = f'{user}_shopping_list.txt'
         filepath = settings.MEDIA_ROOT / filename
@@ -190,8 +182,10 @@ class RecipeViewSet(ModelViewSet):
             file.write(
                 f'Список покупок\n\n{user}\n\n{dt.now()}\n\n'
             )
-            for key, value in shopping_list.items():
-                file.write(f'{key}: {value[0]} {value[1]} \n')
+            for ing in ingredients:
+                file.write(
+                    f"{ing['ingredient']}: {ing['amount']} {ing['measure']}\n"
+                )
 
         shopping_list = open(filepath, 'r')
         response = HttpResponse(shopping_list, content_type='text.txt')
