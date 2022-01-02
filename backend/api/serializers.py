@@ -215,7 +215,7 @@ class RecipeSerializer(ModelSerializer):
                 raise ValidationError(
                     f'"{value}" должен быть в формате "[]"'
             )
-        
+
         for tag in tags:
             check_value_validate(tag, Tag)
 
@@ -226,9 +226,9 @@ class RecipeSerializer(ModelSerializer):
 
             amount = ing.get('amount')
             check_value_validate(amount)
-            
+
             valid_ingredients.append(
-                {'ingredient':ingredient, 'amount': amount}
+                {'ingredient': ingredient, 'amount': amount}
             )
 
         data['name'] = name.capitalize()
