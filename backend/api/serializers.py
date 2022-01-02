@@ -227,7 +227,9 @@ class RecipeSerializer(ModelSerializer):
             amount = ing.get('amount')
             check_value_validate(amount)
             
-            valid_ingredients.append({'ingredient':ingredient, 'amount': amount})
+            valid_ingredients.append(
+                {'ingredient':ingredient, 'amount': amount}
+            )
 
         data['name'] = name.capitalize()
         data['tags'] = tags
