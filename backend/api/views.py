@@ -4,8 +4,11 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db.models import F, Sum
 from django.http.response import HttpResponse
+
 from djoser.views import UserViewSet as DjoserUserViewSet
+
 from recipes.models import AmountIngredient, Ingredient, Recipe, Tag
+
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
