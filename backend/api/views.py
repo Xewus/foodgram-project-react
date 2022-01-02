@@ -168,9 +168,8 @@ class RecipeViewSet(ModelViewSet):
         user = self.request.user
         if not user.carts.exists():
             return Response(status=HTTP_400_BAD_REQUEST)
-        recipes = user.carts.values('id')
         ingredients = AmountIngredient.objects.filter(
-            recipe__in=recipes
+            recipe__in=(user.carts.values('id'))
         ).values(
             ingredient=F('ingredients__name'),
             measure=F('ingredients__measurement_unit')
