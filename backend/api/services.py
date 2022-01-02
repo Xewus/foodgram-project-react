@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.status import (HTTP_201_CREATED, HTTP_204_NO_CONTENT,
                                    HTTP_400_BAD_REQUEST)
 
+from recipes.models import AmountIngredient
 from .tuns import ADD_METHODS, DEL_METHODS
 
 
@@ -60,3 +61,15 @@ def add_del_obj(self, id, meneger, klass, serializer, request=None):
         meneger.remove(obj)
         return Response(status=HTTP_204_NO_CONTENT)
     return Response(status=HTTP_400_BAD_REQUEST)
+
+
+def set_amount_ingredients(recipe, ingredients):
+    '''
+    Записывает ингредиенты вложенные в рецепт.
+    '''
+    for ingredient in ingredients:
+        AmountIngredient.objects.get_or_create(
+            recipe=recipe,
+            ingredients=ingredient['ing'],
+            amount=ingredient['amount']
+        )

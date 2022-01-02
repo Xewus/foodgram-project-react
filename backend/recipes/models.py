@@ -89,13 +89,17 @@ class Ingredient(Model):
         )
 
     def __str__(self) -> str:
-        return f'{self.name}'
+        return f'{self.name} {self.measurement_unit}'
 
 
 class Recipe(Model):
     '''
     Модель для рецептов.
     '''
+    name = CharField(
+        verbose_name='Название блюда',
+        max_length=MAX_LEN_RECIPES_CHARFIELD,
+    )
     author = ForeignKey(
         verbose_name='Автор рецепта',
         related_name='recipes',
@@ -107,18 +111,10 @@ class Recipe(Model):
         related_name='favorites',
         to=User,
     )
-    cart = ManyToManyField(
-        verbose_name='Список покупок',
-        related_name='carts',
-        to=User,
-    )
-    name = CharField(
-        verbose_name='Название блюда',
-        max_length=MAX_LEN_RECIPES_CHARFIELD,
-    )
-    pub_date = DateTimeField(
-        verbose_name='Дата публикации',
-        auto_now_add=True,
+    tags = ManyToManyField(
+        verbose_name='Тег',
+        related_name='recipes',
+        to='Tag',
     )
     ingredients = ManyToManyField(
         verbose_name='Ингредиенты блюда',
@@ -126,14 +122,18 @@ class Recipe(Model):
         to=Ingredient,
         through='recipes.AmountIngredient',
     )
-    tags = ManyToManyField(
-        verbose_name='Тег',
-        related_name='recipes',
-        to='Tag',
+    cart = ManyToManyField(
+        verbose_name='Список покупок',
+        related_name='carts',
+        to=User,
+    )
+    pub_date = DateTimeField(
+        verbose_name='Дата публикации',
+        auto_now_add=True,
     )
     image = ImageField(
         verbose_name='Изображение блюда',
-        upload_to='recipe_images/'
+        upload_to='recipe_images/',
     )
     text = TextField(
         verbose_name='Описание блюда',
@@ -151,7 +151,7 @@ class Recipe(Model):
                 600,
                 'Очень долго ждать...'
             ),
-        )
+        ),
     )
 
     class Meta:
@@ -199,7 +199,7 @@ class AmountIngredient(Model):
             MaxValueValidator(
                 10000, 'Слишком много!'
             ),
-        )
+        ),
     )
 
     class Meta:
@@ -214,4 +214,4 @@ class AmountIngredient(Model):
         )
 
     def __str__(self) -> str:
-        return str(self.amount)
+        return f'{self.amount} {self.ingredients}'

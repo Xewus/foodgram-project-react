@@ -18,9 +18,10 @@ from .serializers import (AddDelSerializer, IngredientSerializer,
                           UserSubscribeSerializer)
 from .services import (AdminOrReadOnly, AuthorStaffOrReadOnly,
                        PageLimitPagination, add_del_obj)
+from .tuns import (ACTION_METHODS, SYMBOL_FALSE_SEARCH,
+                   SYMBOL_TRUE_SEARCH)
 
 User = get_user_model()
-SYMBOL_FOR_SEARCH = ('1', 'true',)
 
 
 class UserViewSet(DjoserUserViewSet):
@@ -34,7 +35,7 @@ class UserViewSet(DjoserUserViewSet):
     serializer_class = UserSerializer
     pagination_class = PageLimitPagination
 
-    @action(methods=('get', 'post', 'delete',), detail=True)
+    @action(methods=ACTION_METHODS, detail=True)
     def subscribe(self, request, id,):
         '''
         Создаёт либо удалет объект связи между запрашивающим
@@ -113,23 +114,29 @@ class RecipeViewSet(ModelViewSet):
             queryset = queryset.filter(
                 tags__slug__in=tags).distinct()
 
-        is_in_shopping = self.request.query_params.get('is_in_shopping_cart')
-        if is_in_shopping in SYMBOL_FOR_SEARCH:
-            if not user.is_anonymous:
-                queryset = queryset.filter(cart=user.id)
-
-        is_favorited = self.request.query_params.get('is_favorited')
-        if is_favorited in SYMBOL_FOR_SEARCH:
-            if not user.is_anonymous:
-                queryset = queryset.filter(favorite=user.id)
-
         author = self.request.query_params.get('author')
         if author:
             queryset = queryset.filter(author=author)
 
+        # Следующие фильтры только для авторизованного пользователя
+        if user.is_anonymous:
+            return queryset
+
+        is_in_shopping = self.request.query_params.get('is_in_shopping_cart')
+        if is_in_shopping in SYMBOL_TRUE_SEARCH:
+            queryset = queryset.filter(cart=user.id)
+        elif is_in_shopping in SYMBOL_FALSE_SEARCH:
+            queryset = queryset.exclude(cart=user.id)
+
+        is_favorited = self.request.query_params.get('is_favorited')
+        if is_favorited in SYMBOL_TRUE_SEARCH:
+            queryset = queryset.filter(favorite=user.id)
+        if is_favorited in SYMBOL_FALSE_SEARCH:
+            queryset = queryset.exclude(favorite=user.id)
+
         return queryset
 
-    @action(methods=('get', 'delete', 'post'), detail=True)
+    @action(methods=ACTION_METHODS, detail=True)
     def favorite(self, request, pk):
         '''
         Добавляет либо удалет рецепт в "избранное".
@@ -140,7 +147,7 @@ class RecipeViewSet(ModelViewSet):
             return Response(status=HTTP_401_UNAUTHORIZED)
         return add_del_obj(self, pk, user.favorites, Recipe, AddDelSerializer)
 
-    @action(methods=('get', 'delete', 'post'), detail=True)
+    @action(methods=ACTION_METHODS, detail=True)
     def shopping_cart(self, request, pk):
         '''
         Добавляет либо удалет рецепт в "список покупок".

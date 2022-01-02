@@ -5,23 +5,12 @@ from rest_framework.serializers import (ModelSerializer, SerializerMethodField,
                                         ValidationError)
 from rest_framework.settings import api_settings
 
-from recipes.models import AmountIngredient, Ingredient, Recipe, Tag
+from recipes.models import Ingredient, Recipe, Tag
 
+from .services import set_amount_ingredients
 from .tuns import MAX_LEN_CHARFIELD, MIN_USERNAME_LENGTH
 
 User = get_user_model()
-
-
-def set_amount_ingredients(recipe, ingredients):
-    '''
-    Записывает ингредиенты вложенные в рецепт.
-    '''
-    for ingredient in ingredients:
-        AmountIngredient.objects.get_or_create(
-            recipe=recipe,
-            ingredients=ingredient['ing'],
-            amount=ingredient['amount']
-        )
 
 
 class UserSerializer(ModelSerializer):
@@ -112,11 +101,11 @@ class UserSubscribeSerializer(UserSerializer):
         )
         read_only_fields = '__all__',
 
-    # def get_is_subscribed(*args):
-    #     '''
-    #     Довольно странное поле по запросу фронтенда.
-    #     '''
-    #     return True
+    def get_is_subscribed(*args):
+        '''
+        Довольно странное поле по запросу фронтенда.
+        '''
+        return True
 
     def get_recipes(self, obj):
         '''
@@ -222,12 +211,12 @@ class RecipeSerializer(ModelSerializer):
         tags = self.initial_data.get('tags')
         if not isinstance(tags, list):
             raise ValidationError(
-                '"tags" предоставлено в неверном формате'
+                '"tags" должен быть в формате "[]"'
             )
         for tag in tags:
             if not str(tag).isdigit():
                 raise ValidationError(
-                    'Ключ "tag" не содержит цифру'
+                    'Ключ "tag" должен содержать цифру'
                 )
             if not Tag.objects.filter(id=tag).exists():
                 raise ValidationError(
@@ -237,7 +226,7 @@ class RecipeSerializer(ModelSerializer):
         ingredients = self.initial_data.get('ingredients')
         if not isinstance(ingredients, list):
             raise ValidationError(
-                '"ingredients" предоставлено в неверном формате'
+                '"ingredients" должен быть в формате "[]"'
             )
         valid_ingredients = []
         for ing in ingredients:
@@ -248,7 +237,7 @@ class RecipeSerializer(ModelSerializer):
                 )
             if not str(amount).isdigit():
                 raise ValidationError(
-                    'Ключ "amount" не содержит цифру'
+                    'Ключ "amount" должен содержать цифру'
                 )
             id = ing.get('id')
             if not id:
@@ -257,7 +246,7 @@ class RecipeSerializer(ModelSerializer):
                 )
             if not str(id).isdigit():
                 raise ValidationError(
-                    'Ключ "id" не содержит цифру'
+                    'Ключ "id" должен содержать цифру'
                 )
             ing = Ingredient.objects.filter(id=id)
             if not ing:

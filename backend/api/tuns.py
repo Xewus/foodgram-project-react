@@ -7,6 +7,16 @@ DEL_METHODS = ('DELETE',)
 # HTTP методы разрешённые для изменения объектов
 UPDATE_METHODS = ('PUT', 'PATCH')
 
+# HTTP методы разрешённые для добавления и удаления
+# объектов в @action
+ACTION_METHODS = ('get', 'post', 'delete',)
+
+# Символы принимаемые в запросе для поиска по указанному ключу
+SYMBOL_TRUE_SEARCH = ('1', 'true',)
+
+# Символы рринимаемые в запросе для поиска исключая указанный ключ
+SYMBOL_FALSE_SEARCH = ('0', 'false',)
+
 # Минимальная длина юзернейма
 MIN_USERNAME_LENGTH = 3
 
