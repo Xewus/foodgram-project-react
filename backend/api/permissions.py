@@ -1,7 +1,7 @@
 from rest_framework.permissions import (BasePermission,
                                         IsAuthenticatedOrReadOnly)
 
-                                    
+
 class AuthorStaffOrReadOnly(IsAuthenticatedOrReadOnly):
     '''
     Разрешение на создание и изменение только для админов и автора.

@@ -6,7 +6,7 @@ from rest_framework.serializers import (ModelSerializer, SerializerMethodField,
                                         ValidationError)
 from rest_framework.settings import api_settings
 
-from .services import  check_value_validate, set_amount_ingredients
+from .services import check_value_validate, set_amount_ingredients
 from .tuns import MAX_LEN_CHARFIELD, MIN_USERNAME_LENGTH
 
 User = get_user_model()
@@ -214,7 +214,7 @@ class RecipeSerializer(ModelSerializer):
             if not isinstance(value, list):
                 raise ValidationError(
                     f'"{value}" должен быть в формате "[]"'
-            )
+                )
 
         for tag in tags:
             check_value_validate(tag, Tag)
