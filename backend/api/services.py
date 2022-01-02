@@ -5,7 +5,7 @@ from rest_framework.serializers import ValidationError
 from rest_framework.status import (HTTP_201_CREATED, HTTP_204_NO_CONTENT,
                                    HTTP_400_BAD_REQUEST)
 
-from .tuns import ADD_METHODS, DEL_METHODS
+from ..tuns import ADD_METHODS, DEL_METHODS
 
 
 def add_del_obj(self, id, meneger, klass, serializer, request=None):

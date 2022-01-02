@@ -6,7 +6,8 @@ from django.db.models import (CASCADE, CharField, CheckConstraint,
                               PositiveSmallIntegerField, Q, TextField,
                               UniqueConstraint)
 from django.db.models.functions import Length
-from tuns import MAX_LEN_RECIPES_CHARFIELD, MAX_LEN_RECIPES_TEXTFIELD
+
+from ..tuns import MAX_LEN_RECIPES_CHARFIELD, MAX_LEN_RECIPES_TEXTFIELD
 
 CharField.register_lookup(Length)
 

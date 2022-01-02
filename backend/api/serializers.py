@@ -6,8 +6,8 @@ from rest_framework.serializers import (ModelSerializer, SerializerMethodField,
                                         ValidationError)
 from rest_framework.settings import api_settings
 
+from ..tuns import MAX_LEN_CHARFIELD, MIN_USERNAME_LENGTH
 from .services import check_value_validate, set_amount_ingredients
-from .tuns import MAX_LEN_CHARFIELD, MIN_USERNAME_LENGTH
 
 User = get_user_model()
 
