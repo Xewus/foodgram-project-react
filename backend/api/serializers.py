@@ -6,7 +6,7 @@ from rest_framework.serializers import (ModelSerializer, SerializerMethodField,
                                         ValidationError)
 from rest_framework.settings import api_settings
 
-from .services import set_amount_ingredients
+from .services import  check_value_validate, set_amount_ingredients
 from .tuns import MAX_LEN_CHARFIELD, MIN_USERNAME_LENGTH
 
 User = get_user_model()
@@ -206,54 +206,28 @@ class RecipeSerializer(ModelSerializer):
 
     def validate(self, data):
         name = str(self.initial_data.get('name')).strip()
-
         tags = self.initial_data.get('tags')
-        if not isinstance(tags, list):
-            raise ValidationError(
-                '"tags" должен быть в формате "[]"'
-            )
-        for tag in tags:
-            if not str(tag).isdigit():
-                raise ValidationError(
-                    'Ключ "tag" должен содержать цифру'
-                )
-            if not Tag.objects.filter(id=tag).exists():
-                raise ValidationError(
-                    'Такого тэга не существует'
-                )
-
         ingredients = self.initial_data.get('ingredients')
-        if not isinstance(ingredients, list):
-            raise ValidationError(
-                '"ingredients" должен быть в формате "[]"'
+        values_as_list = (tags, ingredients)
+
+        for value in values_as_list:
+            if not isinstance(value, list):
+                raise ValidationError(
+                    f'"{value}" должен быть в формате "[]"'
             )
+        
+        for tag in tags:
+            check_value_validate(tag, Tag)
+
         valid_ingredients = []
         for ing in ingredients:
-            amount = str(ing.get('amount'))
-            if not amount:
-                raise ValidationError(
-                    'Отсутствует ключ "amount'
-                )
-            if not str(amount).isdigit():
-                raise ValidationError(
-                    'Ключ "amount" должен содержать цифру'
-                )
             id = ing.get('id')
-            if not id:
-                raise ValidationError(
-                    'Отсутствует ключ "id'
-                )
-            if not str(id).isdigit():
-                raise ValidationError(
-                    'Ключ "id" должен содержать цифру'
-                )
-            ing = Ingredient.objects.filter(id=id)
-            if not ing:
-                raise ValidationError(
-                    'Такого ингредиента не существует'
-                )
-            valid_ingredients.append(
-                {'ing': ing[0], 'amount': amount})
+            ingredient = check_value_validate(id, Ingredient)
+
+            amount = ing.get('amount')
+            check_value_validate(amount)
+            
+            valid_ingredients.append({'ingredient':ingredient, 'amount': amount})
 
         data['name'] = name.capitalize()
         data['tags'] = tags
