@@ -1,0 +1,36 @@
+.ingredients {
+  
+}
+
+.ingredients__list {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px;
+  max-height: 104px;
+  flex-wrap: wrap;
+}
+
+.ingredients__title {
+    font-family: 'Montserrat', sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 24px;
+    color: #000000;
+    margin: 0 0 12px;
+}
+
+.ingredients__list-item {
+    font-size: 16px;
+    line-height: 26px;
+    font-family: 'Montserrat', sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    color: #000000;
+    margin: 0;
+    padding: 0;
+    width: max-content;
+}
+

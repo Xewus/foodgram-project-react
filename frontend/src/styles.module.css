@@ -1,0 +1,33 @@
+.loading {
+  position: fixed;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100%;
+  line-height: 100vh;
+  text-align: center;
+}
+
+.menuButton {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  cursor: pointer;
+  display: none;
+}
+
+.menuButton img {
+  width: 100%;
+}
+
+.appMenuToggled {
+  transform: translateX(200px);
+}
+
+@media screen and (max-width: 770px) {
+  .menuButton {
+    display: block
+  }
+}
