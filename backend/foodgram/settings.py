@@ -1,5 +1,4 @@
 from pathlib import Path
-
 from decouple import config, Csv
 
 DEBUG = config('DEBUG', default=True, cast=bool)
