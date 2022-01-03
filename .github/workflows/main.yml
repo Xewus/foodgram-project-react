@@ -65,7 +65,7 @@ jobs:
       uses: docker/login-action@v1
       with:
         username: ${{ secrets.DOCKER_USER }}
-        password: p${{ secrets.DOCKER_PASS }}
+        password: ${{ secrets.DOCKER_PASS }}
 
     - name: Push to DockerHub
       uses: docker/build-push-action@v2
