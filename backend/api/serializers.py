@@ -9,8 +9,8 @@ from rest_framework.serializers import (ModelSerializer, SerializerMethodField,
                                         ValidationError)
 from rest_framework.settings import api_settings
 
-from ..tuns import MAX_LEN_CHARFIELD, MIN_USERNAME_LENGTH
 from .services import check_value_validate, set_amount_ingredients
+from ..tuns import MAX_LEN_CHARFIELD, MIN_USERNAME_LENGTH
 
 User = get_user_model()
 
@@ -224,8 +224,8 @@ class RecipeSerializer(ModelSerializer):
 
         valid_ingredients = []
         for ing in ingredients:
-            id = ing.get('id')
-            ingredient = check_value_validate(id, Ingredient)
+            ing_id = ing.get('id')
+            ingredient = check_value_validate(ing_id, Ingredient)
 
             amount = ing.get('amount')
             check_value_validate(amount)
