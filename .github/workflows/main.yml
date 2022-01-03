@@ -33,12 +33,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Copy files through scp
-      uses: appleboy/ssh-action@master
+    - name: Copy files
+      uses: canastro/copy-file-action@master
       with:
-        host: ${{ secrets.HOST_IP }}
-        username: ${{ secrets.HOST_USER }}
-        key: ${{ secrets.SSH_KEY }}
         source: "infra/"
         target: "/home/${{ secrets.HOST_USER }}/"
 
