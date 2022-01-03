@@ -27,23 +27,23 @@ User = get_user_model()
 
 
 class UserViewSet(DjoserUserViewSet):
-    '''
+    """
     ViewSet для работы с пользователми - вывод таковых,
     регистрация.
     Для авторизованных пользователей —
     возможность подписаться на автора рецепта.
-    '''
+    """
     queryset = User.objects.all()
     serializer_class = UserSerializer
     pagination_class = PageLimitPagination
 
     @action(methods=ACTION_METHODS, detail=True)
     def subscribe(self, request, id,):
-        '''
+        """
         Создаёт либо удалет объект связи между запрашивающим
         и запрошенным пользователями.
         Вызов метода через url: */user/<int:id>/subscribe/.
-        '''
+        """
         user = self.request.user
         serializer = UserSubscribeSerializer
         if user.is_anonymous:
@@ -54,11 +54,11 @@ class UserViewSet(DjoserUserViewSet):
 
     @action(methods=('get',), detail=False)
     def subscriptions(self, request):
-        '''
+        """
         Выводит список пользоваетелей
         на каторых подписан запрашивающй пользователь
         Вызов метода через url: */user/<int:id>/subscribtions/.
-        '''
+        """
         user = self.request.user
         if user.is_anonymous:
             return Response(status=HTTP_401_UNAUTHORIZED)
@@ -71,10 +71,10 @@ class UserViewSet(DjoserUserViewSet):
 
 
 class TagViewSet(ReadOnlyModelViewSet):
-    '''
+    """
     ViewSet для работы с тэгами.
     Изменение и создание объектов разрешено только админам.
-    '''
+    """
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     permission_classes = (AdminOrReadOnly,)
@@ -82,10 +82,10 @@ class TagViewSet(ReadOnlyModelViewSet):
 
 
 class IngredientViewSet(ReadOnlyModelViewSet):
-    '''
+    """
     ViewSet для работы с игридиентами.
     Изменение и создание объектов разрешено только админам.
-    '''
+    """
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     permission_classes = (AdminOrReadOnly,)
@@ -95,14 +95,14 @@ class IngredientViewSet(ReadOnlyModelViewSet):
 
 
 class RecipeViewSet(ModelViewSet):
-    '''
+    """
     ViewSet для работы с рецептами - вывод, создание, редактирование,
     добавление/удаление в избранное и список покупок.
     Отправка текстового файла со списком покупок.
     Для авторизованных пользователей — возможность добавить
     рецепт в избранное и в список покупок.
     Изменять рецепт может только автор или админы.
-    '''
+    """
     serializer_class = RecipeSerializer
     permission_classes = (AuthorStaffOrReadOnly,)
     pagination_class = PageLimitPagination
@@ -140,10 +140,10 @@ class RecipeViewSet(ModelViewSet):
 
     @action(methods=ACTION_METHODS, detail=True)
     def favorite(self, request, pk):
-        '''
+        """
         Добавляет либо удалет рецепт в "избранное".
         Вызов метода через url:  */recipe/<int:id>/favorite/.
-        '''
+        """
         user = self.request.user
         if user.is_anonymous:
             return Response(status=HTTP_401_UNAUTHORIZED)
@@ -151,10 +151,10 @@ class RecipeViewSet(ModelViewSet):
 
     @action(methods=ACTION_METHODS, detail=True)
     def shopping_cart(self, request, pk):
-        '''
+        """
         Добавляет либо удалет рецепт в "список покупок".
         Вызов метода через url:  */recipe/<int:id>/shopping_cart/.
-        '''
+        """
         user = self.request.user
         if user.is_anonymous:
             return Response(status=HTTP_401_UNAUTHORIZED)
@@ -162,11 +162,11 @@ class RecipeViewSet(ModelViewSet):
 
     @action(methods=('get',), detail=False)
     def download_shopping_cart(self, request):
-        '''
+        """
         Считает сумму ингредиентов в рецептах выбранных для покупки.
         Возвращает текстовый файл со списком ингредиентов.
         Вызов метода через url:  */recipe/<int:id>/download_shopping_cart/.
-        '''
+        """
         user = self.request.user
         if not user.carts.exists():
             return Response(status=HTTP_400_BAD_REQUEST)

@@ -11,9 +11,9 @@ from .tuns import ADD_METHODS, DEL_METHODS
 
 
 def add_del_obj(self, obj_id, meneger, klass, serializer, request=None):
-    '''
-    This method adds objects "many-to-many".
-    '''
+    """
+    Добавляет или удаляет связь через "many-to-many".
+    """
     obj = get_object_or_404(klass, id=obj_id)
     serializer = serializer(obj, context={'request': request})
     exist = meneger.filter(id=obj_id).exists()
@@ -29,9 +29,9 @@ def add_del_obj(self, obj_id, meneger, klass, serializer, request=None):
 
 
 def set_amount_ingredients(recipe, ingredients):
-    '''
+    """
     Записывает ингредиенты вложенные в рецепт.
-    '''
+    """
     for ingredient in ingredients:
         AmountIngredient.objects.get_or_create(
             recipe=recipe,
@@ -41,12 +41,12 @@ def set_amount_ingredients(recipe, ingredients):
 
 
 def check_value_validate(value, klass=None):
-    '''
+    """
     Проверяет корректность переданного значения.
-    При необходимости, проверяет существует ли объект с переданным obj_id
+    При необходимости проверяет существует ли объект с переданным obj_id
     При нахождении объекта создаётся Queryset[],
     для дальнейшей работы возвращается первое (и единственное) значение.
-    '''
+    """
     if not str(value).isdigit():
         raise ValidationError(
             f'{value} должно содержать цифру'

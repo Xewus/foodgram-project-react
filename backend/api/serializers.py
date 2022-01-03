@@ -16,13 +16,13 @@ User = get_user_model()
 
 
 class UserSerializer(ModelSerializer):
-    '''
+    """
     Сериализатор для использования с моделью User,
     Создание пользователей разрешено с юзернеймами только из букв
     определённой в настройках длины.
     Метод "get_is_subscribed" определяет - подписан ли
     текущий пользователь на просматриваемого пользователя.
-    '''
+    """
     is_subscribed = SerializerMethodField()
 
     class Meta:
@@ -40,19 +40,19 @@ class UserSerializer(ModelSerializer):
         read_only_fields = ('is_subscribed', )
 
     def get_is_subscribed(self, obj):
-        '''
+        """
         Определяет - подписан ли текущий пользователь
         на просматриваемого пользователя.
-        '''
+        """
         user = self.context.get('request').user
         if user.is_anonymous or (user == obj):
             return False
         return user.subscribe.filter(id=obj.id).exists()
 
     def create(self, validated_data):
-        '''
+        """
         Создаёт нового пользователя с запрошенными полями.
-        '''
+        """
         user = User(
             email=validated_data['email'],
             username=validated_data['username'],
@@ -64,10 +64,10 @@ class UserSerializer(ModelSerializer):
         return user
 
     def validate_username(self, username):
-        '''
+        """
         Проверяет введённый юзернейм на соответствие
         установленным правилам.
-        '''
+        """
         if len(username) < MIN_USERNAME_LENGTH:
             raise ValidationError(
                 'Длина username допустима от '
@@ -81,11 +81,11 @@ class UserSerializer(ModelSerializer):
 
 
 class UserSubscribeSerializer(UserSerializer):
-    '''
+    """
     Сериализатор для вывода авторов на которых подписан текущий пользователь.
     Метод "get_is_subscribed" переопределён, для уменьшения нагрузки,
     так как при вычислениях всё равно будет возвращать True.
-    '''
+    """
     recipes = SerializerMethodField()
     recipes_count = SerializerMethodField()
 
@@ -104,15 +104,15 @@ class UserSubscribeSerializer(UserSerializer):
         read_only_fields = '__all__',
 
     def get_is_subscribed(*args):
-        '''
-        Довольно странное поле по запросу фронтенда.
-        '''
+        """
+        Cтранное поле по запросу фронтенда.
+        """
         return True
 
     def get_recipes(self, obj):
-        '''
+        """
         Рецепты каждого автора с запрошенным лимитом.
-        '''
+        """
         lim = (
             self.context['request'].query_params.get('recipes_limit')
         )
@@ -122,16 +122,16 @@ class UserSubscribeSerializer(UserSerializer):
         return obj.recipes.values('id', 'name', 'image', 'cooking_time')[:lim]
 
     def get_recipes_count(self, obj):
-        '''
+        """
         Показывает общее количество рецептов у каждого автора.
-        '''
+        """
         return obj.recipes.count()
 
 
 class TagSerializer(ModelSerializer):
-    '''
+    """
     Сериализатор для вывода тэгов.
-    '''
+    """
     class Meta:
         model = Tag
         fields = ('id', 'name', 'color', 'slug', )
@@ -139,9 +139,9 @@ class TagSerializer(ModelSerializer):
 
 
 class IngredientSerializer(ModelSerializer):
-    '''
+    """
     Сериализатор для вывода ингридиентов.
-    '''
+    """
     class Meta:
         model = Ingredient
         fields = (
@@ -151,9 +151,9 @@ class IngredientSerializer(ModelSerializer):
 
 
 class RecipeSerializer(ModelSerializer):
-    '''
+    """
     Сериализатор для работы с рецептами.
-    '''
+    """
     tags = TagSerializer(many=True, read_only=True)
     author = UserSerializer(read_only=True)
     ingredients = SerializerMethodField()
@@ -181,27 +181,27 @@ class RecipeSerializer(ModelSerializer):
         )
 
     def get_ingredients(self, obj):
-        '''
+        """
         Получает ингридиенты для каждого рецепта.
-        '''
+        """
         ingredients = obj.ingredients.values(
             'id', 'name', 'measurement_unit', amount=F('recipe__amount')
         )
         return ingredients
 
     def get_is_favorited(self, obj):
-        '''
+        """
         Проверка - находится ли рецепт в избранном.
-        '''
+        """
         user = self.context.get('request').user
         if user.is_anonymous:
             return False
         return user.favorites.filter(id=obj.id).exists()
 
     def get_is_in_shopping_cart(self, obj):
-        '''
+        """
         Проверка - находится ли рецепт в списке покупок.
-        '''
+        """
         user = self.context.get('request').user
         if user.is_anonymous:
             return False
@@ -272,10 +272,10 @@ class RecipeSerializer(ModelSerializer):
 
 
 class AddDelSerializer(ModelSerializer):
-    '''
+    """
     Сериализатор для добавления и удаления объектов
     по запросу с определённым URL.
-    '''
+    """
     class Meta:
         model = Recipe
         fields = ('id', 'name', 'image', 'cooking_time',)

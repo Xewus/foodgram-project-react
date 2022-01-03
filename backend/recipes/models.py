@@ -15,9 +15,9 @@ User = get_user_model()
 
 
 class Tag(Model):
-    '''
+    """
     Тэги для рецептов.
-    '''
+    """
     name = CharField(
         verbose_name='Тэг',
         max_length=MAX_LEN_RECIPES_CHARFIELD,
@@ -60,9 +60,9 @@ class Tag(Model):
 
 
 class Ingredient(Model):
-    '''
+    """
     Ингридиенты для рецептов.
-    '''
+    """
     name = CharField(
         verbose_name='Ингридиент',
         max_length=MAX_LEN_RECIPES_CHARFIELD,
@@ -93,9 +93,9 @@ class Ingredient(Model):
 
 
 class Recipe(Model):
-    '''
+    """
     Модель для рецептов.
-    '''
+    """
     name = CharField(
         verbose_name='Название блюда',
         max_length=MAX_LEN_RECIPES_CHARFIELD,
@@ -174,9 +174,9 @@ class Recipe(Model):
 
 
 class AmountIngredient(Model):
-    '''
+    """
     Количество ингридиентов в блюде.
-    '''
+    """
     recipe = ForeignKey(
         verbose_name='В каких рецептах',
         related_name='ingredient',
