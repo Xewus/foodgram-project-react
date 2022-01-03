@@ -10,7 +10,7 @@ from rest_framework.serializers import (ModelSerializer, SerializerMethodField,
 from rest_framework.settings import api_settings
 
 from .services import check_value_validate, set_amount_ingredients
-from ..tuns import MAX_LEN_CHARFIELD, MIN_USERNAME_LENGTH
+from .tuns import MAX_LEN_USERS_CHARFIELD, MIN_USERNAME_LENGTH
 
 User = get_user_model()
 
@@ -71,7 +71,7 @@ class UserSerializer(ModelSerializer):
         if len(username) < MIN_USERNAME_LENGTH:
             raise ValidationError(
                 'Длина username допустима от '
-                f'{MIN_USERNAME_LENGTH} до {MAX_LEN_CHARFIELD}'
+                f'{MIN_USERNAME_LENGTH} до {MAX_LEN_USERS_CHARFIELD}'
             )
         if not username.isalpha():
             raise ValidationError(

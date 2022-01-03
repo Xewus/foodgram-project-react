@@ -7,16 +7,16 @@ from rest_framework.serializers import ValidationError
 from rest_framework.status import (HTTP_201_CREATED, HTTP_204_NO_CONTENT,
                                    HTTP_400_BAD_REQUEST)
 
-from ..tuns import ADD_METHODS, DEL_METHODS
+from .tuns import ADD_METHODS, DEL_METHODS
 
 
-def add_del_obj(self, id, meneger, klass, serializer, request=None):
+def add_del_obj(self, obj_id, meneger, klass, serializer, request=None):
     '''
     This method adds objects "many-to-many".
     '''
-    obj = get_object_or_404(klass, id=id)
+    obj = get_object_or_404(klass, id=obj_id)
     serializer = serializer(obj, context={'request': request})
-    exist = meneger.filter(id=id).exists()
+    exist = meneger.filter(id=obj_id).exists()
 
     if (self.request.method in ADD_METHODS) and not exist:
         meneger.add(obj)
@@ -43,7 +43,7 @@ def set_amount_ingredients(recipe, ingredients):
 def check_value_validate(value, klass=None):
     '''
     Проверяет корректность переданного значения.
-    При необходимости, проверяет существует ли объект с переданным id
+    При необходимости, проверяет существует ли объект с переданным obj_id
     При нахождении объекта создаётся Queryset[],
     для дальнейшей работы возвращается первое (и единственное) значение.
     '''

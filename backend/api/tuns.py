@@ -4,11 +4,20 @@ ADD_METHODS = ('GET', 'POST',)
 # HTTP методы разрешённые для удаления объектов
 DEL_METHODS = ('DELETE',)
 
+# HTTP методы для @action разрешающие вход
+# в метод для удаления и добавления объетов
+ACTION_METHODS = [s.lower() for s in (ADD_METHODS + DEL_METHODS)]
+
 # HTTP методы разрешённые для изменения объектов
 UPDATE_METHODS = ('PUT', 'PATCH')
 
 # Символы, передаваемын в URL для активации фильтров поиска
-SYMBOL_FOR_SEARCH = ('1', 'true',)
+# с переданными значениями
+SYMBOL_TRUE_SEARCH = ('1', 'true',)
+
+# Символы, передаваемын в URL для активации фильтров поиска
+# исключающих переданные значения
+SYMBOL_FALSE_SEARCH = ('0', 'false',)
 
 # Максимальная длина строковых полей моделей в приложении "users"
 MAX_LEN_USERS_CHARFIELD = 150

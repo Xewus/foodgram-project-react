@@ -21,7 +21,7 @@ from .serializers import (AddDelSerializer, IngredientSerializer,
                           RecipeSerializer, TagSerializer, UserSerializer,
                           UserSubscribeSerializer)
 from .services import add_del_obj
-from ..tuns import ACTION_METHODS, SYMBOL_FALSE_SEARCH, SYMBOL_TRUE_SEARCH
+from .tuns import ACTION_METHODS, SYMBOL_FALSE_SEARCH, SYMBOL_TRUE_SEARCH
 
 User = get_user_model()
 
