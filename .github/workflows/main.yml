@@ -39,16 +39,18 @@ jobs:
         host: ${{ secrets.HOST_IP }}
         username: ${{ secrets.HOST_USER }}
         key: ${{ secrets.SSH_KEY }}
-        script: mkdir -p foodgram/dinfra
+        script: |
+          mkdir -p foodgram/dinfra
+          cp infra foodgram/infra
 
-    - name: Copy files
-      uses: garygrossgarten/github-action-scp@release
-      with:
-          local: /infra
-          remote: /home/${{ secrets.HOST_USER }}/foodgram
-          host: ${{ secrets.HOST_IP }}
-          username: ${{ secrets.HOST_USER }}
-          privateKey: ${{ secrets.SSH_KEY }}
+    # - name: Copy files
+    #   uses: garygrossgarten/github-action-scp@release
+    #   with:
+    #       local: /infra
+    #       remote: /home/${{ secrets.HOST_USER }}/foodgram
+    #       host: ${{ secrets.HOST_IP }}
+    #       username: ${{ secrets.HOST_USER }}
+    #       privateKey: ${{ secrets.SSH_KEY }}
 
 
   # build_push_to_DockerHub:
