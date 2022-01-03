@@ -1,11 +1,11 @@
+from api.tuns import (MAX_LEN_EMAIL_FIELD, MAX_LEN_USERS_CHARFIELD,
+                      MIN_USERNAME_LENGTH)
+
 from django.contrib.auth.models import AbstractUser
 from django.db.models import CharField, CheckConstraint, EmailField, Q
 from django.db.models.fields.related import ManyToManyField
 from django.db.models.functions import Length
 from django.utils.translation import gettext_lazy as _
-
-from api.tuns import (MAX_LEN_EMAIL_FIELD, MAX_LEN_USERS_CHARFIELD,
-                      MIN_USERNAME_LENGTH)
 
 CharField.register_lookup(Length)
 
