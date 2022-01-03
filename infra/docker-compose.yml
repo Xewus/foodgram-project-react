@@ -2,9 +2,7 @@ version: '3.3'
 services:
 
   frontend:
-    build:
-      context: ../frontend
-      dockerfile: Dockerfile
+    image: xewus/foodgram_front:latest
     volumes:
       - ../frontend/:/app/result_build/
 
@@ -16,7 +14,7 @@ services:
       - ../.env
 
   backend:
-    image: xewus/foodgram:latest
+    image: xewus/foodgram_back:latest
     volumes:
       - static_value:/app/static/
       - media_value:/app/media/
@@ -24,7 +22,6 @@ services:
       - db
     env_file:
       - ../.env
-
 
   nginx:
     image: nginx:1.19.3

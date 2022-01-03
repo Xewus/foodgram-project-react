@@ -52,7 +52,7 @@ jobs:
           privateKey: ${{ secrets.SSH_KEY }}
 
   build_push_backend_to_DockerHub:
-    name: Building docker image and pushing it to Docker Hub
+    name: Building back image and pushing it to Docker Hub
     runs-on: ubuntu-20.04
     needs: tests
     steps:
@@ -72,10 +72,10 @@ jobs:
       with:
         context: backend/
         push: true
-        tags: ${{ secrets.DOCKER_USER }}/foodgram:latest
+        tags: ${{ secrets.DOCKER_USER }}/foodgram_back:latest
 
   build_push_frontend_to_DockerHub:
-    name: Building docker image and pushing it to Docker Hub
+    name: Building front image and pushing it to Docker Hub
     runs-on: ubuntu-20.04
     needs: tests
     steps:
@@ -95,22 +95,22 @@ jobs:
       with:
         context: frontend/
         push: true
-        tags: ${{ secrets.DOCKER_USER }}/foodgram:latest
+        tags: ${{ secrets.DOCKER_USER }}/foodgram_front:latest
 
-  # deploy:
-  #   runs-on: ubuntu-20.04
-  #   needs: build_push_to_DockerHub
-  #   steps:
-  #   - name: remote ssh commands to deploy
-  #     uses: appleboy/ssh-action@master
-  #     with:
-  #       host: ${{ secrets.HOST_IP }}
-  #       username: ${{ secrets.HOST_USER }}
-  #       key: ${{ secrets.SSH_KEY }}
-  #       script: |
-  #         sudo docker pull ${{ secrets.DOCKER_USER }}/foodgram
-  #         sudo docker stop $(sudo docker ps -a -q)
-  #         sudo docker run --rm -d ${{ secrets.DOCKER_USER }}/foodgram
+  deploy:
+    runs-on: ubuntu-20.04
+    needs: build_push_to_DockerHub
+    steps:
+    - name: remote ssh commands to deploy
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST_IP }}
+        username: ${{ secrets.HOST_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        script: |
+          sudo docker pull ${{ secrets.DOCKER_USER }}/foodgram
+          sudo docker stop $(sudo docker ps -a -q)
+          sudo docker run --rm -d ${{ secrets.DOCKER_USER }}/foodgram
   
   # send_message:
     # runs-on: ubuntu-latest
