@@ -41,7 +41,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         script: |
           mkdir -p foodgram/dinfra
-          cp infra foodgram/infra
+          cp infra foodgram
 
     # - name: Copy files
     #   uses: garygrossgarten/github-action-scp@release
