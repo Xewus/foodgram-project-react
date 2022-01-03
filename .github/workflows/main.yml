@@ -34,11 +34,13 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Copy files
-      uses: canastro/copy-file-action@master
+      uses: garygrossgarten/github-action-scp@release
       with:
-        source: "infra/"
-        target: "/home/${{ secrets.HOST_USER }}/"
-
+          local: infra
+          remote: /home/ ${{ secrets.HOST_USER }}
+          host: ${{ secrets.HOST_IP }}
+          username: ${{ secrets.HOST_USER }}
+          privateKey: ${{ secrets.SSH_KEY }}
 
 
   # build_push_to_DockerHub:
