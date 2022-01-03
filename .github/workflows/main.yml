@@ -67,9 +67,10 @@ jobs:
         username: ${{ secrets.DOCKER_USER }}
         password: ${{ secrets.DOCKER_PASS }}
 
-    - name: Push to DockerHub
+    - name: Push "foodgram/backend" to DockerHub
       uses: docker/build-push-action@v2
       with:
+        context: backend/
         push: true
         tags: ${{ secrets.DOCKER_USER }}/foodgram:latest
 
