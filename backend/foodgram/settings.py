@@ -1,10 +1,14 @@
 from pathlib import Path
 
-from decouple import Csv, config
-
-DEBUG = config('DEBUG', default=True, cast=bool)
+from decouple import Csv, config, Config, RepositoryEnv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+DOTENV_FILE = BASE_DIR.parent / '.env'
+
+env_config = Config(RepositoryEnv(DOTENV_FILE))
+
+DEBUG = config('DEBUG', default=True, cast=bool)
 
 SECRET_KEY = config('SECRET_KEY', default='string_from_.env')
 

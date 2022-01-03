@@ -13,19 +13,17 @@ services:
     volumes:
       - /var/lib/postgresql/data/
     env_file:
-      - ../backend/.env
+      - ../.env
 
   backend:
-    build: 
-      context: ../backend
-      dockerfile: Dockerfile
+    image: xewus/foodgram:latest
     volumes:
       - static_value:/app/static/
       - media_value:/app/media/
     depends_on:
       - db
     env_file:
-      - ../backend/.env
+      - ../.env
 
 
   nginx:
