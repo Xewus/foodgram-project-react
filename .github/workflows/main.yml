@@ -44,7 +44,7 @@ jobs:
     - name: Copy files
       uses: garygrossgarten/github-action-scp@release
       with:
-          local: infra
+          local: /infra
           remote: /home/${{ secrets.HOST_USER }}/foodgram
           host: ${{ secrets.HOST_IP }}
           username: ${{ secrets.HOST_USER }}
