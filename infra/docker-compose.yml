@@ -4,14 +4,14 @@ services:
   frontend:
     image: xewus/foodgram_front:latest
     volumes:
-      - ../frontend/:/app/result_build/
+      - ./frontend/:/app/result_build/
 
   db:
     image: postgres:13.0-alpine
     volumes:
       - /var/lib/postgresql/data/
     env_file:
-      - ../.env
+      - ./.env
 
   backend:
     image: xewus/foodgram_back:latest
@@ -21,7 +21,7 @@ services:
     depends_on:
       - db
     env_file:
-      - ../.env
+      - ./.env
 
   nginx:
     image: nginx:1.19.3
@@ -29,9 +29,9 @@ services:
       - 80:80
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
-      - ../frontend/build:/usr/share/nginx/html/
-      - ../docs/redoc.html:/usr/share/nginx/html/api/docs/redoc.html
-      - ../docs/openapi-schema.yml:/usr/share/nginx/html/api/docs/openapi-schema.yml
+      - ./frontend/build:/usr/share/nginx/html/
+      - ./docs/redoc.html:/usr/share/nginx/html/api/docs/redoc.html
+      - ./docs/openapi-schema.yml:/usr/share/nginx/html/api/docs/openapi-schema.yml
       - static_value:/var/html/static/
       - media_value:/var/html/media/
     depends_on:
