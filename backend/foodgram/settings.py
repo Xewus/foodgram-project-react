@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from decouple import Csv, config, Config, RepositoryEnv
+from decouple import Config, Csv, RepositoryEnv, config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
