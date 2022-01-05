@@ -40,7 +40,7 @@ jobs:
         username: ${{ secrets.HOST_USER }}
         key: ${{ secrets.SSH_KEY }}
         script: |
-          mkdir -p foodgram/infra
+          mkdir -p foodgram/
 
     - name: Copy files
       uses: garygrossgarten/github-action-scp@release
@@ -114,7 +114,7 @@ jobs:
         script: |
           sudo docker pull ${{ secrets.DOCKER_USER }}/foodgram
           sudo docker stop $(sudo docker ps -a -q)
-          sudo docker run --rm -d ${{ secrets.DOCKER_USER }}/foodgram
+          sudo docker-compose up --rm -d ${{ secrets.DOCKER_USER }}/foodgram
   
   # send_message:
   #   runs-on: ubuntu-latest
