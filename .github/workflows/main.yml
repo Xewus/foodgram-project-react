@@ -112,8 +112,7 @@ jobs:
         username: ${{ secrets.HOST_USER }}
         key: ${{ secrets.SSH_KEY }}
         script: |
-          cd foodgram
-          sudo docker pull ${{ secrets.DOCKER_USER }}/foodgram
+          cd foodgram/
           sudo docker stop $(sudo docker ps -a -q)
           sudo docker-compose up --rm -d
   
