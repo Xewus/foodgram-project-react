@@ -112,9 +112,10 @@ jobs:
         username: ${{ secrets.HOST_USER }}
         key: ${{ secrets.SSH_KEY }}
         script: |
+          cd foodgram
           sudo docker pull ${{ secrets.DOCKER_USER }}/foodgram
           sudo docker stop $(sudo docker ps -a -q)
-          sudo docker-compose up --rm -d ${{ secrets.DOCKER_USER }}/foodgram
+          sudo docker-compose up --rm -d
   
   # send_message:
   #   runs-on: ubuntu-latest
