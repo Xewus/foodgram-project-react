@@ -1,24 +1,23 @@
 from pathlib import Path
+from os import environ, path
+from dotenv import load_dotenv
 
-from decouple import Config, Csv, RepositoryEnv, config
+load_dotenv()
+path.expanduser('~')
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DOTENV_FILE = BASE_DIR.parent / '.env'
+DEBUG = environ.get('DEBUG', default=True)
 
-env_config = Config(RepositoryEnv(DOTENV_FILE))
+SECRET_KEY = environ.get('SECRET_KEY', default='delete this default')
 
-DEBUG = config('DEBUG', default=True, cast=bool)
+ALLOWED_HOSTS = environ.get(
+    'ALLOWED_HOSTS', default='127.0.0.1, localhost'
+).split(', ')
 
-SECRET_KEY = config('SECRET_KEY', default='string_from_.env')
-
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*', cast=Csv())
-
-CSRF_TRUSTED_ORIGINS = config(
-    'CSRF_TRUSTED_ORIGINS',
-    default='http://localhost http://127.0.0.1',
-    cast=Csv()
-)
+CSRF_TRUSTED_ORIGINS = environ.get(
+    'CSRF_TRUSTED_ORIGINS', default='http://localhost, http://127.0.0.1'
+).split(', ')
 
 ROOT_URLCONF = 'foodgram.urls'
 
@@ -71,18 +70,18 @@ TEMPLATES = [
 
 DATABASES = {
     'default': {
-        'ENGINE': config(
+        'ENGINE': environ.get(
             'DB_ENGINE', default='django.db.backends.postgresql'),
-        'NAME': config(
+        'NAME': environ.get(
             'DB_NAME', default='postgres'),
-        'USER': config(
+        'USER': environ.get(
             'POSTGRES_USER', default='postgres'),
-        'PASSWORD': config(
+        'PASSWORD': environ.get(
             'POSTGRES_PASSWORD', default='password'),
-        'HOST': config(
+        'HOST': environ.get(
             'DB_HOST', default='db'),
-        'PORT': config(
-            'DB_PORT', default=5432, cast=int)
+        'PORT': environ.get(
+            'DB_PORT', default=5432)
     }
 }
 
