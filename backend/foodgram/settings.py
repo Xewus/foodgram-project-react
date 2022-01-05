@@ -1,5 +1,6 @@
-from pathlib import Path
 from os import environ, path
+from pathlib import Path
+
 from dotenv import load_dotenv
 
 load_dotenv()
