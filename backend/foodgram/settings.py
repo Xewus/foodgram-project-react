@@ -1,25 +1,22 @@
-from os import environ, path
 from pathlib import Path
 
-from dotenv import load_dotenv
+from decouple import Csv, config
 
-load_dotenv()
-path.expanduser('~')
+REVIEW = 1
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = environ.get('DEBUG', default=True)
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-SECRET_KEY = environ.get('SECRET_KEY', default='delete this default')
+SECRET_KEY = config('SECRET_KEY', default='string_from_.env')
 
-ALLOWED_HOSTS = environ.get(
-    'ALLOWED_HOSTS', default='127.0.0.1, localhost'
-).split(', ')
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*', cast=Csv())
 
-CSRF_TRUSTED_ORIGINS = environ.get(
-    'CSRF_TRUSTED_ORIGINS', default='http://localhost, http://127.0.0.1'
-).split(', ')
-
+CSRF_TRUSTED_ORIGINS = config(
+    'CSRF_TRUSTED_ORIGINS',
+    default='http://localhost http://127.0.0.1',
+    cast=Csv()
+)
 ROOT_URLCONF = 'foodgram.urls'
 
 WSGI_APPLICATION = 'foodgram.wsgi.application'
@@ -71,18 +68,18 @@ TEMPLATES = [
 
 DATABASES = {
     'default': {
-        'ENGINE': environ.get(
+        'ENGINE': config(
             'DB_ENGINE', default='django.db.backends.postgresql'),
-        'NAME': environ.get(
+        'NAME': config(
             'DB_NAME', default='postgres'),
-        'USER': environ.get(
+        'USER': config(
             'POSTGRES_USER', default='postgres'),
-        'PASSWORD': environ.get(
+        'PASSWORD': config(
             'POSTGRES_PASSWORD', default='password'),
-        'HOST': environ.get(
+        'HOST': config(
             'DB_HOST', default='db'),
-        'PORT': environ.get(
-            'DB_PORT', default=5432)
+        'PORT': config(
+            'DB_PORT', default=5432, cast=int)
     }
 }
 
@@ -141,10 +138,10 @@ MEDIA_ROOT = BASE_DIR / MEDIA_URL
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # for review
-# if DEBUG:
-#     DATABASES = {
-#         'default': {
-#             'ENGINE': 'django.db.backends.sqlite3',
-#             'NAME': str(BASE_DIR / 'db.sqlite3'),
-#         }
-#     }
+if REVIEW:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': str(BASE_DIR / 'db.sqlite3'),
+        }
+    }
