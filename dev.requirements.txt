@@ -3,6 +3,7 @@ django-filter==21.1
 djangorestframework==3.13.1
 djoser==2.1.0
 drf-extra-fields==3.2.1
+dotenv
 ipython
 isort
 gunicorn==20.1.0
