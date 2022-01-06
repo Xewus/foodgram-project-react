@@ -126,9 +126,11 @@ jobs:
           echo DB_HOST=${{ secrets.DB_HOST }} >> .env
           echo DB_PORT=${{ secrets.DB_PORT }} >> .env
 
-          sudo docker-compose down
-          sudo docker rmi {{ secrets.DOCKER_PASS }}/foodgram_back
+          sudo docker-compose stop
+          sudo docker rm foodgram_frontend_1
+          sudo docker rm foodgram_backend_1
           sudo docker rmi {{ secrets.DOCKER_PASS }}/foodgram_front
+          sudo docker rmi {{ secrets.DOCKER_PASS }}/foodgram_back
           sudo docker-compose up -d
   
   send_message:
