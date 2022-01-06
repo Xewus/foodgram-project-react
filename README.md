@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-BSD_2--Clause-orange.svg)](https://opensource.org/licenses/BSD-2-Clause)
 
-![example workflow](https://github.com/xewus/Foodgram/actions/workflows/yamdb_workflow.yml/badge.svg)
+![workflow](https://github.com/Xewus/Foodgram/actions/workflows/main.yml/badge.svg)
 
 -Diploma work for Yandex-\
 -Frontend provided by the customer-\
@@ -56,11 +56,11 @@ git@github.com:Xewus/foodgram-project-react.git
 
 - Create project directory on your server
 ```
-mkdir foodgram
+mkdir foodgram && cd foodgram/
 ```
 - Copy files from 'infra/'  there:
 ```
-scp *infra/ <server user>@<server address>:/home/<server user>/foodgram/
+scp infra/* <server user>@<server address>:/home/<server user>/foodgram/
 ```
 - Create env-file:
 ```
@@ -81,7 +81,10 @@ DB_PORT=5432
 ```
 - Run docker-compose
 ```
-sudo docker-compose up
+sudo docker-compose up -d
 ```
+Wait a few seconds...
+Your service is work!
+![Иллюстрация к проекту](https://github.com/Xewus/Foodgram/raw/master/image_path/image.png)
 
 # Enjoy your meal !
