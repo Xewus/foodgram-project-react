@@ -85,6 +85,6 @@ sudo docker-compose up -d
 ```
 Wait a few seconds...
 Your service is work!
-![Иллюстрация к проекту](https://github.com/Xewus/Foodgram/raw/master/image_path/image.png)
+![Иллюстрация к проекту](https://github.com/Xewus/Foodgram/blob/master/screen.png)
 
 # Enjoy your meal !
