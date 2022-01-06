@@ -5,14 +5,15 @@
 ![workflow](https://github.com/Xewus/Foodgram/actions/workflows/main.yml/badge.svg)
 
 -Diploma work for Yandex-\
--Frontend provided by the customer-\
+-Frontend provided by the customer-
 
 http://my-ya.ml
 
 Информация для ревью (впоследствии будет удалена):
 
 ```
-Для docker-compose необходим */backend/.env, если пустой, то будет использована прилагаемая БД со следующими данными:
+Для docker-compose необходим *//foodgram-project-react/.env,
+если пустой, то будет использована прилагаемая БД со следующими данными:
 ```
 ```
 superuser: q@q.qq
@@ -54,7 +55,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 git@github.com:Xewus/foodgram-project-react.git
 ```
 
-- Create project directory on your server
+- Create project directory on your server (preferably in your home directory)
 ```
 mkdir foodgram && cd foodgram/
 ```
