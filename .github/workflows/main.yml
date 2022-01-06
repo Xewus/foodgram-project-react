@@ -127,7 +127,8 @@ jobs:
           echo DB_PORT=${{ secrets.DB_PORT }} >> .env
 
           sudo docker-compose down
-          sudo docker rmi $(sudo docker images -a -q)
+          sudo docker rmi {{ secrets.DOCKER_PASS }}/foodgram_back
+          sudo docker rmi {{ secrets.DOCKER_PASS }}/foodgram_front
           sudo docker-compose up -d
   
   # send_message:
