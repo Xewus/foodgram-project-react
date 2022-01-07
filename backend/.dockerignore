@@ -1,2 +1,3 @@
-!fixtures/
+!*data
+!*data/
 *db.sqlite3
