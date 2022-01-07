@@ -4,39 +4,38 @@
 
 ![workflow](https://github.com/Xewus/Foodgram/actions/workflows/main.yml/badge.svg)
 
--Diploma work for Yandex-\
--Frontend provided by the customer-
+#### *Diploma work for Yandex*
 
-http://my-ya.ml
-
-Информация для ревью (впоследствии будет удалена):
-
-```
-Для docker-compose необходим *//foodgram-project-react/.env,
-если пустой, то будет использована прилагаемая БД со следующими данными:
-```
-```
-superuser: q@q.qq
-```
-```
-password: q
-```
-```
-Пароль остальных пользователей: aqswdefr
-```
-
-Here you can share recipes of dishes, add them to favorites and display a shopping list for cooking your favorite dishes.
-To preserve order - only administrators are allowed to create tags and ingredients.
-
-
-Tecnhologies:
+## Tecnhologies:
 - Python 3.10
 - Django 4.0
 - Django REST
 - Nginx
 - Docker
 
-To deploy this project need next actions:
+http://foodgramm.ml
+
+## Информация для ревью (впоследствии будет удалена):
+
+### Для docker-compose и settings.py необходим */foodgram-project-react/.env,
+### Eсли пустой, то будет использована прилагаемая БД со следующими данными:
+- superuser
+```
+ q@q.qq
+```
+- password
+```
+q
+```
+Пароль остальных пользователей
+```
+aqswdefr
+```
+
+Here you can share recipes of dishes, add them to favorites and display a shopping list for cooking your favorite dishes.
+To preserve order - only administrators are allowed to create tags and ingredients.
+
+### To deploy this project need the next actions:
 
 - Install Docker on your server
 ```
@@ -88,4 +87,9 @@ Wait a few seconds...
 Your service is work!
 ![Иллюстрация к проекту](https://github.com/Xewus/Foodgram/blob/master/screen.png)
 
-# Enjoy your meal !
+## Enjoy your meal !
+
+### *Backend by:*
+https://github.com/Xewus
+### *Frontend & docs by:*
+https://github.com/yandex-praktikum/foodgram-project-react

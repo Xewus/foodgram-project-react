@@ -2,6 +2,7 @@ from pathlib import Path
 
 from decouple import Csv, config
 
+# Eсли true то будет использована прилагаемая база SQLite c записанными данными
 REVIEW = 0
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,8 +21,6 @@ CSRF_TRUSTED_ORIGINS = config(
 ROOT_URLCONF = 'foodgram.urls'
 
 WSGI_APPLICATION = 'foodgram.wsgi.application'
-
-AUTH_USER_MODEL = 'users.MyUser'
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -83,6 +82,8 @@ DATABASES = {
     }
 }
 
+AUTH_USER_MODEL = 'users.MyUser'
+
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME':
      'django.contrib.auth.password_validation.UserAttributeSimilarityValidator', },
@@ -136,6 +137,12 @@ MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / MEDIA_URL
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+TIME_FORMAT = 'H:I'
+SHORT_DATE_FORMAT = 'j/E/Y'
+SHORT_DATETIME_FORMAT = f'{TIME_FORMAT} {SHORT_DATE_FORMAT}'
+
+PASSWORD_RESET_TIMEOUT = 60 * 60
 
 # for review
 if REVIEW:
