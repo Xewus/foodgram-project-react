@@ -66,7 +66,6 @@ class Ingredient(Model):
     name = CharField(
         verbose_name='Ингридиент',
         max_length=MAX_LEN_RECIPES_CHARFIELD,
-        unique=True,
     )
     measurement_unit = CharField(
         verbose_name='Единицы измерения',
@@ -78,6 +77,10 @@ class Ingredient(Model):
         verbose_name_plural = 'Ингридиенты'
         ordering = ('name', )
         constraints = (
+            UniqueConstraint(
+                fields=('name', 'measurement_unit'),
+                name='unique_for_ingredient'
+            ),
             CheckConstraint(
                 check=Q(name__length__gt=0),
                 name='\n%(app_label)s_%(class)s_name is empty\n',

@@ -3,7 +3,7 @@ from pathlib import Path
 from decouple import Csv, config
 
 # Eсли true то будет использована прилагаемая база SQLite c записанными данными
-REVIEW = 0
+REVIEW = 1
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
