@@ -136,3 +136,4 @@ dmypy.json
 
 static/
 media/
+rewrite_data.py
