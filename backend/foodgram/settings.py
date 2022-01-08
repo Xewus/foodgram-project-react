@@ -3,11 +3,11 @@ from pathlib import Path
 from decouple import Csv, config
 
 # Eсли true то будет использована прилагаемая база SQLite c записанными данными
-REVIEW = 1
+REVIEW = 0
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = 1 #config('DEBUG', default=False, cast=bool)
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 SECRET_KEY = config('SECRET_KEY', default='string_from_.env')
 
