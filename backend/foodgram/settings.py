@@ -7,7 +7,7 @@ REVIEW = 1
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = 1 #config('DEBUG', default=False, cast=bool)
 
 SECRET_KEY = config('SECRET_KEY', default='string_from_.env')
 
@@ -101,21 +101,16 @@ REST_FRAMEWORK = {
 
     'DEFAULT_PERMISSION_CLASSES':
     ['rest_framework.permissions.IsAuthenticatedOrReadOnly', ],
-
-    'DEFAULT_PAGINATION_CLASS':
-    'rest_framework.pagination.PageNumberPagination',
-
-    'PAGE_SIZE': 6
 }
 
 DJOSER = {
     'LOGIN_FIELD': 'email',
     'HIDE_USERS': False,
     'PERMISSIONS': {
-        'resipe': ('rest_framework.permissions.AllowAny',),
-        'recipe_list': ('rest_framework.permissions.AllowAny',),
-        'user': ('rest_framework.permissions.AllowAny',),
-        'user_list': ('rest_framework.permissions.AllowAny',),
+        'resipe': ('api.permissions.AuthorStaffOrReadOnly,',),
+        'recipe_list': ('api.permissions.AuthorStaffOrReadOnly',),
+        'user': ('api.permissions.OwnerUserOrReadOnly',),
+        'user_list': ('api.permissions.OwnerUserOrReadOnly',),
     },
     'SERIALIZERS': {
         'user': 'api.serializers.UserSerializer',

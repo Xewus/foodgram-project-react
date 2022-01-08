@@ -34,7 +34,6 @@ class UserViewSet(DjoserUserViewSet):
     возможность подписаться на автора рецепта.
     """
     queryset = User.objects.all()
-    serializer_class = UserSerializer
     pagination_class = PageLimitPagination
 
     @action(methods=t.ACTION_METHODS, detail=True)
@@ -78,7 +77,6 @@ class TagViewSet(ReadOnlyModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     permission_classes = (AdminOrReadOnly,)
-    pagination_class = None
 
 
 class IngredientViewSet(ReadOnlyModelViewSet):
@@ -88,7 +86,6 @@ class IngredientViewSet(ReadOnlyModelViewSet):
     """
     serializer_class = IngredientSerializer
     permission_classes = (AdminOrReadOnly,)
-    pagination_class = None
 
     def get_queryset(self):
         queryset = Ingredient.objects.all()
