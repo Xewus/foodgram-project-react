@@ -19,7 +19,7 @@ from . import tuns as t
 from .paginators import PageLimitPagination
 from .permissions import AdminOrReadOnly, AuthorStaffOrReadOnly
 from .serializers import (AddDelSerializer, IngredientSerializer,
-                          RecipeSerializer, TagSerializer, UserSerializer,
+                          RecipeSerializer, TagSerializer,
                           UserSubscribeSerializer)
 from .services import add_del_obj
 
