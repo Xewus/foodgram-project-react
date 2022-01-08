@@ -7,7 +7,7 @@ REVIEW = 1
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = 1 #config('DEBUG', default=False, cast=bool)
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 SECRET_KEY = config('SECRET_KEY', default='string_from_.env')
 
