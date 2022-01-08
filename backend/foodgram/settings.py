@@ -7,7 +7,7 @@ REVIEW = 1
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = 1 #config('DEBUG', default=False, cast=bool)
 
 SECRET_KEY = config('SECRET_KEY', default='string_from_.env')
 
@@ -96,11 +96,11 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES':
-    ['rest_framework.permissions.IsAuthenticatedOrReadOnly', ],
-
     'DEFAULT_AUTHENTICATION_CLASSES':
     ['rest_framework.authentication.TokenAuthentication', ],
+
+    'DEFAULT_PERMISSION_CLASSES':
+    ['rest_framework.permissions.IsAuthenticatedOrReadOnly', ],
 
     'DEFAULT_PAGINATION_CLASS':
     'rest_framework.pagination.PageNumberPagination',

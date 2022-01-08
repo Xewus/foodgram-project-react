@@ -1,4 +1,5 @@
 from datetime import datetime as dt
+from urllib.parse import unquote
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -10,18 +11,17 @@ from djoser.views import UserViewSet as DjoserUserViewSet
 from recipes.models import AmountIngredient, Ingredient, Recipe, Tag
 
 from rest_framework.decorators import action
-from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
+from . import tuns as t
 from .paginators import PageLimitPagination
 from .permissions import AdminOrReadOnly, AuthorStaffOrReadOnly
 from .serializers import (AddDelSerializer, IngredientSerializer,
                           RecipeSerializer, TagSerializer, UserSerializer,
                           UserSubscribeSerializer)
 from .services import add_del_obj
-from .tuns import ACTION_METHODS, SYMBOL_FALSE_SEARCH, SYMBOL_TRUE_SEARCH
 
 User = get_user_model()
 
@@ -37,7 +37,7 @@ class UserViewSet(DjoserUserViewSet):
     serializer_class = UserSerializer
     pagination_class = PageLimitPagination
 
-    @action(methods=ACTION_METHODS, detail=True)
+    @action(methods=t.ACTION_METHODS, detail=True)
     def subscribe(self, request, id,):
         """
         Создаёт либо удалет объект связи между запрашивающим
@@ -86,12 +86,22 @@ class IngredientViewSet(ReadOnlyModelViewSet):
     ViewSet для работы с игридиентами.
     Изменение и создание объектов разрешено только админам.
     """
-    queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     permission_classes = (AdminOrReadOnly,)
     pagination_class = None
-    filter_backends = (SearchFilter, )
-    search_fields = ('^name', )
+
+    def get_queryset(self):
+        queryset = Ingredient.objects.all()
+        name = self.request.query_params.get(t.SEARCH_ING_NAME)
+        if name:
+            name = unquote(name)
+            stw_queryset = list(queryset.filter(name__startswith=name))
+            cnt_queryset = queryset.filter(name__contains=name)
+            stw_queryset.extend(
+                [i for i in cnt_queryset if i not in stw_queryset]
+            )
+            queryset = stw_queryset
+        return queryset
 
 
 class RecipeViewSet(ModelViewSet):
@@ -108,15 +118,15 @@ class RecipeViewSet(ModelViewSet):
     pagination_class = PageLimitPagination
 
     def get_queryset(self):
-        queryset = Recipe.objects.all().select_related('author')
+        queryset = Recipe.objects.all().select_related(t.AUTHOR)
         user = self.request.user
 
-        tags = self.request.query_params.getlist('tags')
+        tags = self.request.query_params.getlist(t.TAGS)
         if tags:
             queryset = queryset.filter(
                 tags__slug__in=tags).distinct()
 
-        author = self.request.query_params.get('author')
+        author = self.request.query_params.get(t.AUTHOR)
         if author:
             queryset = queryset.filter(author=author)
 
@@ -124,21 +134,21 @@ class RecipeViewSet(ModelViewSet):
         if user.is_anonymous:
             return queryset
 
-        is_in_shopping = self.request.query_params.get('is_in_shopping_cart')
-        if is_in_shopping in SYMBOL_TRUE_SEARCH:
+        is_in_shopping = self.request.query_params.get(t.SHOP_CART)
+        if is_in_shopping in t.SYMBOL_TRUE_SEARCH:
             queryset = queryset.filter(cart=user.id)
-        elif is_in_shopping in SYMBOL_FALSE_SEARCH:
+        elif is_in_shopping in t.SYMBOL_FALSE_SEARCH:
             queryset = queryset.exclude(cart=user.id)
 
-        is_favorited = self.request.query_params.get('is_favorited')
-        if is_favorited in SYMBOL_TRUE_SEARCH:
+        is_favorited = self.request.query_params.get(t.FAVORITE)
+        if is_favorited in t.SYMBOL_TRUE_SEARCH:
             queryset = queryset.filter(favorite=user.id)
-        if is_favorited in SYMBOL_FALSE_SEARCH:
+        if is_favorited in t.SYMBOL_FALSE_SEARCH:
             queryset = queryset.exclude(favorite=user.id)
 
         return queryset
 
-    @action(methods=ACTION_METHODS, detail=True)
+    @action(methods=t.ACTION_METHODS, detail=True)
     def favorite(self, request, pk):
         """
         Добавляет либо удалет рецепт в "избранное".
@@ -149,7 +159,7 @@ class RecipeViewSet(ModelViewSet):
             return Response(status=HTTP_401_UNAUTHORIZED)
         return add_del_obj(self, pk, user.favorites, Recipe, AddDelSerializer)
 
-    @action(methods=ACTION_METHODS, detail=True)
+    @action(methods=t.ACTION_METHODS, detail=True)
     def shopping_cart(self, request, pk):
         """
         Добавляет либо удалет рецепт в "список покупок".
@@ -187,6 +197,9 @@ class RecipeViewSet(ModelViewSet):
                 file.write(
                     f"{ing['ingredient']}: {ing['amount']} {ing['measure']}\n"
                 )
+            file.write(
+                '\nПосчитано в Foodgram.ml\n'
+            )
 
         shopping_list = open(filepath, 'r')
         response = HttpResponse(shopping_list, content_type='text.txt')
