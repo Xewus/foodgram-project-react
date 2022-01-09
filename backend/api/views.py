@@ -21,7 +21,7 @@ from .permissions import AdminOrReadOnly, AuthorStaffOrReadOnly
 from .serializers import (AddDelSerializer, IngredientSerializer,
                           RecipeSerializer, TagSerializer,
                           UserSubscribeSerializer)
-from .services import add_del_obj
+from .services import add_del_obj, incorrect_layout
 
 User = get_user_model()
 
@@ -55,7 +55,7 @@ class UserViewSet(DjoserUserViewSet):
     def subscriptions(self, request):
         """
         Выводит список пользоваетелей
-        на каторых подписан запрашивающй пользователь
+        на которых подписан запрашивающй пользователь
         Вызов метода через url: */user/<int:id>/subscribtions/.
         """
         user = self.request.user
@@ -83,6 +83,10 @@ class IngredientViewSet(ReadOnlyModelViewSet):
     """
     ViewSet для работы с игридиентами.
     Изменение и создание объектов разрешено только админам.
+    Реализован поиск объектов по совпадение в начале назавния,
+    также добавляются результаты по совпадению в середине.
+    При наборе названия в неправильной раскладке - латинские символы
+    преобразуются в кириллицу (для стандартной раскладки).
     """
     serializer_class = IngredientSerializer
     permission_classes = (AdminOrReadOnly,)
@@ -91,7 +95,10 @@ class IngredientViewSet(ReadOnlyModelViewSet):
         queryset = Ingredient.objects.all()
         name = self.request.query_params.get(t.SEARCH_ING_NAME)
         if name:
-            name = unquote(name)
+            if name[0] =='%':
+                name = unquote(name)
+            else:
+                name = name.translate(incorrect_layout)
             stw_queryset = list(queryset.filter(name__startswith=name))
             cnt_queryset = queryset.filter(name__contains=name)
             stw_queryset.extend(

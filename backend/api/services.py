@@ -1,3 +1,5 @@
+from string import hexdigits as hex
+
 from django.shortcuts import get_object_or_404
 
 from recipes.models import AmountIngredient
@@ -47,7 +49,7 @@ def check_value_validate(value, klass=None):
     При нахождении объекта создаётся Queryset[],
     для дальнейшей работы возвращается первое (и единственное) значение.
     """
-    if not str(value).isdigit():
+    if not str(value).isdecimal():
         raise ValidationError(
             f'{value} должно содержать цифру'
         )
@@ -58,3 +60,22 @@ def check_value_validate(value, klass=None):
                 f'{value} не существует'
             )
         return obj[0]
+
+
+def is_hex_color(value):
+    """
+    Проверяет - может ли значение быть шестнадцатеричным цветом.
+    """
+    if len(value) not in (3, 6):
+        raise ValidationError(
+            f'{value} не правильной длины для цвета({len(value)}).'
+        )
+    if not set(value).issubset(hex):
+        raise ValidationError(
+            f'{value} не шестнадцатиричное.'
+        )
+
+incorrect_layout = str.maketrans(
+    "qwertyuiop[]asdfghjkl;'zxcvbnm,./",
+    "йцукенгшщзхъфывапролджЭячсмитьбю."
+)
