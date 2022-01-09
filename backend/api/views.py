@@ -95,7 +95,7 @@ class IngredientViewSet(ReadOnlyModelViewSet):
         queryset = Ingredient.objects.all()
         name = self.request.query_params.get(t.SEARCH_ING_NAME)
         if name:
-            if name[0] =='%':
+            if name[0] == '%':
                 name = unquote(name)
             else:
                 name = name.translate(incorrect_layout)

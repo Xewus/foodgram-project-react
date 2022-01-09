@@ -1,4 +1,4 @@
-from string import hexdigits as hex
+from string import hexdigits
 
 from django.shortcuts import get_object_or_404
 
@@ -70,12 +70,13 @@ def is_hex_color(value):
         raise ValidationError(
             f'{value} не правильной длины для цвета({len(value)}).'
         )
-    if not set(value).issubset(hex):
+    if not set(value).issubset(hexdigits):
         raise ValidationError(
             f'{value} не шестнадцатиричное.'
         )
 
+
 incorrect_layout = str.maketrans(
-    "qwertyuiop[]asdfghjkl;'zxcvbnm,./",
-    "йцукенгшщзхъфывапролджЭячсмитьбю."
+    'qwertyuiop[]asdfghjkl;\'zxcvbnm,./',
+    'йцукенгшщзхъфывапролджЭячсмитьбю.'
 )

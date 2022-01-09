@@ -9,7 +9,8 @@ from rest_framework.serializers import (ModelSerializer, SerializerMethodField,
                                         ValidationError)
 from rest_framework.settings import api_settings
 
-from .services import check_value_validate, is_hex_color, set_amount_ingredients
+from .services import (check_value_validate, is_hex_color,
+                       set_amount_ingredients)
 from .tuns import MAX_LEN_USERS_CHARFIELD, MIN_USERNAME_LENGTH
 
 User = get_user_model()
@@ -136,7 +137,7 @@ class TagSerializer(ModelSerializer):
         model = Tag
         fields = ('id', 'name', 'color', 'slug', )
         read_only_fields = '__all__',
-    
+
     def validate_color(self, color):
         """
         Проверяет и нормализует код цвета
