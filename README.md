@@ -13,25 +13,8 @@
 - Nginx
 - Docker
 
-http://foodgramm.ml
+## http://foodgramm.ml
 
-## Информация для ревью (впоследствии будет удалена):
-
-### Так как workflow пишет образ из этого кода, то для запуска локального сервера 
-### необходим файл */Foodgram/.env либо в */Foodgram/backend/foodgram/settings.py
-### изменить 'REVIEW=True', тогда будет использована прилагаемая БД со следующими данными:
-- superuser
-```
- q@q.qq
-```
-- password
-```
-q
-```
-Пароль остальных пользователей
-```
-aqswdefr
-```
 
 Here you can share recipes of dishes, add them to favorites and display a shopping list for cooking your favorite dishes.
 To preserve order - only administrators are allowed to create tags and ingredients.
