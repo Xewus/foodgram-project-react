@@ -5,9 +5,9 @@ from decouple import Csv, config
 # Eсли true то будет использована прилагаемая база SQLite c записанными данными
 REVIEW = 0
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-
 DEBUG = config('DEBUG', default=False, cast=bool)
+
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY', default='string_from_.env')
 

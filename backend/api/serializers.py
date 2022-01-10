@@ -112,12 +112,14 @@ class UserSubscribeSerializer(UserSerializer):
 
     def get_recipes(self, obj):
         """
-        Рецепты каждого автора с запрошенным лимитом.
+        Рецепты каждого автора (obj) с запрошенным лимитом.
         """
         lim = str(
             self.context['request'].query_params.get('recipes_limit')
         )
-        if not lim or not lim.isdecimal():
+        if lim and lim.isdecimal():
+            lim = int(lim)
+        else:
             lim = api_settings.PAGE_SIZE
 
         return obj.recipes.values('id', 'name', 'image', 'cooking_time')[:lim]
