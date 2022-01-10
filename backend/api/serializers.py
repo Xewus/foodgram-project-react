@@ -1,7 +1,9 @@
+from django.conf import global_settings
 from django.contrib.auth import get_user_model
 from django.db.models import F
 
 from drf_extra_fields.fields import Base64ImageField
+from foodgram.settings import MEDIA_URL
 
 from recipes.models import Ingredient, Recipe, Tag
 
@@ -12,6 +14,8 @@ from rest_framework.settings import api_settings
 from .services import (check_value_validate, is_hex_color,
                        set_amount_ingredients)
 from .tuns import MAX_LEN_USERS_CHARFIELD, MIN_USERNAME_LENGTH
+
+MEDIA = global_settings.MEDIA_URL
 
 User = get_user_model()
 
@@ -126,7 +130,7 @@ class UserSubscribeSerializer(UserSerializer):
             'id', 'name', 'image', 'cooking_time'
         )[:lim]
         for recipe in recipes:
-            recipe['image'] = 'media/' + recipe['image']
+            recipe['image'] = MEDIA + recipe['image']
         return recipes
 
     def get_recipes_count(self, obj):
