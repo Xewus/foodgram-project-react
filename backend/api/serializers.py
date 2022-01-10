@@ -3,7 +3,6 @@ from django.contrib.auth import get_user_model
 from django.db.models import F
 
 from drf_extra_fields.fields import Base64ImageField
-from foodgram.settings import MEDIA_URL
 
 from recipes.models import Ingredient, Recipe, Tag
 
