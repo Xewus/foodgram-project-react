@@ -14,7 +14,7 @@ from .services import (check_value_validate, is_hex_color,
                        set_amount_ingredients)
 from .tuns import MAX_LEN_USERS_CHARFIELD, MIN_USERNAME_LENGTH
 
-MEDIA = global_settings.MEDIA_URL
+MEDIA = str(global_settings.MEDIA_URL)
 
 User = get_user_model()
 
@@ -129,7 +129,7 @@ class UserSubscribeSerializer(UserSerializer):
             'id', 'name', 'image', 'cooking_time'
         )[:lim]
         for recipe in recipes:
-            recipe['image'] = MEDIA + recipe['image']
+            recipe['image'] = 'media/' + recipe['image']
         return recipes
 
     def get_recipes_count(self, obj):
