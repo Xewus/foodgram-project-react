@@ -122,7 +122,9 @@ class UserSubscribeSerializer(UserSerializer):
         else:
             lim = api_settings.PAGE_SIZE
 
-        recipes = obj.recipes.values('id', 'name', 'image', 'cooking_time')[:lim]
+        recipes = obj.recipes.values(
+            'id', 'name', 'image', 'cooking_time'
+        )[:lim]
         for recipe in recipes:
             recipe['image'] = 'media/' + recipe['image']
         return recipes
