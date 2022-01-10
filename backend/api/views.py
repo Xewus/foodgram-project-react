@@ -83,15 +83,19 @@ class IngredientViewSet(ReadOnlyModelViewSet):
     """
     ViewSet для работы с игридиентами.
     Изменение и создание объектов разрешено только админам.
-    Реализован поиск объектов по совпадение в начале назавния,
-    также добавляются результаты по совпадению в середине.
-    При наборе названия в неправильной раскладке - латинские символы
-    преобразуются в кириллицу (для стандартной раскладки).
     """
     serializer_class = IngredientSerializer
     permission_classes = (AdminOrReadOnly,)
 
     def get_queryset(self):
+        """
+        Реализован поиск объектов по совпадение в начале назавния,
+        также добавляются результаты по совпадению в середине.
+        При наборе названия в неправильной раскладке - латинские символы
+        преобразуются в кириллицу (для стандартной раскладки).
+        Также прописные буквы преобразуются в строчные,
+        так как все ингридиенты в базе записаны в нижнем регистре.
+        """
         queryset = Ingredient.objects.all()
         name = self.request.query_params.get(t.SEARCH_ING_NAME)
         if name:
@@ -99,6 +103,7 @@ class IngredientViewSet(ReadOnlyModelViewSet):
                 name = unquote(name)
             else:
                 name = name.translate(incorrect_layout)
+            name = name.lower()
             stw_queryset = list(queryset.filter(name__startswith=name))
             cnt_queryset = queryset.filter(name__contains=name)
             stw_queryset.extend(
