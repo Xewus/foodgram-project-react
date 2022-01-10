@@ -117,7 +117,7 @@ class UserSubscribeSerializer(UserSerializer):
         lim = str(
             self.context['request'].query_params.get('recipes_limit')
         )
-        if not lim or not lim.is_decimal():
+        if not lim or not lim.isdecimal():
             lim = api_settings.PAGE_SIZE
 
         return obj.recipes.values('id', 'name', 'image', 'cooking_time')[:lim]
