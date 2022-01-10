@@ -117,9 +117,9 @@ class UserSubscribeSerializer(UserSerializer):
         lim = (
             self.context['request'].query_params.get('recipes_limit')
         )
-        if not lim:
+        if  not lim:
             lim = api_settings.PAGE_SIZE
-        lim = int(lim)
+        
         return obj.recipes.values('id', 'name', 'image', 'cooking_time')[:lim]
 
     def get_recipes_count(self, obj):
