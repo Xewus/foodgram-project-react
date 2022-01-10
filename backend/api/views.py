@@ -139,9 +139,9 @@ class RecipeViewSet(ModelViewSet):
         if author:
             queryset = queryset.filter(author=author)
 
-        # Следующие фильтры только для авторизованного пользователя
-        if user.is_anonymous:
-            return queryset
+        # # Следующие фильтры только для авторизованного пользователя
+        # if user.is_anonymous:
+        #     return queryset
 
         is_in_shopping = self.request.query_params.get(t.SHOP_CART)
         if is_in_shopping in t.SYMBOL_TRUE_SEARCH:
