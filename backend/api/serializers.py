@@ -119,7 +119,7 @@ class UserSubscribeSerializer(UserSerializer):
         )
         if not lim or not lim.is_decimal():
             lim = api_settings.PAGE_SIZE
-        
+
         return obj.recipes.values('id', 'name', 'image', 'cooking_time')[:lim]
 
     def get_recipes_count(self, obj):
