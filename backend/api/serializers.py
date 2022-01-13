@@ -8,7 +8,6 @@ from recipes.models import Ingredient, Recipe, Tag
 
 from rest_framework.serializers import (ModelSerializer, SerializerMethodField,
                                         ValidationError)
-from rest_framework.settings import api_settings
 
 from .services import (check_value_validate, is_hex_color,
                        set_amount_ingredients)
@@ -17,6 +16,17 @@ from .tuns import MAX_LEN_USERS_CHARFIELD, MIN_USERNAME_LENGTH
 MEDIA = str(global_settings.MEDIA_URL)
 
 User = get_user_model()
+
+
+class ShortRecipeSerializer(ModelSerializer):
+    """
+    Сериализатор для модели Recipe
+    с укороченным набором полей для некоторых эндпоинтов.
+    """
+    class Meta:
+        model = Recipe
+        fields = ('id', 'name', 'image', 'cooking_time',)
+        read_only_fields = '__all__',
 
 
 class UserSerializer(ModelSerializer):
@@ -90,7 +100,7 @@ class UserSubscribeSerializer(UserSerializer):
     Метод "get_is_subscribed" переопределён, для уменьшения нагрузки,
     так как при вычислениях всё равно будет возвращать True.
     """
-    recipes = SerializerMethodField()
+    recipes = ShortRecipeSerializer(many=True, read_only=True)
     recipes_count = SerializerMethodField()
 
     class Meta:
@@ -112,25 +122,6 @@ class UserSubscribeSerializer(UserSerializer):
         Cтранное поле по запросу фронтенда.
         """
         return True
-
-    def get_recipes(self, obj):
-        """
-        Рецепты каждого автора (obj) с запрошенным лимитом.
-        """
-        lim = str(
-            self.context['request'].query_params.get('recipes_limit')
-        )
-        if lim and lim.isdecimal():
-            lim = int(lim)
-        else:
-            lim = api_settings.PAGE_SIZE
-
-        recipes = obj.recipes.values(
-            'id', 'name', 'image', 'cooking_time'
-        )[:lim]
-        for recipe in recipes:
-            recipe['image'] = 'media/' + recipe['image']
-        return recipes
 
     def get_recipes_count(self, obj):
         """
@@ -288,14 +279,3 @@ class RecipeSerializer(ModelSerializer):
         instance.tags.set(tags)
         set_amount_ingredients(instance, ingredients)
         return instance
-
-
-class AddDelSerializer(ModelSerializer):
-    """
-    Сериализатор для добавления и удаления объектов
-    по запросу с определённым URL.
-    """
-    class Meta:
-        model = Recipe
-        fields = ('id', 'name', 'image', 'cooking_time',)
-        read_only_fields = '__all__',
