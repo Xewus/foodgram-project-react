@@ -25,7 +25,7 @@ class ShortRecipeSerializer(ModelSerializer):
     """
     class Meta:
         model = Recipe
-        fields = ('id', 'name', 'image', 'cooking_time',)
+        fields = 'id', 'name', 'image', 'cooking_time'
         read_only_fields = '__all__',
 
 
@@ -41,15 +41,7 @@ class UserSerializer(ModelSerializer):
 
     class Meta:
         model = User
-        fields = (
-            'email',
-            'id',
-            'username',
-            'first_name',
-            'last_name',
-            'is_subscribed',
-            'password',
-        )
+        fields = '__all__', 'is_subscribed', 'password'
         extra_kwargs = {'password': {'write_only': True}}
         read_only_fields = ('is_subscribed', )
 
@@ -106,12 +98,7 @@ class UserSubscribeSerializer(UserSerializer):
     class Meta:
         model = User
         fields = (
-            'email',
-            'id',
-            'username',
-            'first_name',
-            'last_name',
-            'is_subscribed',
+            '__all__',
             'recipes',
             'recipes_count',
         )
@@ -136,7 +123,7 @@ class TagSerializer(ModelSerializer):
     """
     class Meta:
         model = Tag
-        fields = ('id', 'name', 'color', 'slug', )
+        fields = '__all__',
         read_only_fields = '__all__',
 
     def validate_color(self, color):
@@ -154,9 +141,7 @@ class IngredientSerializer(ModelSerializer):
     """
     class Meta:
         model = Ingredient
-        fields = (
-            'id', 'name', 'measurement_unit',
-        )
+        fields = '__all__',
         read_only_fields = '__all__',
 
 
