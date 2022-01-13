@@ -3,9 +3,9 @@ from pathlib import Path
 from decouple import Csv, config
 
 # Eсли true то будет использована прилагаемая база SQLite c записанными данными
-REVIEW = 1
+REVIEW = 0
 
-DEBUG = 1#config('DEBUG', default=False, cast=bool)
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
