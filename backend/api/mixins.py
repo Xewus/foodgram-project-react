@@ -25,9 +25,9 @@ class AddDelViewMixin:
             return Response(status=HTTP_401_UNAUTHORIZED)
 
         menegers = {
-            'subscribe': user.subscribe,
-            'favorite': user.favorites,
-            'shopping_cart': user.carts,
+            t.SUBSCRIBE_M2M: user.subscribe,
+            t.FAVORITE_M2M: user.favorites,
+            t.SHOP_CART_M2M: user.carts,
 
         }
         meneger = menegers[meneger]

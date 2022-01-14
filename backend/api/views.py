@@ -45,7 +45,7 @@ class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
         и запрошенным пользователями.
         Вызов метода через url: */user/<int:id>/subscribe/.
         """
-        return self.add_del_obj(id, 'subscribe')
+        return self.add_del_obj(id, t.SUBSCRIBE_M2M)
 
     @action(methods=('get',), detail=False)
     def subscriptions(self, request):
@@ -162,7 +162,7 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
         Добавляет либо удалет рецепт в "избранное".
         Вызов метода через url:  */recipe/<int:pk>/favorite/.
         """
-        return self.add_del_obj(pk, 'favorite')
+        return self.add_del_obj(pk, t.FAVORITE_M2M)
 
     @action(methods=t.ACTION_METHODS, detail=True)
     def shopping_cart(self, request, pk):
@@ -170,7 +170,7 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
         Добавляет либо удалет рецепт в "список покупок".
         Вызов метода через url:  */recipe/<int:pk>/shopping_cart/.
         """
-        return self.add_del_obj(pk, 'shopping_cart')
+        return self.add_del_obj(pk, t.SHOP_CART_M2M)
 
     @action(methods=('get',), detail=False)
     def download_shopping_cart(self, request):
@@ -193,7 +193,8 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
         filepath = settings.MEDIA_ROOT / filename
         with open(filepath, 'w') as file:
             file.write(
-                f'Список покупок\n\n{user}\n\n{dt.now()}\n\n'
+                f'Список покупок\n\n{user}\n\n'
+                f'{dt.now().strftime(t.DATE_TIME_FORMAT)}\n\n'
             )
             for ing in ingredients:
                 file.write(
