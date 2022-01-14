@@ -131,8 +131,8 @@ class TagSerializer(ModelSerializer):
     """
     class Meta:
         model = Tag
-        fields = '__all__',
-        read_only_fields = '__all__',
+        fields = '__all__'
+        read_only_fields = '__all__'
 
     def validate_color(self, color):
         """
@@ -149,8 +149,8 @@ class IngredientSerializer(ModelSerializer):
     """
     class Meta:
         model = Ingredient
-        fields = '__all__',
-        read_only_fields = '__all__',
+        fields = '__all__'
+        read_only_fields = '__all__'
 
 
 class RecipeSerializer(ModelSerializer):
