@@ -98,7 +98,8 @@ class UserSubscribeSerializer(UserSerializer):
     """
     Сериализатор для вывода авторов на которых подписан текущий пользователь.
     Метод "get_is_subscribed" переопределён, для уменьшения нагрузки,
-    так как при вычислениях всё равно будет возвращать True.
+    так как при вычислениях с входными данными этого сериализатора
+    всё равно будет возвращать True.
     """
     recipes = ShortRecipeSerializer(many=True, read_only=True)
     recipes_count = SerializerMethodField()
