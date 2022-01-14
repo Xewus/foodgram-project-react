@@ -51,7 +51,7 @@ class UserSerializer(ModelSerializer):
             'password',
         )
         extra_kwargs = {'password': {'write_only': True}}
-        read_only_fields = ('is_subscribed', )
+        read_only_fields = 'is_subscribed',
 
     def get_is_subscribed(self, obj):
         """
@@ -132,7 +132,7 @@ class TagSerializer(ModelSerializer):
     class Meta:
         model = Tag
         fields = '__all__'
-        read_only_fields = '__all__'
+        read_only_fields = '__all__',
 
     def validate_color(self, color):
         """
@@ -150,7 +150,7 @@ class IngredientSerializer(ModelSerializer):
     class Meta:
         model = Ingredient
         fields = '__all__'
-        read_only_fields = '__all__'
+        read_only_fields = '__all__',
 
 
 class RecipeSerializer(ModelSerializer):
