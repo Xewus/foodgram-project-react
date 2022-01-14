@@ -94,14 +94,15 @@ class IngredientViewSet(ReadOnlyModelViewSet):
         так как все ингридиенты в базе записаны в нижнем регистре.
         """
         name = self.request.query_params.get(t.SEARCH_ING_NAME)
+        queryset = self.queryset
         if name:
             if name[0] == '%':
                 name = unquote(name)
             else:
                 name = name.translate(incorrect_layout)
             name = name.lower()
-            stw_queryset = list(self.queryset.filter(name__startswith=name))
-            cnt_queryset = self.queryset.filter(name__contains=name)
+            stw_queryset = list(queryset.filter(name__startswith=name))
+            cnt_queryset = queryset.filter(name__contains=name)
             stw_queryset.extend(
                 [i for i in cnt_queryset if i not in stw_queryset]
             )
@@ -125,33 +126,35 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
     add_serializer = ShortRecipeSerializer
 
     def get_queryset(self):
+        queryset = self.queryset
+
         tags = self.request.query_params.getlist(t.TAGS)
         if tags:
-            self.queryset = self.queryset.filter(
+            queryset = queryset.filter(
                 tags__slug__in=tags).distinct()
 
         author = self.request.query_params.get(t.AUTHOR)
         if author:
-            self.queryset = self.queryset.filter(author=author)
+            queryset = queryset.filter(author=author)
 
         # Следующие фильтры только для авторизованного пользователя
         user = self.request.user
         if user.is_anonymous:
-            return self.queryset
+            return queryset
 
         is_in_shopping = self.request.query_params.get(t.SHOP_CART)
         if is_in_shopping in t.SYMBOL_TRUE_SEARCH:
-            self.queryset = self.queryset.filter(cart=user.id)
+            queryset = queryset.filter(cart=user.id)
         elif is_in_shopping in t.SYMBOL_FALSE_SEARCH:
-            self.queryset = self.queryset.exclude(cart=user.id)
+            queryset = queryset.exclude(cart=user.id)
 
         is_favorited = self.request.query_params.get(t.FAVORITE)
         if is_favorited in t.SYMBOL_TRUE_SEARCH:
-            self.queryset = self.queryset.filter(favorite=user.id)
+            queryset = queryset.filter(favorite=user.id)
         if is_favorited in t.SYMBOL_FALSE_SEARCH:
-            self.queryset = self.queryset.exclude(favorite=user.id)
+            queryset = queryset.exclude(favorite=user.id)
 
-        return self.queryset
+        return queryset
 
     @action(methods=t.ACTION_METHODS, detail=True)
     def favorite(self, request, pk):
