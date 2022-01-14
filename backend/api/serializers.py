@@ -41,7 +41,7 @@ class UserSerializer(ModelSerializer):
 
     class Meta:
         model = User
-        fields = fields = (
+        fields = (
             'email',
             'id',
             'username',
@@ -106,7 +106,12 @@ class UserSubscribeSerializer(UserSerializer):
     class Meta:
         model = User
         fields = (
-            '__all__',
+            'email',
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'is_subscribed',
             'recipes',
             'recipes_count',
         )
