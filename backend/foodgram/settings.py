@@ -18,6 +18,7 @@ CSRF_TRUSTED_ORIGINS = config(
     default='http://localhost http://127.0.0.1',
     cast=Csv()
 )
+
 ROOT_URLCONF = 'foodgram.urls'
 
 WSGI_APPLICATION = 'foodgram.wsgi.application'
