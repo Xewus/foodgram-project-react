@@ -1,4 +1,4 @@
-from api.tuns import (MAX_LEN_EMAIL_FIELD, MAX_LEN_USERS_CHARFIELD,
+from api.conf import (MAX_LEN_EMAIL_FIELD, MAX_LEN_USERS_CHARFIELD,
                       MIN_USERNAME_LENGTH)
 
 from django.contrib.auth.models import AbstractUser

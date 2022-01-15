@@ -1,4 +1,3 @@
-from django.conf import global_settings
 from django.contrib.auth import get_user_model
 from django.db.models import F
 
@@ -11,9 +10,7 @@ from rest_framework.serializers import (ModelSerializer, SerializerMethodField,
 
 from .services import (check_value_validate, is_hex_color,
                        set_amount_ingredients)
-from .tuns import MAX_LEN_USERS_CHARFIELD, MIN_USERNAME_LENGTH
-
-MEDIA = str(global_settings.MEDIA_URL)
+from .conf import MAX_LEN_USERS_CHARFIELD, MIN_USERNAME_LENGTH
 
 User = get_user_model()
 
