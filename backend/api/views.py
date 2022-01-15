@@ -1,7 +1,6 @@
 from datetime import datetime as dt
 from urllib.parse import unquote
 
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db.models import F, Sum
 from django.http.response import HttpResponse
@@ -190,22 +189,20 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
             measure=F('ingredients__measurement_unit')
         ).annotate(amount=Sum('amount'))
 
-        filename = f'{user}_shopping_list.txt'
-        filepath = settings.MEDIA_ROOT / filename
-        with open(filepath, 'w') as file:
-            file.write(
-                f'Список покупок для:\n\n{user.first_name}\n\n'
-                f'{dt.now().strftime(conf.DATE_TIME_FORMAT)}\n\n'
-            )
-            for ing in ingredients:
-                file.write(
-                    f"{ing['ingredient']}: {ing['amount']} {ing['measure']}\n"
-                )
-            file.write(
-                '\nПосчитано в Foodgram.ml\n'
+        filename = f'{user.username}_shopping_list.txt'
+        shopping_list = (
+            f'Список покупок для:\n\n{user.first_name}\n\n'
+            f'{dt.now().strftime(conf.DATE_TIME_FORMAT)}\n\n'
+        )
+        for ing in ingredients:
+            shopping_list += (
+                f'{ing["ingredient"]}: {ing["amount"]} {ing["measure"]}\n'
             )
 
-        shopping_list = open(filepath, 'r')
-        response = HttpResponse(shopping_list, content_type='text.txt')
+        shopping_list += '\n\nПосчитано в Foodgram'
+
+        response = HttpResponse(
+            shopping_list, content_type='text.txt; charset=utf-8'
+        )
         response['Content-Disposition'] = f'attachment; filename={filename}'
         return response

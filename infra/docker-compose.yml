@@ -15,7 +15,6 @@ services:
       - ./.env
 
   backend:
-    # build: ../backend
     image: xewus/foodgram_back:latest
     restart: always
     command: >

@@ -1,9 +1,14 @@
+"""Модуль для создания, настройки и управления пользователями.
+
+Задаёт модели и методы для настроийки и управления пользователями
+приложения `Foodgram`. Модель пользователя основана на модели
+AbstractUser из Django для переопределения полей обязательных для заполнения.
+"""
 from api.conf import (MAX_LEN_EMAIL_FIELD, MAX_LEN_USERS_CHARFIELD,
                       MIN_USERNAME_LENGTH)
-
 from django.contrib.auth.models import AbstractUser
-from django.db.models import CharField, CheckConstraint, EmailField, Q
-from django.db.models.fields.related import ManyToManyField
+from django.db.models import (CharField, CheckConstraint, EmailField,
+                              ManyToManyField, Q)
 from django.db.models.functions import Length
 from django.utils.translation import gettext_lazy as _
 
@@ -11,8 +16,32 @@ CharField.register_lookup(Length)
 
 
 class MyUser(AbstractUser):
-    """
-    Настроенная модель пользователя.
+    """Настроенная под приложение `Foodgram` модель пользователя.
+
+    При создании пользователя все поля обязательны для заполнения.
+
+    Attributes:
+        email(str):
+            Адрес email пользователя.
+            Проверка формата производится внутри Dlango.
+            Установлено ограничение по максимальной длине.
+        username(str):
+            Юзернейм пользователя.
+            Установлены ограничения по минимальной и максимальной длине.
+        first_name(str):
+            Реальное имя пользователя.
+            Установлено ограничение по максимальной длине.
+        last_name(str):
+            Реальная фамилия пользователя.
+            Установлено ограничение по максимальной длине.
+        password(str):
+            Пароль для авторизации.
+            Внутри Django проходит хэш-функцию с добавлением
+            `соли` settings.SECRET_KEY.
+            Хранится в зашифрованном виде.
+            Установлено ограничение по максимальной длине.
+        subscribe(int):
+            Ссылки на id связанных пользователей.
     """
     email = EmailField(
         verbose_name='Адрес электронной почты',
@@ -54,7 +83,7 @@ class MyUser(AbstractUser):
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
-        ordering = ['username']
+        ordering = ('username',)
         constraints = (
             CheckConstraint(
                 check=Q(username__length__gte=MIN_USERNAME_LENGTH),
