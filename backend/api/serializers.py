@@ -8,9 +8,9 @@ from recipes.models import Ingredient, Recipe, Tag
 from rest_framework.serializers import (ModelSerializer, SerializerMethodField,
                                         ValidationError)
 
+from .conf import MAX_LEN_USERS_CHARFIELD, MIN_USERNAME_LENGTH
 from .services import (check_value_validate, is_hex_color,
                        set_amount_ingredients)
-from .conf import MAX_LEN_USERS_CHARFIELD, MIN_USERNAME_LENGTH
 
 User = get_user_model()
 
