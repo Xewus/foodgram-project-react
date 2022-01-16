@@ -10,7 +10,7 @@ from rest_framework.serializers import (ModelSerializer, SerializerMethodField,
 
 from .conf import MAX_LEN_USERS_CHARFIELD, MIN_USERNAME_LENGTH
 from .services import (check_value_validate, is_hex_color,
-                       set_amount_ingredients)
+                       instance_amount_ingredients_set)
 
 User = get_user_model()
 
@@ -252,26 +252,26 @@ class RecipeSerializer(ModelSerializer):
         ingredients = validated_data.pop('ingredients')
         recipe = Recipe.objects.create(image=image, **validated_data)
         recipe.tags.set(tags)
-        set_amount_ingredients(recipe, ingredients)
+        instance_amount_ingredients_set(recipe, ingredients)
         return recipe
 
-    def update(self, instance, validated_data):
+    def update(self, recipe, validated_data):
         tags = validated_data.get(
-            'tags', instance.tags)
+            'tags', recipe.tags)
         ingredients = validated_data.get(
-            'ingredients', instance.ingredients)
-        instance.image = validated_data.get(
-            'image', instance.image)
-        instance.name = validated_data.get(
-            'name', instance.name)
-        instance.text = validated_data.get(
-            'text', instance.text)
-        instance.cooking_time = validated_data.get(
-            'cooking_time', instance.cooking_time)
+            'ingredients', recipe.ingredients)
+        recipe.image = validated_data.get(
+            'image', recipe.image)
+        recipe.name = validated_data.get(
+            'name', recipe.name)
+        recipe.text = validated_data.get(
+            'text', recipe.text)
+        recipe.cooking_time = validated_data.get(
+            'cooking_time', recipe.cooking_time)
 
-        instance.tags.clear()
-        instance.ingredients.clear()
-        instance.save()
-        instance.tags.set(tags)
-        set_amount_ingredients(instance, ingredients)
-        return instance
+        recipe.tags.clear()
+        recipe.ingredients.clear()
+        recipe.save()
+        recipe.tags.set(tags)
+        instance_amount_ingredients_set(recipe, ingredients)
+        return recipe

@@ -5,7 +5,7 @@ from recipes.models import AmountIngredient
 from rest_framework.serializers import ValidationError
 
 
-def set_amount_ingredients(recipe, ingredients):
+def instance_amount_ingredients_set(recipe, ingredients):
     """
     Записывает ингредиенты вложенные в рецепт.
     """
