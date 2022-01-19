@@ -33,8 +33,8 @@ class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
     Для авторизованных пользователей —
     возможность подписаться на автора рецепта.
     """
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+    # queryset = User.objects.all()
+    # serializer_class = UserSerializer
     pagination_class = PageLimitPagination
     add_serializer = UserSubscribeSerializer
 

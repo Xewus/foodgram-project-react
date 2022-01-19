@@ -9,8 +9,8 @@ from rest_framework.serializers import (ModelSerializer, SerializerMethodField,
                                         ValidationError)
 
 from .conf import MAX_LEN_USERS_CHARFIELD, MIN_USERNAME_LENGTH
-from .services import (check_value_validate, instance_amount_ingredients_set,
-                       is_hex_color)
+from .services import (check_value_validate, is_hex_color,
+                       recipe_amount_ingredients_set)
 
 User = get_user_model()
 
@@ -143,7 +143,7 @@ class TagSerializer(ModelSerializer):
         """
         color = str(color).strip(' #')
         is_hex_color(color)
-        return color
+        return f'#{color}'
 
 
 class IngredientSerializer(ModelSerializer):
@@ -252,7 +252,7 @@ class RecipeSerializer(ModelSerializer):
         ingredients = validated_data.pop('ingredients')
         recipe = Recipe.objects.create(image=image, **validated_data)
         recipe.tags.set(tags)
-        instance_amount_ingredients_set(recipe, ingredients)
+        recipe_amount_ingredients_set(recipe, ingredients)
         return recipe
 
     def update(self, recipe, validated_data):
@@ -274,7 +274,7 @@ class RecipeSerializer(ModelSerializer):
 
         if ingredients:
             recipe.ingredients.clear()
-            instance_amount_ingredients_set(recipe, ingredients)
+            recipe_amount_ingredients_set(recipe, ingredients)
 
         recipe.save()
         return recipe

@@ -1,3 +1,7 @@
+"""Модуль содержит дополнительные классы
+для настройки основных классов приложения.
+"""
+
 from django.shortcuts import get_object_or_404
 
 from rest_framework.response import Response
@@ -9,13 +13,40 @@ from . import conf
 
 class AddDelViewMixin:
     """
-    Миксин для добавления и удаления связанных объектов.
+    Добавляет во Viewset дополнительные методы.
+
+    Содержит метод добавляющий/удаляющий объект связи
+    Many-to-Many между моделями.
+    Требует определения атрибута `add_serializer`.
+
+    Attributes:
+        add_serializer: Дополнительный серализатор для вывода
+            результатов работы функции добавляющей/удаляющей объект M2M.
+
+    Example:
+        class ExampleViewSet(ModelViewSet, AddDelViewMixin)
+            ...
+            add_serializer = ExamplSerializer
+
+            def example_func(self, request, **kwargs):
+                ...
+                obj_id = ...
+                return self.add_del_obj(obj_id, meneger.M2M)
     """
+
     add_serializer = None
 
     def add_del_obj(self, obj_id, meneger):
-        """
-        Добавляет или удаляет связь через "user.many-to-many".
+        """Добавляет/удаляет связь через менеджер `model.many-to-many`.
+
+        Доступные для работы менеджеры-М2М должны быть внесены в словарь
+        `menegers` откуда будут вызываться в зависимости от переданного ключа.
+
+        Args:
+            obj_id(int):
+                id обЪекта, с которым требуется создать/удалить связь.
+            meneger(model.ManyRelatedManager):
+                Менеджер указанной модели управляющий требуемой связью.
         """
         assert self.add_serializer is not None, (
             f'{self.__class__.__name__} should include '
@@ -30,7 +61,6 @@ class AddDelViewMixin:
             conf.SUBSCRIBE_M2M: user.subscribe,
             conf.FAVORITE_M2M: user.favorites,
             conf.SHOP_CART_M2M: user.carts,
-
         }
         meneger = menegers[meneger]
 

@@ -1,4 +1,12 @@
-# 23/02/2025 16:56
+"""
+Модуль с некоторыми настройками приложения `Foodgram`.
+"""
+
+"""
+Формат даты и времени.
+Example:
+    23/02/2025 16:56
+"""
 DATE_TIME_FORMAT = '%d/%m/%Y %H:%M'
 
 """
@@ -69,3 +77,20 @@ MAX_LEN_RECIPES_CHARFIELD = 200
 
 # Максимальная длина текстовых полей моделей в приложении "recipes"
 MAX_LEN_RECIPES_TEXTFIELD = 5000
+
+"""help-texts for users.models"""
+# help-text для email
+USERS_HELP_EMAIL = (
+    'Обязательно для заполнения. '
+    f'Максимум {MAX_LEN_EMAIL_FIELD} букв.'
+)
+# help-text для username
+USERS_HELP_UNAME = (
+    'Обязательно для заполнения. '
+    f'От {MIN_USERNAME_LENGTH} до {MAX_LEN_USERS_CHARFIELD} букв.'
+)
+
+# help-text для first_name/last_name
+USERS_HELP_FNAME = (
+    f'Обязательно для заполнения.Максимум {MAX_LEN_USERS_CHARFIELD} букв.'
+)
