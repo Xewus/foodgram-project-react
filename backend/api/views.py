@@ -20,7 +20,7 @@ from .paginators import PageLimitPagination
 from .permissions import AdminOrReadOnly, AuthorStaffOrReadOnly
 from .serializers import (IngredientSerializer, RecipeSerializer,
                           ShortRecipeSerializer, TagSerializer,
-                          UserSerializer, UserSubscribeSerializer)
+                          UserSubscribeSerializer)
 from .services import incorrect_layout
 
 User = get_user_model()
