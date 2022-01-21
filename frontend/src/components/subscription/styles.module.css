@@ -1,0 +1,161 @@
+.subscription {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #EEEEEE;
+  box-sizing: border-box;
+  border-radius: 8px;
+  max-width: 363px;
+  width: 100%;
+  text-align: left;
+}
+
+.subscriptionHeader {
+  padding: 31px 26px 17px;
+}
+
+.subscriptionRecipeLink {
+  color: #000;
+  text-decoration: none;
+}
+
+.subscriptionBody {
+  flex: 1 0 auto;
+  padding: 17px 26px 16px;
+}
+
+.subscriptionFooter {
+  padding: 16px 26px 26px;
+}
+
+.subscriptionTitle {
+    font-family: 'Montserrat', sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 24px;
+    color: #000000;
+    margin: 0;
+}
+
+.subscriptionItems {
+    margin-left: 0;
+    padding-left: 0;
+    list-style: none;
+}
+
+.subscriptionItem {
+    position: relative;
+    margin-bottom: 18px;
+    padding-bottom: 18px;
+    list-style-type: none;
+}
+
+.subscriptionItem:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    background: #EEEEEE;
+    height: 1px;
+    width: calc(100% - 72px);
+}
+
+.subscriptionItem:last-child {
+    margin-bottom: 0;
+}
+
+.subscriptionItem:last-child:after {
+    content: none;
+}
+
+.subscriptionLink {
+    font-family: 'Montserrat', sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    color: #4A61DD;
+}
+
+.subscriptionRecipe {
+    display: grid;
+    position: relative;
+    grid-template-areas: 'title image'
+    'text image';
+    justify-content: space-between;
+    column-gap: 50px;
+}
+
+.subscriptionRecipe {
+    display: grid;
+    position: relative;
+    grid-template-areas: 'title image'
+    'text image';
+    justify-content: space-between;
+    column-gap: 50px;
+}
+
+.subscriptionRecipeTitle {
+    font-family: 'Montserrat', sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    max-width: 200px;
+    font-size: 16px;
+    line-height: 20px;
+    color: #000;
+    margin: 10px 0 13px;
+    grid-area: title;
+}
+
+.subscriptionRecipeImage {
+    width: 72px;
+    height: 72px;
+    grid-area: image;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.subscriptionRecipeText {
+    font-family: 'Montserrat', sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 17px;
+    max-width: 200px;
+    color: #000;
+    display: flex;
+    align-items: center;
+    grid-area: text;
+    align-self: start;
+    margin: 0 0 28px;
+}
+
+.subscriptionRecipeText svg {
+  margin-right: 10px;
+}
+
+.subscriptionRecipeText:last-child {
+    margin-bottom: 0;
+}
+
+.subscriptionMore {
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  color: #4A61DD;
+}
+
+.subscriptionButton {
+  width: 100%;
+}
+
+
+@media screen and (max-width: 860px) {
+  .subscription {
+    max-width: 100%;
+  }
+}
+
+

@@ -1,0 +1,5 @@
+*/Dockerfile
+*/dockerignore
+*/db.sqlite3
+*/dat
+!data

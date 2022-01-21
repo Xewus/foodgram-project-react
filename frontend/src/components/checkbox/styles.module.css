@@ -1,0 +1,41 @@
+.checkbox {
+  position: relative;
+  min-width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #ddd;
+  border: none;
+  outline: none;
+  margin-right: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0px;
+  justify-content: center;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  margin-right: 24px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.checkbox_active {
+  background: currentColor;
+  box-shadow: 0 0 7px #ddd;
+}
+
+.checkbox_style_green {
+  color: #49B64E;
+}
+
+.checkbox_style_orange {
+  color: #E26C2D;
+}
+
+.checkbox_style_purple {
+  color: #8775D2;
+}
+

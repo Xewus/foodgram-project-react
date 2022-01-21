@@ -1,0 +1,90 @@
+.menuButton {
+  font-family: 'Montserrat', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 17px;
+  background: none;
+  height: 48px;
+  line-height: 48px;
+  border-radius: 6px;
+  padding: 0px 24px;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: background 0.2s;
+  outline: none;
+  user-select: none;
+  cursor: pointer;
+  width: max-content;
+  display: inline-block;
+  background: #4A61DD;
+  color: #FFF;
+  transform: translateY(-9px);
+}
+
+.menuButton:hover {
+  background: #2845DF;
+}
+
+.menuLink {
+  white-space: nowrap;
+  color: #000;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  display: inline-block;
+  padding: 0;
+  font-weight: 500;
+  line-height: 19px;
+  padding-bottom: 14px;
+  margin-right: 28px;
+}
+
+.menuLink:last-child {
+  margin-right: 0px;
+}
+
+.menu {
+  display: flex;
+  align-items: center;
+}
+
+
+@media screen and (max-width: 990px) {
+  .menuLink {
+    font-size: 14px;
+    margin-right: 14px;
+  }
+
+  .menuButton {
+    font-size: 14px;
+    line-height: 24px;
+    height: 24px;
+    line-height: 22px;
+    padding: 0px 10px;
+  }
+}
+
+
+@media screen and (max-width: 900px) {
+  .menuLink {
+    font-size: 12px;
+    margin-right: 8px;
+  }
+}
+
+@media screen and (max-width: 770px) {
+  .menu {
+    height: 50px;
+  }
+
+  .menuLink {
+    padding-bottom: 0px;
+    font-size: 14px;
+  }
+
+  .menuButton {
+    margin-top: 20px;
+  }
+}

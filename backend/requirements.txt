@@ -1,0 +1,9 @@
+django-extensions==3.1.5
+django-filter==21.1
+djangorestframework==3.13.1
+djoser==2.1.0
+python-decouple==3.5
+drf-extra-fields==3.2.1
+gunicorn==20.1.0
+Pillow==8.4.0
+psycopg2-binary==2.9.3

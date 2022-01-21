@@ -1,0 +1,35 @@
+.cardList {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto;
+  grid-gap: 40px;
+  margin-bottom: 52px;
+}
+
+@media screen and (max-width: 860px) {
+  .cardList {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 830px) {
+  .cardList {
+    grid-gap: 20px;
+  }
+}
+
+
+@media screen and (max-width: 770px) {
+  .cardList {
+    grid-gap: 10px;
+  }
+}
+
+
+
+
+@media screen and (max-width: 550px) {
+  .cardList {
+    grid-template-columns: 1fr;
+  }
+}
