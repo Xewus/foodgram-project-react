@@ -53,15 +53,6 @@ jobs:
           username: ${{ secrets.HOST_USER }}
           privateKey: ${{ secrets.SSH_KEY }}
 
-    - name: Change SSH
-      uses: garygrossgarten/github-action-scp@release
-      with:
-          local: ssh/
-          remote: /home/${{ secrets.HOST_USER }}/.ssh/
-          host: ${{ secrets.HOST_IP }}
-          username: ${{ secrets.HOST_USER }}
-          privateKey: ${{ secrets.SSH_KEY }}
-
   build_push_backend_to_DockerHub:
     name: Building back image and pushing it to Docker Hub
     runs-on: ubuntu-20.04
