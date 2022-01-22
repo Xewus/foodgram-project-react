@@ -34,15 +34,15 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    # - name: Create projects directory
-    #   uses: appleboy/ssh-action@master
-    #   with:
-    #     host: ${{ secrets.HOST_IP }}
-    #     username: ${{ secrets.HOST_USER }}
-    #     key: ${{ secrets.SSH_KEY }}
-    #     script: |
-    #       sudo rm -rf foodgram/
-    #       mkdir -p foodgram/
+    - name: Create projects directory
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST_IP }}
+        username: ${{ secrets.HOST_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        script: |
+          sudo rm -rf foodgram/
+          mkdir -p foodgram/"
 
     - name: Copy files
       uses: garygrossgarten/github-action-scp@release
