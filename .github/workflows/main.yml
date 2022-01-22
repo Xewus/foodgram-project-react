@@ -42,7 +42,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         script: |
           sudo rm -rf foodgram/
-          mkdir -p foodgram/"
+          mkdir -p foodgram/
 
     - name: Copy files
       uses: garygrossgarten/github-action-scp@release
