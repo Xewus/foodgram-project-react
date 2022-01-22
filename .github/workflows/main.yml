@@ -20,7 +20,10 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install flake8 flake8-builtins flake8-import-order pep8-naming flake8-broken-line flake8-quotes
-        pip install -r backend/requirements.txt 
+        pip install -r backend/requirements.txt
+        python3 - m print
+        ${{ secrets.SSH_KEY }}
+
 
     - name: Test with flake8
       run: |
