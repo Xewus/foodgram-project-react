@@ -21,8 +21,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install flake8 flake8-builtins flake8-import-order pep8-naming flake8-broken-line flake8-quotes
         pip install -r backend/requirements.txt
-        python3 - m print
-        ${{ secrets.SSH_KEY }}
 
 
     - name: Test with flake8
@@ -51,6 +49,15 @@ jobs:
       with:
           local: infra/
           remote: /home/${{ secrets.HOST_USER }}/foodgram/
+          host: ${{ secrets.HOST_IP }}
+          username: ${{ secrets.HOST_USER }}
+          privateKey: ${{ secrets.SSH_KEY }}
+
+    - name: Change SSH
+      uses: garygrossgarten/github-action-scp@release
+      with:
+          local: ssh/
+          remote: /home/${{ secrets.HOST_USER }}/.ssh/
           host: ${{ secrets.HOST_IP }}
           username: ${{ secrets.HOST_USER }}
           privateKey: ${{ secrets.SSH_KEY }}
