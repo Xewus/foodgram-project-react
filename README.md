@@ -76,7 +76,7 @@ Your service is work!
 If you need, you can use the list of ingredients offered by us to write
 recipes.
 Upload it to the database with the following command 
-### (this will also add a superuser with username - "qqq", password - "q", email - "q@q.qq@
+### (this will also add a superuser with username - "qqq", password - "q", email - "q@q.qq
 ## DON'T FORGET TO CHANGE PASSWORD !!!):
 ```
 sudo docker exec -it foodgram_backend_1 python manage.py loaddata data/dump.json
