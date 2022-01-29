@@ -9,7 +9,7 @@
 ## Tecnhologies:
 - Python 3.10
 - Django 4.0
-- Django REST
+- Django REST framework 3.13
 - Nginx
 - Docker
 
