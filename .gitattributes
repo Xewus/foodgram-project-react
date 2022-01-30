@@ -1,0 +1,2 @@
+*.js linguist-vendored=true
+*.py linguist-vendored=false
