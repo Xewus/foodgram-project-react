@@ -4,12 +4,14 @@ Classes:
     Recipe:
         Основная модель приложения, через которую описываются рецепты.
     Tag:
-       Модель для группировки рецептов по тэгам. Связана с Recipe через Many-To-Many.
+       Модель для группировки рецептов по тэгам.
+       Связана с Recipe через Many-To-Many.
     Ingredient:
         Модель для описания ингредиентов.
         Связана с Recipe через модель AmountIngredient ( Many-To-Many).
     AmountIngredient:
-        Модель для связи Ingredient и Recipe, также указывающая количество ингридиента.
+        Модель для связи Ingredient и Recipe.
+        Также указывает количество ингридиента.
 """
 from api.conf import MAX_LEN_RECIPES_CHARFIELD, MAX_LEN_RECIPES_TEXTFIELD
 
@@ -29,10 +31,10 @@ User = get_user_model()
 
 class Tag(Model):
     """Тэги для рецептов.
-    
+
     Связано с моделью Recipe через М2М.
     Поля `name` и 'slug` - обязательны для заполнения.
-    
+
     Attributes:
         name(str):
             Название тэга. Установлены ограничения по длине и уникальности.
@@ -41,10 +43,10 @@ class Tag(Model):
         slug(str):
             Те же правила, что и для атрибута `name`, но для корректной работы
             с фронтэндом следует заполнять латинскими буквами.
-   Example:
-       Tag('Завтрак', '01AB89', 'breakfirst')
-       Tag('Завтрак', '01AB89', 'zavtrak')
-   
+
+    Example:
+        Tag('Завтрак', '01AB89', 'breakfirst')
+        Tag('Завтрак', '01AB89', 'zavtrak')
     """
     name = CharField(
         verbose_name='Тэг',
@@ -89,15 +91,16 @@ class Tag(Model):
 
 class Ingredient(Model):
     """Ингридиенты для рецепта.
-    
+
     Связано с моделью Recipe через М2М ( AmountIngredient).
-    
+
     Attributes:
         name(str):
-            Название ингридиента. Установлены ограничения по длине и уникальности.
+            Название ингридиента.
+            Установлены ограничения по длине и уникальности.
         measurement_unit(str):
             Единицы измерения ингридентов (граммыб штуки, литры и т.п.).
-            Установлены ограничения по длине   
+            Установлены ограничения по длине.
     """
     name = CharField(
         verbose_name='Ингридиент',
@@ -133,9 +136,9 @@ class Ingredient(Model):
 
 class Recipe(Model):
     """Модель для рецептов.
-    
+
     Основная модель приложения описывающая рецепты.
-        
+
     Attributes:
         name(str):
             Название рецепта. Установлены ограничения по длине.
@@ -241,9 +244,9 @@ class Recipe(Model):
 
 class AmountIngredient(Model):
     """Количество ингридиентов в блюде.
-    
+
     Модель связывает Recipe и Ingredient с указанием количества ингридиента.
-    
+
     Attributes:
         recipe(int):
             Связаный рецепт. Связь через ForeignKey.
