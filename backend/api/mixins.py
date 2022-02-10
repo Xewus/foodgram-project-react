@@ -68,13 +68,13 @@ class AddDelViewMixin:
         serializer = self.add_serializer(
             obj, context={'request': self.request}
         )
-        exist = meneger.filter(id=obj_id).exists()
+        obj_exist = meneger.filter(id=obj_id).exists()
 
-        if (self.request.method in conf.ADD_METHODS) and not exist:
+        if (self.request.method in conf.ADD_METHODS) and not obj_exist:
             meneger.add(obj)
             return Response(serializer.data, status=HTTP_201_CREATED)
 
-        if (self.request.method in conf.DEL_METHODS) and exist:
+        if (self.request.method in conf.DEL_METHODS) and obj_exist:
             meneger.remove(obj)
             return Response(status=HTTP_204_NO_CONTENT)
         return Response(status=HTTP_400_BAD_REQUEST)
