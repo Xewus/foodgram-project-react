@@ -1,6 +1,6 @@
 """Модуль для создания, настройки и управления моделями пакета `recipe`.
 
-Classes:
+Models:
     Recipe:
         Основная модель приложения, через которую описываются рецепты.
     Tag:
@@ -8,7 +8,7 @@ Classes:
        Связана с Recipe через Many-To-Many.
     Ingredient:
         Модель для описания ингредиентов.
-        Связана с Recipe через модель AmountIngredient ( Many-To-Many).
+        Связана с Recipe через модель AmountIngredient (Many-To-Many).
     AmountIngredient:
         Модель для связи Ingredient и Recipe.
         Также указывает количество ингридиента.
@@ -92,7 +92,7 @@ class Tag(Model):
 class Ingredient(Model):
     """Ингридиенты для рецепта.
 
-    Связано с моделью Recipe через М2М ( AmountIngredient).
+    Связано с моделью Recipe через М2М (AmountIngredient).
 
     Attributes:
         name(str):
