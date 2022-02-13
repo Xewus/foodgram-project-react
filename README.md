@@ -13,7 +13,7 @@
 - Nginx
 - Docker
 
-## http://foodgramm.ml
+## https://foodgramm.ml
 
 
 Here you can share recipes of dishes, add them to favorites and display a shopping list for cooking your favorite dishes.
