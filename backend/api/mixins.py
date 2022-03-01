@@ -19,10 +19,6 @@ class AddDelViewMixin:
     Many-to-Many между моделями.
     Требует определения атрибута `add_serializer`.
 
-    Attributes:
-        add_serializer: Дополнительный серализатор для вывода
-            результатов работы функции добавляющей/удаляющей объект M2M.
-
     Example:
         class ExampleViewSet(ModelViewSet, AddDelViewMixin)
             ...
@@ -43,10 +39,13 @@ class AddDelViewMixin:
         `menegers` откуда будут вызываться в зависимости от переданного ключа.
 
         Args:
-            obj_id(int):
+            obj_id (int):
                 id обЪекта, с которым требуется создать/удалить связь.
-            meneger(model.ManyRelatedManager):
+            meneger (model.ManyRelatedManager):
                 Менеджер указанной модели управляющий требуемой связью.
+
+        Returns:
+            Responce: Статус подтверждающий/отклоняющий действие.
         """
         assert self.add_serializer is not None, (
             f'{self.__class__.__name__} should include '

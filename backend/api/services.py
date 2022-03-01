@@ -16,9 +16,9 @@ def recipe_amount_ingredients_set(recipe, ingredients):
     Ingredient с указанием количества(`amount`) конкретного ингридиента.
 
     Args:
-        recipe(Recipe):
+        recipe (Recipe):
             Рецепт, в который нужно добавить игридиенты.
-        ingridients(list):
+        ingridients (list):
             Список ингридентов и количества сих.
     """
     for ingredient in ingredients:
@@ -38,7 +38,7 @@ def check_value_validate(value, klass=None):
     для дальнейшей работы возвращается первое (и единственное) значение.
 
     Args:
-        value(int, str):
+        value (int, str):
             Значение, переданное для проверки.
         klass(class):
             Если значение передано, проверяет наличие объекта с id=value.
@@ -74,7 +74,7 @@ def is_hex_color(value):
     Проверяет - может ли значение быть шестнадцатеричным цветом.
 
     Args:
-        value(str):
+        value (str):
             Значение переданное для проверки.
 
     Raises:
@@ -85,7 +85,7 @@ def is_hex_color(value):
     """
     if len(value) not in (3, 6):
         raise ValidationError(
-            f'{value} не правильной длины для цвета({len(value)}).'
+            f'{value} не правильной длины ({len(value)}).'
         )
     if not set(value).issubset(hexdigits):
         raise ValidationError(
@@ -96,5 +96,5 @@ def is_hex_color(value):
 # Словарь для сопостановления латинской и русской стандартных раскладок.
 incorrect_layout = str.maketrans(
     'qwertyuiop[]asdfghjkl;\'zxcvbnm,./',
-    'йцукенгшщзхъфывапролджЭячсмитьбю.'
+    'йцукенгшщзхъфывапролджэячсмитьбю.'
 )
