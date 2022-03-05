@@ -9,8 +9,7 @@ from rest_framework.serializers import ValidationError
 
 
 def recipe_amount_ingredients_set(recipe, ingredients):
-    """
-    Записывает ингредиенты вложенные в рецепт.
+    """Записывает ингредиенты вложенные в рецепт.
 
     Создаёт объект AmountIngredient связывающий объекты Recipe и
     Ingredient с указанием количества(`amount`) конкретного ингридиента.
@@ -30,8 +29,7 @@ def recipe_amount_ingredients_set(recipe, ingredients):
 
 
 def check_value_validate(value, klass=None):
-    """
-    Проверяет корректность переданного значения.
+    """Проверяет корректность переданного значения.
 
     Если передан класс, проверяет существует ли объект с переданным obj_id.
     При нахождении объекта создаётся Queryset[],
@@ -70,8 +68,7 @@ def check_value_validate(value, klass=None):
 
 
 def is_hex_color(value):
-    """
-    Проверяет - может ли значение быть шестнадцатеричным цветом.
+    """Проверяет - может ли значение быть шестнадцатеричным цветом.
 
     Args:
         value (str):
