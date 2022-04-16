@@ -23,7 +23,18 @@ Here you can share recipes of dishes, add them to favorites and display a shoppi
 To preserve order - only administrators are allowed to create tags and ingredients.
 
 ### To deploy this project need the next actions:
-
+- Download project with SSH (in general, you only need a folder 'infra/')
+```
+git@github.com:Xewus/foodgram-project-react.git
+```
+- Copy files from 'infra/'  there from your local machine:
+```
+scp infra/* <server user>@<server IP>:/home/<server user>/foodgram/
+```
+- Connect to your server:
+```
+ssh <server user>@<server IP>
+```
 - Install Docker on your server
 ```
 sudo apt install docker.io
@@ -36,22 +47,13 @@ sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-
 ```
 sudo chmod +x /usr/local/bin/docker-compose
 ```
-- Download project with SSH (in general, you only need a folder 'infra/')
-```
-git@github.com:Xewus/foodgram-project-react.git
-```
-
-- Create project directory on your server (preferably in your home directory)
+- Create project directory (preferably in your home directory)
 ```
 mkdir foodgram && cd foodgram/
 ```
-- Copy files from 'infra/'  there:
-```
-scp infra/* <server user>@<server address>:/home/<server user>/foodgram/
-```
 - Create env-file:
 ```
-touch foodgram/.env
+touch .env
 ```
 - Fill in the env-file like it:
 ```
