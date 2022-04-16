@@ -27,10 +27,6 @@ To preserve order - only administrators are allowed to create tags and ingredien
 ```
 git@github.com:Xewus/foodgram-project-react.git
 ```
-- Copy files from 'infra/' to your server:
-```
-scp infra/* <server user>@<server IP>:/home/<server user>/foodgram/
-```
 - Connect to your server:
 ```
 ssh <server user>@<server IP>
@@ -67,6 +63,10 @@ POSTGRES_USER='postgres'
 POSTGRES_PASSWORD=<Your_password>
 DB_HOST='db'
 DB_PORT=5432
+```
+- Copy files from 'infra/' (on your local machine) to your server:
+```
+scp infra/* <server user>@<server IP>:/home/<server user>/foodgram/
 ```
 - Run docker-compose
 ```
