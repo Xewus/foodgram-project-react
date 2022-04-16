@@ -12,6 +12,7 @@
 - Django REST framework 3.13
 - Nginx
 - Docker
+- Postgres
 
 
 ## https://foodgramm.cf
