@@ -27,7 +27,7 @@ To preserve order - only administrators are allowed to create tags and ingredien
 ```
 git@github.com:Xewus/foodgram-project-react.git
 ```
-- Copy files from 'infra/'  there from your local machine:
+- Copy files from 'infra/' to your server:
 ```
 scp infra/* <server user>@<server IP>:/home/<server user>/foodgram/
 ```
