@@ -161,7 +161,7 @@ class TagSerializer(ModelSerializer):
         """Проверяет и нормализует код цвета.
 
         Args:
-            color (str): Строка описывающая.
+            color (str): Строка описывающая код цвета.
 
         Returns:
             str: Проверенная строка описывающая цвет в HEX-формате (#12AB98).
