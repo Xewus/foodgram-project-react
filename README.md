@@ -23,7 +23,7 @@ Here you can share recipes of dishes, add them to favorites and display a shoppi
 To preserve order - only administrators are allowed to create tags and ingredients.
 
 ### To deploy this project need the next actions:
-- Download project with SSH (in general, you only need a folder 'infra/')
+- Download project with SSH (actually you only need the folder 'infra/')
 ```
 git@github.com:Xewus/foodgram-project-react.git
 ```
