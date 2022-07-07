@@ -8,7 +8,7 @@ coreschema==0.0.4
 cryptography==36.0.1
 decorator==5.1.0
 defusedxml==0.7.1
-Django==4.0.4
+Django==4.0.6
 django-extensions==3.1.5
 django-filter==21.1
 django-templated-mail==1.1.1
