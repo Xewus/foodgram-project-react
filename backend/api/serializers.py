@@ -15,17 +15,6 @@ from .services import (check_value_validate, is_hex_color,
 User = get_user_model()
 
 
-class ShortRecipeSerializer(ModelSerializer):
-    """Сериализатор для модели Recipe.
-
-    Определён укороченный набор полей для некоторых эндпоинтов.
-    """
-    class Meta:
-        model = Recipe
-        fields = 'id', 'name', 'image', 'cooking_time'
-        read_only_fields = '__all__',
-
-
 class UserSerializer(ModelSerializer):
     """Сериализатор для использования с моделью User.
     """
@@ -177,6 +166,16 @@ class IngredientSerializer(ModelSerializer):
     class Meta:
         model = Ingredient
         fields = '__all__'
+        read_only_fields = '__all__',
+
+
+class ShortRecipeSerializer(ModelSerializer):
+    """Сериализатор для модели Recipe.
+    Определён укороченный набор полей для некоторых эндпоинтов.
+    """
+    class Meta:
+        model = Recipe
+        fields = 'id', 'name', 'image', 'cooking_time'
         read_only_fields = '__all__',
 
 
