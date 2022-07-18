@@ -260,7 +260,7 @@ class RecipeSerializer(ModelSerializer):
             data (dict): Вводные данные.
 
         Raises:
-            ValidationError: Тип данных несоответствует ожидаеому.
+            ValidationError: Тип данных несоответствует ожидаемому.
 
         Returns:
             dict: Проверенные данные.
