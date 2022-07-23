@@ -110,6 +110,8 @@ class IngredientViewSet(ReadOnlyModelViewSet):
 
         Returns:
             QuerySet: Список запрошенных объектов.
+        
+        TODO: `exclude` in queryset.
         """
         name = self.request.query_params.get(conf.SEARCH_ING_NAME)
         queryset = self.queryset
