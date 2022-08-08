@@ -70,7 +70,7 @@ DB_PORT=5432
 ```
 - Copy files from 'infra/' (on your local machine) to your server:
 ```
-scp infra/* <server user>@<server IP>:/home/<server user>/foodgram/
+scp -r infra/* <server user>@<server IP>:/home/<server user>/foodgram/
 ```
 - Run docker-compose
 ```
