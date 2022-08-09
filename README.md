@@ -19,7 +19,7 @@
 - Postgres
 
 
-## http://212.109.198.109/
+## http://foodgram.gq
 
 
 Here you can share recipes of dishes, add them to favorites and display a shopping list for cooking your favorite dishes.
