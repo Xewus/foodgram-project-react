@@ -41,7 +41,6 @@ jobs:
         host: ${{ secrets.HOST_IP }}
         username: ${{ secrets.HOST_USER }}
         key: ${{ secrets.SSH_KEY }}
-        password: ${{ secrets.HOST_PASS }}
         script: |
           cd projects
           sudo rm -rf foodgram
