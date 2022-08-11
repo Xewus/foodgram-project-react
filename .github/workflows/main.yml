@@ -43,10 +43,9 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         password: ${{ secrets.HOST_PASS }}
         script: |
-          ${{ secrets.HOST_PASS }}/
-          cd projects/
-          sudo rm -rf foodgram/
-          mkdir -p foodgram/
+          cd projects
+          sudo rm -rf foodgram
+          mkdir -p foodgram
 
     - name: Copy files
       uses: garygrossgarten/github-action-scp@release
@@ -117,7 +116,7 @@ jobs:
         username: ${{ secrets.HOST_USER }}
         key: ${{ secrets.SSH_KEY }}
         script: |
-          cd foodgram/
+          cd projects/foodgram/
           touch .env
           echo DEBUG=${{ secrets.DEBUG }} >> .env
           echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
