@@ -13,6 +13,8 @@ Models:
         Модель для связи Ingredient и Recipe.
         Также указывает количество ингридиента.
 """
+from api.conf import MAX_LEN_RECIPES_CHARFIELD, MAX_LEN_RECIPES_TEXTFIELD
+
 from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db.models import (CASCADE, CharField, CheckConstraint,
@@ -21,8 +23,6 @@ from django.db.models import (CASCADE, CharField, CheckConstraint,
                               PositiveSmallIntegerField, Q, TextField,
                               UniqueConstraint)
 from django.db.models.functions import Length
-
-from api.conf import MAX_LEN_RECIPES_CHARFIELD, MAX_LEN_RECIPES_TEXTFIELD
 
 CharField.register_lookup(Length)
 
