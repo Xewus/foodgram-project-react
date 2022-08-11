@@ -1,3 +1,4 @@
+---
 name: CI for Foodgram
 
 on:
@@ -40,6 +41,7 @@ jobs:
         host: ${{ secrets.HOST_IP }}
         username: ${{ secrets.HOST_USER }}
         key: ${{ secrets.SSH_KEY }}
+        assphrase: ${{ secrets.HOST_PASS }}
         script: |
           sudo rm -rf foodgram/
           mkdir -p foodgram/
@@ -112,6 +114,7 @@ jobs:
       with:
         host: ${{ secrets.HOST_IP }}
         username: ${{ secrets.HOST_USER }}
+        assphrase: ${{ secrets.HOST_PASS }}
         key: ${{ secrets.SSH_KEY }}
         script: |
           cd foodgram/
@@ -144,3 +147,4 @@ jobs:
         to: ${{ secrets.TELEGRAM_TO }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
         message: ${{ github.workflow }} успешно выполнен!
+...

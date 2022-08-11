@@ -1,3 +1,4 @@
+---
 version: '3.3'
 services:
 
@@ -20,7 +21,7 @@ services:
     command: >
       bash -c "python manage.py migrate &&
       python manage.py collectstatic --noinput &&
-      gunicorn --bind 0:8000 foodgram.wsgi"
+      gunicorn --bind 0:80 foodgram.wsgi"
     volumes:
       - static_value:/app/static/
       - media_value:/app/media/
@@ -48,3 +49,4 @@ volumes:
   static_value:
   media_value:
   postgres_data:
+...

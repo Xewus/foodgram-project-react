@@ -1,18 +1,26 @@
 from django.contrib.auth import get_user_model
 from django.db.models import F
-
 from drf_extra_fields.fields import Base64ImageField
-
-from recipes.models import Ingredient, Recipe, Tag
-
 from rest_framework.serializers import (ModelSerializer, SerializerMethodField,
                                         ValidationError)
+
+from recipes.models import Ingredient, Recipe, Tag
 
 from .conf import MAX_LEN_USERS_CHARFIELD, MIN_USERNAME_LENGTH
 from .services import (check_value_validate, is_hex_color,
                        recipe_amount_ingredients_set)
 
 User = get_user_model()
+
+
+class ShortRecipeSerializer(ModelSerializer):
+    """Сериализатор для модели Recipe.
+    Определён укороченный набор полей для некоторых эндпоинтов.
+    """
+    class Meta:
+        model = Recipe
+        fields = 'id', 'name', 'image', 'cooking_time'
+        read_only_fields = '__all__',
 
 
 class UserSerializer(ModelSerializer):
@@ -166,16 +174,6 @@ class IngredientSerializer(ModelSerializer):
     class Meta:
         model = Ingredient
         fields = '__all__'
-        read_only_fields = '__all__',
-
-
-class ShortRecipeSerializer(ModelSerializer):
-    """Сериализатор для модели Recipe.
-    Определён укороченный набор полей для некоторых эндпоинтов.
-    """
-    class Meta:
-        model = Recipe
-        fields = 'id', 'name', 'image', 'cooking_time'
         read_only_fields = '__all__',
 
 

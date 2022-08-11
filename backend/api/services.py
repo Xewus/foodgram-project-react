@@ -3,9 +3,9 @@
 
 from string import hexdigits
 
-from recipes.models import AmountIngredient
-
 from rest_framework.serializers import ValidationError
+
+from recipes.models import AmountIngredient
 
 
 def recipe_amount_ingredients_set(recipe, ingredients):
