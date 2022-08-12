@@ -41,16 +41,16 @@ jobs:
         host: ${{ secrets.HOST_IP }}
         username: ${{ secrets.HOST_USER }}
         key: ${{ secrets.SSH_KEY }}
-        passphrase: ${{ secrets.HOST_PASS }}
         script: |
-          sudo rm -rf foodgram/
-          mkdir -p foodgram/
+          cd projects
+          sudo rm -rf foodgram
+          mkdir -p foodgram
 
     - name: Copy files
       uses: garygrossgarten/github-action-scp@release
       with:
           local: infra/
-          remote: /home/${{ secrets.HOST_USER }}/foodgram/
+          remote: /${{ secrets.HOST_USER }}/projects/foodgram/
           host: ${{ secrets.HOST_IP }}
           username: ${{ secrets.HOST_USER }}
           privateKey: ${{ secrets.SSH_KEY }}
@@ -104,21 +104,19 @@ jobs:
 
   deploy:
     runs-on: ubuntu-20.04
-    needs: [
-      copy_infra_to_server,
-      build_push_backend_to_DockerHub,
-      build_push_frontend_to_DockerHub
-    ]
+    needs:
+      - copy_infra_to_server
+      - build_push_backend_to_DockerHub
+      - build_push_frontend_to_DockerHub
     steps:
     - name: remote ssh commands to deploy
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST_IP }}
         username: ${{ secrets.HOST_USER }}
-        passphrase: ${{ secrets.HOST_PASS }}
         key: ${{ secrets.SSH_KEY }}
         script: |
-          cd foodgram/
+          cd projects/foodgram/
           touch .env
           echo DEBUG=${{ secrets.DEBUG }} >> .env
           echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
