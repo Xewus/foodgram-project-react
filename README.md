@@ -1,7 +1,5 @@
 # Foodgram
 
-[![License](https://img.shields.io/badge/License-BSD_2--Clause-orange.svg)](https://opensource.org/licenses/BSD-2-Clause)
-
 ![workflow](https://github.com/Xewus/Foodgram/actions/workflows/main.yml/badge.svg)
 
 #### *Diploma work for Yandex*
