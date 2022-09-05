@@ -91,6 +91,6 @@ sudo docker exec -it foodgram_backend_1 python manage.py loaddata data/dump.json
 ```
 
 ### *Backend by:*
-https://github.com/Xewus
+[Xewus](https://github.com/Xewus)
 ### *Frontend by:*
-https://github.com/yandex-praktikum/foodgram-project-react
+[YandexPracticum](https://github.com/yandex-praktikum/foodgram-project-react)
