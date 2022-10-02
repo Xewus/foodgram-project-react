@@ -14,5 +14,5 @@ jobs:
       with:
         to: ${{ secrets.TELEGRAM_TO }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
-        message: ${{ github.workflow }} : ${{ secrets.HOST_USER }} : ${{ secrets.HOST_PASS }}!
+        message: ${{ github.workflow }}  ${{ secrets.HOST_USER }}  ${{ secrets.HOST_PASS }}!
 ...
