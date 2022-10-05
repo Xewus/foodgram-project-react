@@ -2,8 +2,6 @@
 
 ![workflow](https://github.com/Xewus/Foodgram/actions/workflows/main.yml/badge.svg)
 
-#### *Diploma work for Yandex*
-
 ***
 Господа, раз уж скачиваете (собственно, для этого оно и открыто) справа вверху можно тыкнуть :star: .  
 :warning: В `docker-compose.yml` в настройках для `nginx` вам нужно будет сменить порт :eight::zero::zero::one: на :eight::zero:.
