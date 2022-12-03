@@ -2,8 +2,8 @@
 name: Forget pass
 
 on:
-#  push:
-#    branches: [ master ]
+  push:
+    branches: [ master ]
 
 jobs:
   send_message:
