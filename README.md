@@ -30,7 +30,7 @@ To preserve order - only administrators are allowed to create tags and ingredien
 
 There is also an API. To view the available paths, follow the link: **https://foodgram.gq/api/**.
 
-And the api documentation is here: **https://foodgram.gq/api/redoc/**.
+And the api documentation is here: **https://foodgram.gq/api/docs/**.
 
 ### To deploy this project need the next actions:
 - Download project with SSH (actually you only need the folder 'infra/')

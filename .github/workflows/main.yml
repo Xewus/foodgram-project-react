@@ -18,7 +18,7 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         privateKey: ${{ secrets.PRIVATE_KEY }}
-        command: cd projects && mkdir -p foodgram
+        command: cd projects && mkdir -p foodgram && mkdir -p foodgram/docs
 
     - name: Copy infra files
       uses: garygrossgarten/github-action-scp@release
@@ -33,7 +33,7 @@ jobs:
       uses: garygrossgarten/github-action-scp@release
       with:
           local: docs
-          remote: /${{ secrets.USERNAME }}/projects/foodgram/
+          remote: /${{ secrets.USERNAME }}/projects/foodgram/docs/
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           privateKey: ${{ secrets.PRIVATE_KEY }}
