@@ -4,10 +4,10 @@ import api from '../api'
 export default function useRecipe () {
   const [ recipe, setRecipe ] = useState({})
 
-  const handleLike = ({ id, toLike = true }) => {
+  const handleLike = ({ id, toLike = 1 }) => {
     const method = toLike ? api.addToFavorites.bind(api) : api.removeFromFavorites.bind(api)
     method({ id }).then(res => {
-      const recipeUpdated = { ...recipe, is_favorited: toLike }
+      const recipeUpdated = { ...recipe, is_favorited: Number(toLike) }
       setRecipe(recipeUpdated)
     })
     .catch(err => {
@@ -18,10 +18,10 @@ export default function useRecipe () {
     })
   }
 
-  const handleAddToCart = ({ id, toAdd = true, callback }) => {
+  const handleAddToCart = ({ id, toAdd = 1, callback }) => {
     const method = toAdd ? api.addToOrders.bind(api) : api.removeFromOrders.bind(api)
     method({ id }).then(res => {
-      const recipeUpdated = { ...recipe, is_in_shopping_cart: toAdd }
+      const recipeUpdated = { ...recipe, is_in_shopping_cart: Number(toAdd) }
       setRecipe(recipeUpdated)
       callback && callback(toAdd)
     })
@@ -33,7 +33,7 @@ export default function useRecipe () {
     })
   }
 
-  const handleSubscribe = ({ author_id, toSubscribe = true }) => {
+  const handleSubscribe = ({ author_id, toSubscribe = 1 }) => {
     const method = toSubscribe ? api.subscribe.bind(api) : api.deleteSubscriptions.bind(api)
       method({
         author_id

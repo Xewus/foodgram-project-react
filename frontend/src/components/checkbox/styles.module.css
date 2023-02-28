@@ -1,6 +1,6 @@
 .checkbox {
   position: relative;
-  width: 24px;
+  min-width: 24px;
   height: 24px;
   border-radius: 50%;
   background-color: #ddd;
