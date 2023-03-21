@@ -111,8 +111,7 @@ jobs:
           echo DB_PORT=${{ secrets.DB_PORT }} >> .env
 
           sudo docker-compose stop
-          sudo docker container rm front
-          sudo docker container rm back
+          sudo docker ps -a | grep Exit | cut -d ' ' -f 1 | xargs sudo docker rm
           sudo docker rmi ${{ secrets.DOCKER_USER }}/foodgram_front
           sudo docker rmi ${{ secrets.DOCKER_USER }}/foodgram_back
           sudo docker-compose up -d
