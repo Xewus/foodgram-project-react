@@ -6,6 +6,11 @@
   margin-bottom: 52px;
 }
 
+@media screen and (max-width: 860px) {
+  .cardList {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
 
 @media screen and (max-width: 830px) {
   .cardList {
@@ -21,11 +26,7 @@
 }
 
 
-@media screen and (max-width: 750px) {
-  .cardList {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
+
 
 @media screen and (max-width: 550px) {
   .cardList {

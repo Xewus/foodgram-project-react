@@ -66,7 +66,7 @@ const SingleCard = ({ loadItem, updateOrders }) => {
               {authContext && <Button
                 modifier='style_none'
                 clickHandler={_ => {
-                  handleLike({ id, toLike: !is_favorited })
+                  handleLike({ id, toLike: Number(!is_favorited) })
                 }}
               >
                 {is_favorited ? <Icons.StarBigActiveIcon /> : <Icons.StarBigIcon />}
@@ -93,16 +93,17 @@ const SingleCard = ({ loadItem, updateOrders }) => {
           <div className={styles['single-card__buttons']}>
             {authContext && <Button
               className={styles['single-card__button']}
-              modifier='style_dark-blue'
+              modifier={is_in_shopping_cart ? 'style_light' : 'style_dark-blue'}
               clickHandler={_ => {
-                handleAddToCart({ id, toAdd: !is_in_shopping_cart, callback: updateOrders })
+                handleAddToCart({ id, toAdd: Number(!is_in_shopping_cart), callback: updateOrders })
               }}
             >
               
-            {is_in_shopping_cart ? <><Icons.DoneIcon color="#FFF"/>Рецепт добавлен</> : <><Icons.PlusIcon /> Добавить в покупки</>}
+            {is_in_shopping_cart ? <><Icons.DoneIcon color="#4A61DD"/>Рецепт добавлен</> : <><Icons.PlusIcon /> Добавить в покупки</>}
             </Button>}
             {(userContext || {}).id !== author.id && authContext && <Button
               className={styles['single-card__button']}
+              modifier='style_light-blue'
               clickHandler={_ => {
                 handleSubscribe({ author_id: author.id, toSubscribe: !author.is_subscribed })
               }}

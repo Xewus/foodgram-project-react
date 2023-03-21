@@ -89,7 +89,13 @@ const UserPage = ({ updateOrders }) => {
           })}
           title={user ? `${user.first_name} ${user.last_name}` : ''}
         />
-        <CheckboxGroup values={tagsValue} handleChange={handleTagsChange} />
+        <CheckboxGroup
+          values={tagsValue}
+          handleChange={value => {
+            setRecipesPage(1)
+            handleTagsChange(value)
+          }}
+        />
       </div>
       {(userContext || {}).id !== (user || {}).id && <Button
         className={styles.buttonSubscribe}
@@ -117,6 +123,7 @@ const UserPage = ({ updateOrders }) => {
       <Pagination
         count={recipesCount}
         limit={6}
+        page={recipesPage}
         onPageChange={page => setRecipesPage(page)}
       />
     </Container>

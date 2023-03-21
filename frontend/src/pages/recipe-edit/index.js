@@ -6,7 +6,7 @@ import { useTags } from '../../utils'
 import { useParams, useHistory } from 'react-router-dom'
 import MetaTags from 'react-meta-tags'
 
-const RecipeEdit = ({ onEdit }) => {
+const RecipeEdit = ({ onItemDelete }) => {
   const { value, handleChange, setValue } = useTags()
   const [ recipeName, setRecipeName ] = useState('')
 
@@ -61,9 +61,7 @@ const RecipeEdit = ({ onEdit }) => {
         cooking_time,
         name,
         ingredients,
-        text,
-        is_favorited,
-        is_in_shopping_cart
+        text
       } = res
       setRecipeText(text)
       setRecipeName(name)
@@ -133,9 +131,19 @@ const RecipeEdit = ({ onEdit }) => {
               history.push(`/recipes/${id}`)
             })
             .catch(err => {
-              const { non_field_errors } = err
+              const { non_field_errors, ingredients, cooking_time } = err
+              console.log({  ingredients })
               if (non_field_errors) {
-                alert(non_field_errors.join(', '))
+                return alert(non_field_errors.join(', '))
+              }
+              if (ingredients) {
+                return alert(`Ингредиенты: ${ingredients.filter(item => Object.keys(item).length).map(item => {
+                  const error = item[Object.keys(item)[0]]
+                  return error && error.join(' ,')
+                })[0]}`)
+              }
+              if (cooking_time) {
+                return alert(`Время готовки: ${cooking_time[0]}`)
               }
               const errors = Object.values(err)
               if (errors) {
@@ -281,6 +289,7 @@ const RecipeEdit = ({ onEdit }) => {
             onClick={_ => {
               api.deleteRecipe({ recipe_id: id })
                 .then(res => {
+                  onItemDelete && onItemDelete()
                   history.push('/recipes')
                 })
             }}

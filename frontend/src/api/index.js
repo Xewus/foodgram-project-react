@@ -106,8 +106,8 @@ class Api {
   getRecipes ({
     page = 1,
     limit = 6,
-    is_favorited = false,
-    is_in_shopping_cart = false,
+    is_favorited = 0,
+    is_in_shopping_cart = 0,
     author,
     tags
   } = {}) {
@@ -180,12 +180,12 @@ class Api {
     cooking_time,
     text,
     ingredients
-  }, isPut) {
+  }, wasImageUpdated) { // image was changed
     const token = localStorage.getItem('token')
     return fetch(
       `/api/recipes/${recipe_id}/`,
       {
-        method: isPut ? 'PUT' : 'PATCH',
+        method: 'PATCH',
         headers: {
           ...this._headers,
           'authorization': `Token ${token}`
@@ -193,9 +193,9 @@ class Api {
         body: JSON.stringify({
           name,
           id: recipe_id,
-          image: isPut ? image : undefined,
+          image: wasImageUpdated ? image : undefined,
           tags,
-          cooking_time,
+          cooking_time: Number(cooking_time),
           text,
           ingredients
         })
@@ -208,7 +208,7 @@ class Api {
     return fetch(
       `/api/recipes/${id}/favorite/`,
       {
-        method: 'GET',
+        method: 'POST',
         headers: {
           ...this._headers,
           'authorization': `Token ${token}`
@@ -305,7 +305,7 @@ class Api {
     return fetch(
       `/api/users/${author_id}/subscribe/`,
       {
-        method: 'GET',
+        method: 'POST',
         headers: {
           ...this._headers,
           'authorization': `Token ${token}`
@@ -348,7 +348,7 @@ class Api {
     return fetch(
       `/api/recipes/${id}/shopping_cart/`,
       {
-        method: 'GET',
+        method: 'POST',
         headers: {
           ...this._headers,
           'authorization': `Token ${token}`

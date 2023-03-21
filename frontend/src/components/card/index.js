@@ -45,9 +45,13 @@ const Card = ({
       <div className={styles.card__footer}>
           {authContext && <Button
             className={styles.card__add}
-            modifier='style_light-blue'
+            modifier={is_in_shopping_cart ? 'style_light' : 'style_light-blue'}
             clickHandler={_ => {
-              handleAddToCart({ id, toAdd: !is_in_shopping_cart, callback: updateOrders })
+              handleAddToCart({
+                id,
+                toAdd: Number(!is_in_shopping_cart),
+                callback: updateOrders
+              })
             }}
             disabled={!authContext}
           >
@@ -57,7 +61,7 @@ const Card = ({
           {authContext && <Button
             modifier='style_none'
             clickHandler={_ => {
-              handleLike({ id, toLike: !is_favorited })
+              handleLike({ id, toLike: Number(!is_favorited) })
             }}
           >
             {is_favorited ? <Icons.StarActiveIcon /> : <Icons.StarIcon />}

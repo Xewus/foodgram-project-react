@@ -15,16 +15,30 @@
   user-select: none;
   cursor: pointer;
   width: max-content;
+  box-sizing: border-box;
 }
 
 .button:active {
   box-shadow: 0 0 7px #ddd;
 }
 
+.button_style_light {
+  border: 1px solid #DEE2F2;
+  background: #FFF;
+  color: #4A61DD;
+}
+
+.button_style_light:hover {
+  background: #D8DEFF;
+  color: #4A61DD;
+  border: 1px solid transparent;
+}
+
 .button_style_light-blue {
   background: #F0F3FF;
   color: #4A61DD;
 }
+
 .button_style_light-blue:hover {
   background: #D8DEFF;
   color: #4A61DD;
