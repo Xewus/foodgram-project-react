@@ -5,6 +5,7 @@ from core.validators import ingredients_validator, tags_exist_validator
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db.models import F, QuerySet
+from django.db.transaction import atomic
 from drf_extra_fields.fields import Base64ImageField
 from recipes.models import Ingredient, Recipe, Tag
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
@@ -260,6 +261,7 @@ class RecipeSerializer(ModelSerializer):
         })
         return data
 
+    @atomic
     def create(self, validated_data: dict) -> Recipe:
         """Создаёт рецепт.
 
@@ -276,6 +278,7 @@ class RecipeSerializer(ModelSerializer):
         recipe_ingredients_set(recipe, ingredients)
         return recipe
 
+    @atomic
     def update(self, recipe: Recipe, validated_data: dict):
         """Обновляет рецепт.
 
