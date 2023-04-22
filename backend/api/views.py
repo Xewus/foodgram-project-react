@@ -185,11 +185,12 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
         elif is_in_cart in Tuples.SYMBOL_FALSE_SEARCH.value:
             queryset = queryset.exclude(in_carts__user=self.request.user)
 
-        is_favorit: str = self.request.query_params.get(UrlQueries.FAVORITE)
-        if is_favorit in Tuples.SYMBOL_TRUE_SEARCH.value:
+        is_favorite: str = self.request.query_params.get(UrlQueries.FAVORITE)
+        if is_favorite in Tuples.SYMBOL_TRUE_SEARCH.value:
             queryset = queryset.filter(in_favorites__user=self.request.user)
-        if is_favorit in Tuples.SYMBOL_FALSE_SEARCH.value:
+        if is_favorite in Tuples.SYMBOL_FALSE_SEARCH.value:
             queryset = queryset.exclude(in_favorites__user=self.request.user)
+
         return queryset
 
     @action(

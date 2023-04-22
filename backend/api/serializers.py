@@ -54,7 +54,7 @@ class UserSerializer(ModelSerializer):
         Returns:
             bool: True, если подписка есть. Во всех остальных случаях False.
         """
-        user = self.context.get('view').request.user
+        user = self.context.get('request').user
 
         if user.is_anonymous or (user == obj):
             return False

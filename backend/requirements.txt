@@ -1,5 +1,5 @@
 django-filter==21.1
-djangorestframework==3.13.1
+djangorestframework==3.14.0
 djoser==2.1.0
 python-decouple==3.5
 drf-extra-fields==3.2.1

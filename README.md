@@ -14,9 +14,9 @@
 ***
 
 ## Tecnhologies:
-- Python 3.10
+- Python 3.11
 - Django 4.0
-- Django REST framework 3.13
+- Django REST framework 3.14
 - Nginx
 - Docker
 - Postgres
@@ -67,11 +67,11 @@ DEBUG=False
 SECRET_KEY=<Your_some_long_string>
 ALLOWED_HOSTS=<Your_host>
 CSRF_TRUSTED_ORIGINS=https://<Your_host>
-DB_ENGINE='django.db.backends.postgresql'
-DB_NAME='postgres'
-POSTGRES_USER='postgres'
+DB_ENGINE=django.db.backends.postgresql
+DB_NAME=postgres
+POSTGRES_USER=postgres
 POSTGRES_PASSWORD=<Your_password>
-DB_HOST='db'
+DB_HOST=foodgram-db
 DB_PORT=5432
 ```
 - Copy files from 'infra/' (on your local machine) to your server:
@@ -97,7 +97,7 @@ And if you want, you can use the list of ingredients offered by us to write
 recipes.
 Upload it to the database with the following command:
 ```
-sudo docker exec -it app python manage.py loaddata data/dump.json
+sudo docker exec -it foodgram-app python manage.py loaddata data/dump.json
 ```
 
 ### *Backend by:*

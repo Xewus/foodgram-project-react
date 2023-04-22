@@ -174,6 +174,9 @@ def ingredients_validator(
             raise ValidationError('Неправильное количество ингидиента')
 
         amount = valid_ings.get(ing['id'], 0) + int(ing['amount'])
+        if amount <= 0:
+            raise ValidationError('Неправильное количество ингридиента')
+
         valid_ings[ing['id']] = amount
 
     if not valid_ings:
