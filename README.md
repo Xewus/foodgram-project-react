@@ -66,11 +66,11 @@ touch .env
 DEBUG=False
 SECRET_KEY=<Your_some_long_string>
 ALLOWED_HOSTS=<Your_host>
-CSRF_TRUSTED_ORIGINS=https://<Your_host>
+CSRF_TRUSTED_ORIGINS=http://<Your_host>
 DB_ENGINE=django.db.backends.postgresql
 DB_NAME=postgres
 POSTGRES_USER=postgres
-POSTGRES_PASSWORD=<Your_password>
+POSTGRES_PASSWORD=postgres
 DB_HOST=foodgram-db
 DB_PORT=5432
 ```
