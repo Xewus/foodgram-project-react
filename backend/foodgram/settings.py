@@ -2,151 +2,154 @@ from pathlib import Path
 
 from decouple import Csv, config
 
-DATE_TIME_FORMAT = '%d/%m/%Y %H:%M'
+DATE_TIME_FORMAT = "%d/%m/%Y %H:%M"
 
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = config("DEBUG", default=False, cast=bool)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = config('SECRET_KEY', default='string_from_.env')
+SECRET_KEY = config("SECRET_KEY", default="string_from_.env")
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*', cast=Csv())
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="*", cast=Csv())
 
 CSRF_TRUSTED_ORIGINS = config(
-    'CSRF_TRUSTED_ORIGINS',
-    default='http://localhost, http://127.0.0.1',
-    cast=Csv()
+    "CSRF_TRUSTED_ORIGINS",
+    default="http://localhost, http://127.0.0.1",
+    cast=Csv(),
 )
 
-ROOT_URLCONF = 'foodgram.urls'
+ROOT_URLCONF = "foodgram.urls"
 
-WSGI_APPLICATION = 'foodgram.wsgi.application'
+WSGI_APPLICATION = "foodgram.wsgi.application"
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'rest_framework',
-    'rest_framework.authtoken',
-    'djoser',
-    'django_filters',
-    'api.apps.ApiConfig',
-    'recipes.apps.RecipesConfig',
-    'users.apps.UsersConfig',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "rest_framework",
+    "rest_framework.authtoken",
+    "djoser",
+    "django_filters",
+    "api.apps.ApiConfig",
+    "recipes.apps.RecipesConfig",
+    "users.apps.UsersConfig",
     # 'django_extensions',
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
 DATABASES = {
-    'default': {
-        'ENGINE': config(
-            'DB_ENGINE', default='django.db.backends.postgresql'),
-        'NAME': config(
-            'DB_NAME', default='postgres'),
-        'USER': config(
-            'POSTGRES_USER', default='postgres'),
-        'PASSWORD': config(
-            'POSTGRES_PASSWORD', default='postgres'),
-        'HOST': config(
-            'DB_HOST', default='127.0.0.1'),
-        'PORT': config(
-            'DB_PORT', default=5432, cast=int)
+    "default": {
+        "ENGINE": config("DB_ENGINE", default="django.db.backends.postgresql"),
+        "NAME": config("DB_NAME", default="postgres"),
+        "USER": config("POSTGRES_USER", default="postgres"),
+        "PASSWORD": config("POSTGRES_PASSWORD", default="postgres"),
+        "HOST": config("DB_HOST", default="127.0.0.1"),
+        "PORT": config("DB_PORT", default=5432, cast=int),
     }
 }
 
-AUTH_USER_MODEL = 'users.MyUser'
+AUTH_USER_MODEL = "users.MyUser"
 
 AUTH_PASSWORD_VALIDATORS = [
-    {'NAME':
-     'django.contrib.auth.password_validation.UserAttributeSimilarityValidator', },  # noqa E501
-    {'NAME':
-     'django.contrib.auth.password_validation.MinimumLengthValidator', },
-    {'NAME':
-     'django.contrib.auth.password_validation.CommonPasswordValidator', },
-    {'NAME':
-     'django.contrib.auth.password_validation.NumericPasswordValidator', },
+    {
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+    },
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES':
-    ['rest_framework.authentication.TokenAuthentication', ],
-
-    'DEFAULT_PERMISSION_CLASSES':
-    ['rest_framework.permissions.IsAuthenticatedOrReadOnly', ],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticatedOrReadOnly",
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 6
 }
 
 DJOSER = {
-    'LOGIN_FIELD': 'email',
-    'HIDE_USERS': False,
-    'PERMISSIONS': {
-        'resipe': ('api.permissions.AuthorStaffOrReadOnly,',),
-        'recipe_list': ('api.permissions.AuthorStaffOrReadOnly',),
-        'user': ('api.permissions.OwnerUserOrReadOnly',),
-        'user_list': ('api.permissions.OwnerUserOrReadOnly',),
+    "LOGIN_FIELD": "email",
+    "HIDE_USERS": False,
+    "PERMISSIONS": {
+        "resipe": ("api.permissions.AuthorStaffOrReadOnly,",),
+        "recipe_list": ("api.permissions.AuthorStaffOrReadOnly",),
+        "user": ("api.permissions.OwnerUserOrReadOnly",),
+        "user_list": ("api.permissions.OwnerUserOrReadOnly",),
     },
-    'SERIALIZERS': {
-        'user': 'api.serializers.UserSerializer',
-        'user_list': 'api.serializers.UserSerializer',
-        'current_user': 'api.serializers.UserSerializer',
-        'user_create': 'api.serializers.UserSerializer',
+    "SERIALIZERS": {
+        "user": "api.serializers.UserSerializer",
+        "user_list": "api.serializers.UserSerializer",
+        "current_user": "api.serializers.UserSerializer",
+        "user_create": "api.serializers.CreateUserSerializer",
     },
 }
 
-LANGUAGE_CODE = 'ru'
-TIME_ZONE = 'UTC'
+LANGUAGE_CODE = "ru"
+TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'static'
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "static"
 
-MEDIA_URL = 'media/'
+MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / MEDIA_URL
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 PASSWORD_RESET_TIMEOUT = 60 * 60  # 1 hour
 
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
         },
     },
-    'loggers': {
-        'django.db.backends': {
-            'level': 'DEBUG',# if DEBUG else 'ERROR',
-            'handlers': ['console', ],
+    "loggers": {
+        "django.db.backends": {
+            "level": "DEBUG",  # if DEBUG else 'ERROR',
+            "handlers": [
+                "console",
+            ],
         },
     },
 }

@@ -3,24 +3,36 @@ from urllib.parse import unquote
 
 from api.mixins import AddDelViewMixin
 from api.paginators import PageLimitPagination
-from api.permissions import (AdminOrReadOnly, AuthorStaffOrReadOnly,
-                             DjangoModelPermissions, IsAuthenticated)
-from api.serializers import (IngredientSerializer, RecipeSerializer,
-                             ShortRecipeSerializer, TagSerializer,
-                             UserSubscribeSerializer)
+from api.permissions import (
+    AdminOrReadOnly,
+    AuthorStaffOrReadOnly,
+    DjangoModelPermissions,
+    IsAuthenticated,
+)
+from api.serializers import (
+    IngredientSerializer,
+    RecipeSerializer,
+    ShortRecipeSerializer,
+    TagSerializer,
+    UserSubscribeSerializer,
+)
 from core.enums import Tuples, UrlQueries
 from core.services import incorrect_layout
 from django.contrib.auth import get_user_model
 from django.core.handlers.wsgi import WSGIRequest
 from django.db.models import F, Q, QuerySet, Sum
 from django.http.response import HttpResponse
-from djoser.views import UserViewSet as DjoserUserViewSet
+from djoser.views import UserViewSet as DjoserUserViewSet, TokenCreateView
 from foodgram.settings import DATE_TIME_FORMAT
 from recipes.models import Carts, Favorites, Ingredient, Recipe, Tag
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.routers import APIRootView
-from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
+from rest_framework.status import (
+    HTTP_400_BAD_REQUEST,
+    HTTP_401_UNAUTHORIZED,
+    HTTP_201_CREATED,
+)
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from users.models import Subscriptions
 
@@ -28,8 +40,16 @@ User = get_user_model()
 
 
 class BaseAPIRootView(APIRootView):
-    """Базовые пути API приложения.
-    """
+    """Базовые пути API приложения."""
+
+
+class TokenCreateViewCode201(TokenCreateView):
+    """Переопределение кода ответа с 200 на 201 при получении токена."""
+
+    def post(self, request: WSGIRequest, **kwargs) -> Response:
+        response: Response = super().post(request, **kwargs)
+        response.status_code = HTTP_201_CREATED
+        return response
 
 
 class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
@@ -40,6 +60,7 @@ class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
     Для авторизованных пользователей —
     возможность подписаться на автора рецепта.
     """
+
     pagination_class = PageLimitPagination
     add_serializer = UserSubscribeSerializer
     permission_classes = (DjangoModelPermissions,)
@@ -47,7 +68,7 @@ class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
     @action(
         methods=Tuples.ACTION_METHODS,
         detail=True,
-        permission_classes=(IsAuthenticated,)
+        permission_classes=(IsAuthenticated,),
     )
     def subscribe(self, request: WSGIRequest, id: int | str) -> Response:
         """Создаёт/удалет связь между пользователями.
@@ -65,7 +86,7 @@ class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
         """
         return self._add_del_obj(id, Subscriptions, Q(author__id=id))
 
-    @action(methods=('get',), detail=False)
+    @action(methods=("get",), detail=False)
     def subscriptions(self, request: WSGIRequest) -> Response:
         """Список подписок пользоваетеля.
 
@@ -94,6 +115,7 @@ class TagViewSet(ReadOnlyModelViewSet):
 
     Изменение и создание тэгов разрешено только админам.
     """
+
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     permission_classes = (AdminOrReadOnly,)
@@ -104,6 +126,7 @@ class IngredientViewSet(ReadOnlyModelViewSet):
 
     Изменение и создание ингридиентов разрешено только админам.
     """
+
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     permission_classes = (AdminOrReadOnly,)
@@ -125,7 +148,7 @@ class IngredientViewSet(ReadOnlyModelViewSet):
         queryset = self.queryset
 
         if name:
-            if name[0] == '%':
+            if name[0] == "%":
                 name = unquote(name)
             else:
                 name = name.translate(incorrect_layout)
@@ -152,7 +175,8 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
     рецепт в избранное и в список покупок.
     Изменять рецепт может только автор или админы.
     """
-    queryset = Recipe.objects.select_related('author')
+
+    queryset = Recipe.objects.select_related("author")
     serializer_class = RecipeSerializer
     permission_classes = (AuthorStaffOrReadOnly,)
     pagination_class = PageLimitPagination
@@ -168,8 +192,7 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
 
         tags: list = self.request.query_params.getlist(UrlQueries.TAGS.value)
         if tags:
-            queryset = queryset.filter(
-                tags__slug__in=tags).distinct()
+            queryset = queryset.filter(tags__slug__in=tags).distinct()
 
         author: str = self.request.query_params.get(UrlQueries.AUTHOR.value)
         if author:
@@ -196,7 +219,7 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
     @action(
         methods=Tuples.ACTION_METHODS,
         detail=True,
-        permission_classes=(IsAuthenticated,)
+        permission_classes=(IsAuthenticated,),
     )
     def favorite(self, request: WSGIRequest, pk: int | str) -> Response:
         """Добавляет/удалет рецепт в `избранное`.
@@ -216,7 +239,7 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
     @action(
         methods=Tuples.ACTION_METHODS,
         detail=True,
-        permission_classes=(IsAuthenticated,)
+        permission_classes=(IsAuthenticated,),
     )
     def shopping_cart(self, request: WSGIRequest, pk: int | str) -> Response:
         """Добавляет/удалет рецепт в `список покупок`.
@@ -233,7 +256,7 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
         """
         return self._add_del_obj(pk, Carts, Q(recipe__id=pk))
 
-    @action(methods=('get',), detail=False)
+    @action(methods=("get",), detail=False)
     def download_shopping_cart(self, request: WSGIRequest) -> Response:
         """Загружает файл *.txt со списком покупок.
 
@@ -251,18 +274,17 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
         if not user.carts.exists():
             return Response(status=HTTP_400_BAD_REQUEST)
 
-        filename = f'{user.username}_shopping_list.txt'
+        filename = f"{user.username}_shopping_list.txt"
         shopping_list = [
-            f'Список покупок для:\n\n{user.first_name}\n'
-            f'{dt.now().strftime(DATE_TIME_FORMAT)}\n'
+            f"Список покупок для:\n\n{user.first_name}\n"
+            f"{dt.now().strftime(DATE_TIME_FORMAT)}\n"
         ]
 
-        ingredients = Ingredient.objects.filter(
-            recipe__recipe__in_carts__user=user
-        ).values(
-            'name',
-            measurement=F('measurement_unit')
-        ).annotate(amount=Sum('recipe__amount'))
+        ingredients = (
+            Ingredient.objects.filter(recipe__recipe__in_carts__user=user)
+            .values("name", measurement=F("measurement_unit"))
+            .annotate(amount=Sum("recipe__amount"))
+        )
 
         for ing in ingredients:
             shopping_list.append(
@@ -290,10 +312,10 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
         #     )                                                           #
         ###################################################################
 
-        shopping_list.append('\nПосчитано в Foodgram')
-        shopping_list = '\n'.join(shopping_list)
+        shopping_list.append("\nПосчитано в Foodgram")
+        shopping_list = "\n".join(shopping_list)
         response = HttpResponse(
-            shopping_list, content_type='text.txt; charset=utf-8'
+            shopping_list, content_type="text.txt; charset=utf-8"
         )
-        response['Content-Disposition'] = f'attachment; filename={filename}'
+        response["Content-Disposition"] = f"attachment; filename={filename}"
         return response
