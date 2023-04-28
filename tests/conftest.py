@@ -2,6 +2,8 @@ from typing import Callable
 import pytest
 from rest_framework.test import APIClient
 
+from rest_framework.response import Response
+
 
 @pytest.fixture
 def api_url() -> str:
@@ -27,14 +29,14 @@ def client() -> APIClient:
 def get_test_user_data() -> dict:
     return {
         "user_1": {
-            "email": "test_1@yandex.ru",
+            "email": "Test_1@yandex.ru",
             "username": "TestUsernameOne",
             "first_name": "FirstNameOne",
             "last_name": "LastnameOne",
             "password": "Qwerty123",
         },
         "user_2": {
-            "email": "test_2@yandex.ru",
+            "email": "Test_2@yandex.ru",
             "username": "TestUsernameTwo",
             "first_name": "FirstNameTwo",
             "last_name": "LastnameTwo",
@@ -64,3 +66,17 @@ def create_many_tests_users(db, django_user_model) -> Callable:
         ]
 
     return create_users
+
+
+@pytest.fixture
+def login(
+    client: APIClient,
+    token_url: str,
+    get_test_user_data: dict,
+    create_user: Callable,
+) -> tuple[APIClient, str, dict]:
+    user: dict = get_test_user_data["user_1"]
+    create_user(**user)
+    login_data = {"email": user["email"], "password": user["password"]}
+    response: Response = client.post(token_url + "login/", data=login_data)
+    return client, response.json().get("auth_token"), user

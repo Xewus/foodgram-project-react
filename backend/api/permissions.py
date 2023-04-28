@@ -19,7 +19,7 @@ class BanPermission(BasePermission):
 
 class AuthorStaffOrReadOnly(BanPermission):
     """
-    Разрешение на изменение только для служебного персонала и автора.
+    Разрешение только для админа и автора.
     Остальным только чтение объекта.
     """
 
@@ -51,9 +51,9 @@ class AdminOrReadOnly(BanPermission):
         )
 
 
-class OwnerUserOrReadOnly(BanPermission):
+class UserOrAdminOrReadOnly(BanPermission):
     """
-    Разрешение на создание и изменение только для админа и пользователя.
+    Разрешение только для авторизованных пользователей.
     Остальным только чтение объекта.
     """
 
@@ -64,6 +64,6 @@ class OwnerUserOrReadOnly(BanPermission):
             request.method in SAFE_METHODS
             or request.user.is_authenticated
             and request.user.is_active
-            and request.user == obj.author
+            and request.user == obj
             or request.user.is_staff
         )

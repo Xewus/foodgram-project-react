@@ -100,18 +100,19 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticatedOrReadOnly",
     ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 6
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE": 6,
 }
 
 DJOSER = {
     "LOGIN_FIELD": "email",
     "HIDE_USERS": False,
+    "DJOSER_UNAUTHENTICATED_USER_TOKEN_PERMISSIONS": False,
     "PERMISSIONS": {
         "resipe": ("api.permissions.AuthorStaffOrReadOnly,",),
         "recipe_list": ("api.permissions.AuthorStaffOrReadOnly",),
-        "user": ("api.permissions.OwnerUserOrReadOnly",),
-        "user_list": ("api.permissions.OwnerUserOrReadOnly",),
+        "user": ("api.permissions.UserOrAdminOrReadOnly",),
+        "user_list": ("api.permissions.UserOrAdminOrReadOnly",),
     },
     "SERIALIZERS": {
         "user": "api.serializers.UserSerializer",
@@ -146,7 +147,7 @@ LOGGING = {
     },
     "loggers": {
         "django.db.backends": {
-            "level": "DEBUG",  # if DEBUG else 'ERROR',
+            "level": "DEBUG" if DEBUG else "ERROR",
             "handlers": [
                 "console",
             ],

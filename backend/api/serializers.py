@@ -41,7 +41,6 @@ class _BaseUserSerializer(ModelSerializer):
             "last_name",
         )
 
-
 class CreateUserSerializer(_BaseUserSerializer):
     """Сериализатор для создания пользователя."""
 

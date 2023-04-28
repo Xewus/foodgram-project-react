@@ -6,7 +6,6 @@ from api.paginators import PageLimitPagination
 from api.permissions import (
     AdminOrReadOnly,
     AuthorStaffOrReadOnly,
-    DjangoModelPermissions,
     IsAuthenticated,
 )
 from api.serializers import (
@@ -25,6 +24,7 @@ from django.http.response import HttpResponse
 from djoser.views import UserViewSet as DjoserUserViewSet, TokenCreateView
 from foodgram.settings import DATE_TIME_FORMAT
 from recipes.models import Carts, Favorites, Ingredient, Recipe, Tag
+from rest_framework.exceptions import NotAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.routers import APIRootView
@@ -63,7 +63,14 @@ class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
 
     pagination_class = PageLimitPagination
     add_serializer = UserSubscribeSerializer
-    permission_classes = (DjangoModelPermissions,)
+
+    def get_permissions(self):
+        """Добавлен запрет на доступ анонима к личному кабинету
+        при разрешённом просмотре отдельных профилей пользователей.
+        """
+        if self.action == "me" and self.request.user.is_anonymous:
+            raise NotAuthenticated()
+        return super().get_permissions()
 
     @action(
         methods=Tuples.ACTION_METHODS,
