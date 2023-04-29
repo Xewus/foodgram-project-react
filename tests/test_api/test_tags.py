@@ -1,12 +1,7 @@
 import pytest
-
-from typing import Callable
-
-import pytest
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.test import APIClient
-
 
 pytestmark = pytest.mark.django_db
 

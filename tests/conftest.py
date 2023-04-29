@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.test import APIClient
 
 try:
-    from recipes.models import Tag, Recipe
+    from recipes.models import Recipe, Tag
 except ImportError:
     raise AssertionError(
         "установите правильные пути импорта моделей в файле `/tests/conftest.py:8"
