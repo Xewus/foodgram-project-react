@@ -130,7 +130,6 @@ class TagViewSet(ReadOnlyModelViewSet):
     pagination_class = None
 
 
-
 class IngredientViewSet(ReadOnlyModelViewSet):
     """Работет с игридиентами.
 
@@ -140,6 +139,7 @@ class IngredientViewSet(ReadOnlyModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     permission_classes = (AdminOrReadOnly,)
+    pagination_class = None
 
     def get_queryset(self) -> list[Ingredient]:
         """Получает queryset в соответствии с параметрами запроса.

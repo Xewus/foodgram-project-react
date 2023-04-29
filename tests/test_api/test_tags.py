@@ -42,9 +42,9 @@ def test_get_list_tags(
     assert data, "в ответе нет тегов"
 
     data: list[dict[str, str]]
-    data.sort(key=lambda d: d.keys())
     tags = list(get_test_tags.values())
-    tags.sort(key=lambda d: d.keys())
+    tags.sort(key=lambda d: d["name"])
+    data.sort(key=lambda d: d["name"])
     for i, resp_tag in enumerate(data):
         assert resp_tag.pop("id", None), "отсутсвует `id` тега"
         assert tags[i] == resp_tag, "данные тега не соответствуют ожидаемым"

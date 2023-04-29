@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.test import APIClient
 
 try:
-    from recipes.models import Recipe, Tag
+    from recipes.models import Ingredient, Recipe, Tag
 except ImportError:
     raise AssertionError(
         "установите правильные пути импорта моделей в файле `/tests/conftest.py:8"
@@ -25,6 +25,11 @@ def users_url(api_url: str) -> str:
 @pytest.fixture
 def tags_url(api_url: str) -> str:
     return api_url + "tags/"
+
+
+@pytest.fixture
+def ingridients_url(api_url: str) -> str:
+    return api_url + "ingredients/"
 
 
 @pytest.fixture
@@ -65,8 +70,34 @@ def get_test_tags() -> dict:
             "color": "#" + "0" * 6,
             "slug": "breakfast",
         },
-        "tag_2": {"name": "обед", "color": "#" + "0A" * 3, "slug": "lunch"},
-        "tag_3": {"name": "ужин", "color": "#" + "F" * 6, "slug": "dinner"},
+        "tag_2": {
+            "name": "обед",
+            "color": "#" + "0A" * 3,
+            "slug": "lunch",
+        },
+        "tag_3": {
+            "name": "ужин",
+            "color": "#" + "F" * 6,
+            "slug": "dinner",
+        },
+    }
+
+
+@pytest.fixture
+def get_test_ingredients() -> dict:
+    return {
+        "ing_1": {
+            "name": "вода",
+            "measurement_unit": "л",
+        },
+        "ing_2": {
+            "name": "хлеб",
+            "measurement_unit": "г",
+        },
+        "ing_3": {
+            "name": "лук",
+            "measurement_unit": "кг",
+        },
     }
 
 
@@ -110,3 +141,10 @@ def login(
 @pytest.fixture
 def set_tags_to_db(get_test_tags: dict):
     Tag.objects.bulk_create((Tag(**tag) for tag in get_test_tags.values()))
+
+
+@pytest.fixture
+def set_ingredientss_to_db(get_test_ingredients: dict):
+    Ingredient.objects.bulk_create(
+        (Ingredient(**ing) for ing in get_test_ingredients.values())
+    )
