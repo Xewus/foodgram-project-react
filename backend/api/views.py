@@ -21,17 +21,18 @@ from django.contrib.auth import get_user_model
 from django.core.handlers.wsgi import WSGIRequest
 from django.db.models import F, Q, QuerySet, Sum
 from django.http.response import HttpResponse
-from djoser.views import UserViewSet as DjoserUserViewSet, TokenCreateView
+from djoser.views import TokenCreateView
+from djoser.views import UserViewSet as DjoserUserViewSet
 from foodgram.settings import DATE_TIME_FORMAT
 from recipes.models import Carts, Favorites, Ingredient, Recipe, Tag
-from rest_framework.exceptions import NotAuthenticated
 from rest_framework.decorators import action
+from rest_framework.exceptions import NotAuthenticated
 from rest_framework.response import Response
 from rest_framework.routers import APIRootView
 from rest_framework.status import (
+    HTTP_201_CREATED,
     HTTP_400_BAD_REQUEST,
     HTTP_401_UNAUTHORIZED,
-    HTTP_201_CREATED,
 )
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from users.models import Subscriptions
@@ -44,7 +45,7 @@ class BaseAPIRootView(APIRootView):
 
 
 class TokenCreateViewCode201(TokenCreateView):
-    """Переопределение кода ответа с 200 на 201 при получении токена."""
+    """Переопределение кода ответа с 200 на 201 при создании токена."""
 
     def post(self, request: WSGIRequest, **kwargs) -> Response:
         response: Response = super().post(request, **kwargs)
@@ -126,6 +127,8 @@ class TagViewSet(ReadOnlyModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     permission_classes = (AdminOrReadOnly,)
+    pagination_class = None
+
 
 
 class IngredientViewSet(ReadOnlyModelViewSet):

@@ -9,9 +9,9 @@ from django.db.transaction import atomic
 from drf_extra_fields.fields import Base64ImageField
 from recipes.models import Ingredient, Recipe, Tag
 from rest_framework.serializers import (
+    CharField,
     ModelSerializer,
     SerializerMethodField,
-    CharField,
 )
 
 User = get_user_model()
@@ -40,6 +40,7 @@ class _BaseUserSerializer(ModelSerializer):
             "first_name",
             "last_name",
         )
+
 
 class CreateUserSerializer(_BaseUserSerializer):
     """Сериализатор для создания пользователя."""

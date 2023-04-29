@@ -1,9 +1,9 @@
 from typing import Callable
 
 import pytest
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.test import APIClient
-from rest_framework import status
 
 pytestmark = pytest.mark.django_db
 
@@ -21,7 +21,7 @@ def check_query_params(link: str, expect_params: set) -> None:
     )
 
 
-class TestUserListGet:
+class TestUsersListGet:
     def test_url(
         self,
         client: APIClient,
@@ -113,7 +113,7 @@ class TestUserListGet:
             ), "последняя страница не может иметь ссылку на следующую страницу"
 
 
-class TestUserListPost:
+class TestUsersListPost:
     @pytest.mark.parametrize(
         "reg_data, expect_data",
         [

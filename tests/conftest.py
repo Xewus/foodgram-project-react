@@ -1,8 +1,15 @@
 from typing import Callable
+
 import pytest
+from rest_framework.response import Response
 from rest_framework.test import APIClient
 
-from rest_framework.response import Response
+try:
+    from recipes.models import Tag, Recipe
+except ImportError:
+    raise AssertionError(
+        "установите правильные пути импорта моделей в файле `/tests/conftest.py:8"
+    )
 
 
 @pytest.fixture
@@ -13,6 +20,11 @@ def api_url() -> str:
 @pytest.fixture
 def users_url(api_url: str) -> str:
     return api_url + "users/"
+
+
+@pytest.fixture
+def tags_url(api_url: str) -> str:
+    return api_url + "tags/"
 
 
 @pytest.fixture
@@ -42,6 +54,19 @@ def get_test_user_data() -> dict:
             "last_name": "LastnameTwo",
             "password": "Qwerty123",
         },
+    }
+
+
+@pytest.fixture
+def get_test_tags() -> dict:
+    return {
+        "tag_1": {
+            "name": "завтрак",
+            "color": "#" + "0" * 6,
+            "slug": "breakfast",
+        },
+        "tag_2": {"name": "обед", "color": "#" + "0A" * 3, "slug": "lunch"},
+        "tag_3": {"name": "ужин", "color": "#" + "F" * 6, "slug": "dinner"},
     }
 
 
@@ -80,3 +105,8 @@ def login(
     login_data = {"email": user["email"], "password": user["password"]}
     response: Response = client.post(token_url + "login/", data=login_data)
     return client, response.json().get("auth_token"), user
+
+
+@pytest.fixture
+def set_tags_to_db(get_test_tags: dict):
+    Tag.objects.bulk_create((Tag(**tag) for tag in get_test_tags.values()))

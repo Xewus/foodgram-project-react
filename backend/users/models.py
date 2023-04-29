@@ -4,7 +4,6 @@
 приложения `Foodgram`. Модель пользователя основана на модели
 AbstractUser из Django для переопределения полей обязательных для заполнения.
 """
-from typing import Iterable, Optional
 import unicodedata
 
 from core import texsts
@@ -25,7 +24,6 @@ from django.db.models import (
     UniqueConstraint,
 )
 from django.db.models.functions import Length
-from django.utils.translation import gettext_lazy as _
 
 CharField.register_lookup(Length)
 
@@ -104,7 +102,7 @@ class MyUser(AbstractUser):
         ),
     )
     password = CharField(
-        verbose_name=_("Пароль"),
+        verbose_name="Пароль",
         max_length=128,
         help_text=texsts.USERS_HELP_FNAME,
     )
@@ -162,7 +160,7 @@ class MyUser(AbstractUser):
         self.first_name = self.__normalize_human_names(self.first_name)
         self.last_name = self.__normalize_human_names(self.last_name)
         return super().clean()
-    
+
 
 class Subscriptions(Model):
     """Подписки пользователей друг на друга.

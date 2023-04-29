@@ -41,7 +41,7 @@ class AdminOrReadOnly(BanPermission):
     """
 
     def has_object_permission(
-        self, request: WSGIRequest, view: APIRootView
+        self, request: WSGIRequest, view: APIRootView, obj: Model
     ) -> bool:
         return (
             request.method in SAFE_METHODS
