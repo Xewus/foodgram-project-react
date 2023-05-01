@@ -59,7 +59,6 @@ const UserPage = ({ updateOrders }) => {
   }
 
   useEffect(_ => {
-    if (!user) { return }
     getRecipes({ page: recipesPage, tags: tagsValue, author: user.id })
   }, [ recipesPage, tagsValue, user ])
 

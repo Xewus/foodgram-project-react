@@ -1,0 +1,14 @@
+[tool.isort]
+profile = "black"
+
+[tool.black]
+line-length = 79
+target-version = ["py311", "py310"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE="tests.settings_for_tests"
+pythonpath = ["./backend/", "."]
+addopts = "-vv -p no:cacheprovider --disable-warnings"
+norecursedirs = ["venv/*"]
+testpaths = ["tests/"]
+python_files = ["test_*.py"]

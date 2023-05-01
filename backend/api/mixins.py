@@ -6,8 +6,11 @@ from django.db.models import Model, Q
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.serializers import ModelSerializer
-from rest_framework.status import (HTTP_201_CREATED, HTTP_204_NO_CONTENT,
-                                   HTTP_400_BAD_REQUEST)
+from rest_framework.status import (
+    HTTP_201_CREATED,
+    HTTP_204_NO_CONTENT,
+    HTTP_400_BAD_REQUEST,
+)
 
 
 class AddDelViewMixin:
@@ -32,10 +35,7 @@ class AddDelViewMixin:
     add_serializer: ModelSerializer | None = None
 
     def _add_del_obj(
-        self,
-        obj_id: int | str,
-        m2m_model: Model,
-        q: Q
+        self, obj_id: int | str, m2m_model: Model, q: Q
     ) -> Response:
         """Добавляет/удаляет связь M2M между пользователем и другим объектом.
 
