@@ -36,10 +36,11 @@ class OneOfTwoValidator:
                 Переданное значение содержит символы разрешённые обоими
                 регулярными выражениями.
     """
-    first_regex = '[^а-яёА-ЯЁ]+'
-    second_regex = '[^a-zA-Z]+'
-    field = 'Переданное значение'
-    message = '<%s> на разных языках либо содержит не только буквы.'
+
+    first_regex = "[^а-яёА-ЯЁ]+"
+    second_regex = "[^a-zA-Z]+"
+    field = "Переданное значение"
+    message = "<%s> на разных языках либо содержит не только буквы."
 
     def __init__(
         self,
@@ -53,7 +54,7 @@ class OneOfTwoValidator:
             self.second_regex = second_regex
         if field is not None:
             self.field = field
-        self.message = f'\n{self.field} {self.message}\n'
+        self.message = f"\n{self.field} {self.message}\n"
 
         self.first_regex = compile(self.first_regex)
         self.second_regex = compile(self.second_regex)
@@ -80,9 +81,10 @@ class MinLenValidator:
         ValidationError:
             Переданное значение слишком короткое.
     """
+
     min_len = 0
-    field = 'Переданное значение'
-    message = '\n%s недостаточной длины.\n'
+    field = "Переданное значение"
+    message = "\n%s недостаточной длины.\n"
 
     def __init__(
         self,
@@ -118,21 +120,19 @@ def hex_color_validator(color: str) -> str:
             Символы значения выходят за пределы 16-ричной системы.
     """
 
-    color = color.strip(' #')
+    color = color.strip(" #")
     if len(color) not in (3, 6):
         raise ValidationError(
-            f'Код цвета {color} не правильной длины ({len(color)}).'
+            f"Код цвета {color} не правильной длины ({len(color)})."
         )
     if not set(color).issubset(hexdigits):
-        raise ValidationError(
-            f'{color} не шестнадцатиричное.'
-        )
+        raise ValidationError(f"{color} не шестнадцатиричное.")
     if len(color) == 3:
-        return f'#{color[0] * 2}{color[1] * 2}{color[2] * 2}'.upper()
-    return '#' + color.upper()
+        return f"#{color[0] * 2}{color[1] * 2}{color[2] * 2}".upper()
+    return "#" + color.upper()
 
 
-def tags_exist_validator(tags_ids: list[int | str], Tag: 'Tag') -> None:
+def tags_exist_validator(tags_ids: list[int | str], Tag: "Tag") -> list["Tag"]:
     """Проверяет наличие тэгов с указанными id.
 
     Args:
@@ -142,17 +142,25 @@ def tags_exist_validator(tags_ids: list[int | str], Tag: 'Tag') -> None:
     Raises:
         ValidationError: Тэга с одним из указанных id не существует.
     """
-    exists_tags = Tag.objects.filter(id__in=tags_ids)
+    if not tags_ids:
+        raise ValidationError("Не указаны тэги")
 
-    if len(exists_tags) != len(tags_ids):
-        raise ValidationError('Указан несуществующий тэг')
+    tags = Tag.objects.filter(id__in=tags_ids)
+
+    if len(tags) != len(tags_ids):
+        raise ValidationError("Указан несуществующий тэг")
+
+    return tags
 
 
 def ingredients_validator(
     ingredients: list[dict[str, str | int]],
-    Ingredient: 'Ingredient',
-) -> dict[int, tuple['Ingredient', int]]:
+    Ingredient: "Ingredient",
+) -> dict[int, tuple["Ingredient", int]]:
     """Проверяет список ингридиентов.
+
+    Если повторяется ингридиенты, то сохраняется последний, считаем,
+    что пользователь забыл, что уже указывал ингридиент и написал его опять.
 
     Args:
         ingredients (list[dict[str, str | int]]):
@@ -167,24 +175,25 @@ def ingredients_validator(
     Returns:
         dict[int, tuple[Ingredient, int]]:
     """
+    if not ingredients:
+        raise ValidationError("Не указаны ингридиенты")
+
     valid_ings = {}
 
     for ing in ingredients:
-        if not (isinstance(ing['amount'], int) or ing['amount'].isdigit()):
-            raise ValidationError('Неправильное количество ингидиента')
+        if not (isinstance(ing["amount"], int) or ing["amount"].isdigit()):
+            raise ValidationError("Неправильное количество ингидиента")
 
-        amount = valid_ings.get(ing['id'], 0) + int(ing['amount'])
-        if amount <= 0:
-            raise ValidationError('Неправильное количество ингридиента')
-
-        valid_ings[ing['id']] = amount
+        valid_ings[ing["id"]] = int(ing["amount"])
+        if valid_ings[ing["id"]] <= 0:
+            raise ValidationError("Неправильное количество ингридиента")
 
     if not valid_ings:
-        raise ValidationError('Неправильные ингидиенты')
+        raise ValidationError("Неправильные ингидиенты")
 
     db_ings = Ingredient.objects.filter(pk__in=valid_ings.keys())
     if not db_ings:
-        raise ValidationError('Неправильные ингидиенты')
+        raise ValidationError("Неправильные ингидиенты")
 
     for ing in db_ings:
         valid_ings[ing.pk] = (ing, valid_ings[ing.pk])

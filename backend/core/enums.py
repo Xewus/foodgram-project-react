@@ -5,17 +5,13 @@ from enum import Enum, IntEnum
 
 class Tuples(tuple, Enum):
     # Размер сохраняемого изображения рецепта
-    RECIPE_IMAGE_SIZE = 500, 300
+    RECIPE_IMAGE_SIZE = 500, 500
     # Поиск объектов только с переданным параметром.
     # Например только в избранном: `is_favorited=1`
-    SYMBOL_TRUE_SEARCH = '1', 'true'
+    SYMBOL_TRUE_SEARCH = "1", "true"
     # Поиск объектов не содержащих переданный параметр.
     # Например только не избранное: `is_favorited=0`
-    SYMBOL_FALSE_SEARCH = '0', 'false'
-    ADD_METHODS = 'GET', 'POST'
-    DEL_METHODS = 'DELETE',
-    ACTION_METHODS = 'GET', 'POST', 'DELETE'
-    UPDATE_METHODS = 'PUT', 'PATCH'
+    SYMBOL_FALSE_SEARCH = "0", "false"
 
 
 class Limits(IntEnum):
@@ -43,12 +39,12 @@ class Limits(IntEnum):
 
 class UrlQueries(str, Enum):
     # Параметр для поиска ингридиентов по вхождению значения в название
-    SEARCH_ING_NAME = 'name'
+    SEARCH_ING_NAME = "name"
     # Параметр для поиска объектов в списке "избранное"
-    FAVORITE = 'is_favorited'
+    FAVORITE = "is_favorited"
     # Параметр для поиска объектов в списке "покупки"
-    SHOP_CART = 'is_in_shopping_cart'
+    SHOP_CART = "is_in_shopping_cart"
     # Параметр для поиска объектов по автору
-    AUTHOR = 'author'
+    AUTHOR = "author"
     # Параметр для поиска объектов по тэгам
-    TAGS = 'tags'
+    TAGS = "tags"

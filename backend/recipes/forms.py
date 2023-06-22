@@ -6,7 +6,7 @@ from recipes.models import Tag
 class TagForm(ModelForm):
     class Meta:
         model = Tag
-        fields = '__all__'
+        fields = "__all__"
         widgets = {
-            'color': TextInput(attrs={'type': 'color'}),
+            "color": TextInput(attrs={"type": "color"}),
         }

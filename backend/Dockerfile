@@ -2,7 +2,7 @@ FROM python:3.11-slim
 # Requirements for `psycorg2` and script "/app/run_app.sh".
 RUN apt-get update &&\
     apt-get upgrade -y &&\
-    apt-get install -y libpq-dev gcc netcat
+    apt-get install -y libpq-dev gcc netcat-traditional
 # It also create directory `/app`.
 WORKDIR /app
 COPY requirements.txt ./
