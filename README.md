@@ -24,7 +24,7 @@
 
 ## https://foodgram.gq
 
-*Развёрнут в облачном сервисе [CLO](https://lk.clo.ru/sign/up/?ref_id=1113625)*
+*С самого начала развёрнут в облачном сервисе [CLO](https://lk.clo.ru/sign/up/?ref_id=1113625)*
 
 Here you can share recipes of dishes, add them to favorites and display a shopping list for cooking your favorite dishes.
 To preserve order - only administrators are allowed to create tags and ingredients.
