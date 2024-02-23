@@ -113,7 +113,7 @@ Your service is work!
 Oh, I'm sorry. You also need to create the first account for the admin panel using this command:
 
 ```text
-sudo docker exec -it app python manage.py createsuperuser
+sudo docker exec -it foodgram-app python manage.py createsuperuser
 ```
 
 And if you want, you can use the list of ingredients offered by us to write recipes.
