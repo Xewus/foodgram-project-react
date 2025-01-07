@@ -1,5 +1,5 @@
 ---
-name: CI for Foodgram
+name: CI Foodgram
 
 on:
   push:
